@@ -29,7 +29,7 @@ summary.mareyMap = function(x) {
       "Chromosomes: ", chromEst, "\n",
       "Recombination rates:\n",
       "Min.   1st Qu.    Median      Mean   3rd Qu.      Max.\n")
-  for (i in 1:nrow(recRate)) {cat(unlist(recRate[i,]), "\n")}
+  if (length(recRate) > 0) {for (i in 1:nrow(recRate)) {cat(unlist(recRate[i,]), "\n")}}
   cat("Interpolation method: ", interpolation, "\n",
       "Smoothing parameter: ", smoothingParam, "\n",
       "Windows size: ", windowSize, "\n",

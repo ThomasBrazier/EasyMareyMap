@@ -3,10 +3,10 @@
 #' @param x A data frame of a Marey map with columns "set",	"map",	"mkr",	"phys",	"gen",	"vld"
 #' @param chromosomeLength An optional vector of chromosome length in Mb
 #'
-#' @return
+#' @return A 'mareyMap' object
 #' @export
 #'
-#' @examples
+#' @examples mareyMap(df)
 mareyMap = function(x = data.frame(), chromosomeLength = numeric()) {
   x = as.data.frame(x)
   marey = new_marey_map(x, chromosomeLength = chromosomeLength)

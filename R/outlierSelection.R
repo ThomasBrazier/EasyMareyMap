@@ -6,7 +6,9 @@
 #' @return A mareyMap object
 #' @export
 #'
-#' @examples
+#' @importFrom gatepoints fhs
+#'
+#' @examples outlierSelection(x, chromosome = 1)
 outlierSelection = function(x = mareyMap(), chromosome = character()) {
   tmp = x$mareyMap[which(x$mareyMap$map == chromosome),]
   idx = pointSelection(tmp)
@@ -20,7 +22,7 @@ pointSelection = function(x) {
   df = df[!is.na(df$phys),]
   X11()
   plot(df, col = "black")
-  selectedPoints = fhs(df, mark = TRUE)
+  selectedPoints = gatepoints::fhs(df, mark = TRUE)
   dev.off()
   pointNames = as.character(selectedPoints)
   return(pointNames)

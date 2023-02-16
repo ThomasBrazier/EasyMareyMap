@@ -6,7 +6,7 @@
 #' @return A mareyMap object
 #' @export
 #'
-#' @examples
+#' @examples removeChromosome(x, "1")
 removeChromosome = function(x, chromosome = character()) {
   x$mareyMap$vld[which(x$mareyMap$map == chromosome)] = FALSE
   return(x)

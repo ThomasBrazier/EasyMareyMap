@@ -1,5 +1,24 @@
-
-calibrateSmoothing = function(x, method = "loess", nResampling = 1000, K = 5, from = 0.2, to = 0.5, nCores = 1, degree = 2) {
+#' Automatic calibration of the smoothing parameter
+#'
+#' @param x A 'mareyMap' object
+#' @param method An interpolation method, either 'loess' or 'splines'
+#' @param nResampling Number of iterations in the cross-validation procedure
+#' @param K Number of clusters to subset in K-fold cross-validation
+#' @param from Minimum of the range of smoothing values to explore
+#' @param to Maximum of the range of smoothing values to explore
+#' @param nCores Number of cores to parallelize
+#' @param degree (optional) The degree parameter of the polynomial used in the 'loess' method
+#'
+#' @return The best smoothing parameter value
+#' @export
+#'
+#' @import pbmcapply
+#'
+#' @examples calibrateSmoothing(x, "loess")
+calibrateSmoothing = function(x, method = "loess",
+                              nResampling = 1000, K = 5,
+                              from = 0.2, to = 0.5,
+                              nCores = 1, degree = 2) {
   if (nrow(x) > 10000) {
     warning("Dataset too large (>10,000 markers). Subsampling 10%...\n")
     x = x[sample(1:nrow(x), size = nrow(x)/10, replace = FALSE),]
@@ -17,7 +36,7 @@ calibrateSmoothing = function(x, method = "loess", nResampling = 1000, K = 5, fr
   for (s in smooth2test) {
     MSEBoot = numeric(nResampling)
     cat("Fitting smoothing parameter", s, "...\n")
-    MSEBoot = unlist(pbmclapply(X = 1:nResampling,
+    MSEBoot = unlist(pbmcapply::pbmclapply(X = 1:nResampling,
                                 function(X) {cvResampling(x, K = K, smooth = s, method = method, degree = degree)},
                                 mc.cores = nCores))
     crossvalidation$MSE[which(crossvalidation$smoothParam == s)] = mean(MSEBoot, na.rm = TRUE)

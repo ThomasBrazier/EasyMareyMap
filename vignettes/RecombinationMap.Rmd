@@ -1,0 +1,90 @@
+---
+title: "How to estimate local recombination rates with the Marey map method"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{RecombinationMap}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The package is loaded with the following command.
+
+```{r setup}
+library(EasyMareyMap)
+```
+
+You can import the example dataset based on a linkage map in *Arabidopsis thaliana* [@serin_construction_2017].
+The dataset need to be formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set, map, mkr, phys, gen, vld'. Genomic coordinates are in basepairs.
+
+
+```{r importMap}
+m = read.table("../data/Arabidopsis_thaliana.txt", header = T)
+# The marey map is imported into a 'mareyMap' object
+df = mareyMap(m)
+# names of slots in the 'mareyMap' object
+names(df)
+# Column names of the input Marey map
+names(df$mareyMap)
+```
+
+Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then rigth-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
+
+```
+df = outlierSelection(df, "1")
+```
+
+<!-- TODO Add a photo of mkr selection -->
+
+
+Alternatively, you can remove a whole chromosome of your dataset with the following command.
+
+
+```{r removeChromosome}
+df = removeChromosome(df, "5")
+```
+
+
+There is a method to `plot` the Marey map of a `mareyMap` object.
+
+```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana*. Invalid markers are shown in red."}
+plot(df)
+```
+
+There is also a method to display a `summary` of a `mareyMap` object.
+
+```{r summary}
+summary(df)
+```
+
+
+All the procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map.
+
+```{r estimateMap, echo=FALSE, message=FALSE}
+res = recombinationMap(df, chromosome = "1", method = "loess")
+res = recombinationMap(res, chromosome = "2", method = "loess")
+res = recombinationMap(res, chromosome = "3", method = "spline")
+```
+
+
+```{r headMap, echo=TRUE, message=FALSE}
+head(res$recMap)
+```
+
+
+```{r summaryResults, echo=TRUE, message=FALSE}
+summary(res)
+```
+
+Finally, the recombination landscape can be plotted with the `recombinationPlot()` function.
+
+```{r plotMap}
+recombinationPlot(res)
+```

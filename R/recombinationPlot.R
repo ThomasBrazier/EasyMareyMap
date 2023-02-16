@@ -5,11 +5,13 @@
 #' @return A plot of the Marey maps
 #' @export
 #'
-#' @examples
+#' @import ggplot2
+#'
+#' @examples recombinationPlot(x)
 recombinationPlot = function(x) {
   x$recMap$point = (x$recMap$start + x$recMap$end)/2
 
-  p = ggplot(data = x$recMap, aes(x = point/10^6, y = recRate)) +
+  p = ggplot2::ggplot(data = x$recMap, aes(x = point/10^6, y = recRate)) +
     geom_line() +
     geom_ribbon(aes(x = point/10^6, ymin = lowerRecRate, ymax = upperRecRate), fill = "gray30", alpha = 0.2) +
     facet_grid(~as.factor(set)) +

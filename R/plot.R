@@ -5,10 +5,14 @@
 #' @return A plot of the Marey maps
 #' @export
 #'
-#' @examples
+#' @import ggplot2
+#'
+#' @examples plot(x)
 plot.mareyMap = function(x) {
-  p = ggplot(data = x$mareyMap, aes(x = phys/10^6, y = gen, col = vld)) +
+  df= x$mareyMap
+  p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen, colour = vld)) +
     geom_point() +
+    scale_colour_manual(values=c("TRUE" = "dodgerblue4", "FALSE" = "firebrick4")) +
     facet_grid(~as.factor(set)) +
     facet_wrap(~as.factor(map)) +
     labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
