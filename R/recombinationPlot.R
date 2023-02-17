@@ -11,6 +11,10 @@
 recombinationPlot = function(x) {
   x$recMap$point = (x$recMap$start + x$recMap$end)/2
 
+  x$recMap$recRate = x$recMap$recRate * 10^6
+  x$recMap$upperRecRate = x$recMap$upperRecRate * 10^6
+  x$recMap$lowerRecRate = x$recMap$lowerRecRate * 10^6
+
   p = ggplot2::ggplot(data = x$recMap, aes(x = point/10^6, y = recRate)) +
     geom_line() +
     geom_ribbon(aes(x = point/10^6, ymin = lowerRecRate, ymax = upperRecRate), fill = "gray30", alpha = 0.2) +

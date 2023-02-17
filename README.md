@@ -1,8 +1,8 @@
 # EasyMareyMap
 
-Estimate local recombination rates with the Marey map method [Brazier and Glémin 2022](https://doi.org/10.1371/journal.pgen.1010141).
+Estimate local recombination rates with the Marey map method as described in [Brazier and Glémin 2022](https://doi.org/10.1371/journal.pgen.1010141).
 
-This R package provide an easy script solution for the Marey map method, as described in more details in the original MareyMap package. See [Rezvoy et al. 2007](https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btm315) and [Siberchicot et al. 2017](https://CRAN.R-project.org/package=MareyMap).
+This R package provide an easy script solution for the Marey map method, which is described in more details in the original MareyMap package. See [Rezvoy et al. 2007](https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btm315) and [Siberchicot et al. 2017](https://CRAN.R-project.org/package=MareyMap).
 
 The original MareyMap package is based on a graphical user interface and does not allow to easily script the method. This package is a simple implementation for scripting.
 
@@ -35,7 +35,10 @@ The input file is a tab-separated text file with five columns:
 
 ## Example
 
-An example dataset is provided to play with the package. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
+An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
+
+
+![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/data/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
 
 
 
