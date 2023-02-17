@@ -21,6 +21,11 @@ library(devtools)
 devtools::install_github("ThomasBrazier/EasyMareyMap")
 ```
 
+Finally load the package in your current R session with the following R command:
+
+```
+library(EasyMareyMap)
+```
 
 ## Usage
 

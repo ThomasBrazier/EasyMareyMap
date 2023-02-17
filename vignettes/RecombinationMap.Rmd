@@ -85,6 +85,6 @@ summary(res)
 
 Finally, the recombination landscape can be plotted with the `recombinationPlot()` function.
 
-```{r plotMap}
+```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
 recombinationPlot(res)
 ```
