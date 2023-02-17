@@ -39,7 +39,7 @@ An example dataset is provided to play with the package in the `data/` directory
 
 
 ![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/data/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
-
+*Recombination landscape of *Arabidopsis thaliana* chromosome 1*
 
 
 ## References
