@@ -48,7 +48,7 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
             chromosomeLength = chromosomeLength,
             linkageMapLength = linkageMapLength,
             interpolationMethod = character(),
-            windowSize = numeric(),
+            windows = numeric(),
             smoothingParam = numeric(),
             nBootstrap = integer())
 
