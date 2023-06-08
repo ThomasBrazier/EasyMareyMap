@@ -1,24 +1,25 @@
 #' Estimate the recombination map
 #'
-#' @param x A 'mareyMap' object
-#' @param chromosome The name of the chromosome to process
-#' @param method An interpolation method, either 'loess' or 'splines'
-#' @param K Number of clusters to subset in K-fold cross-validation
-#' @param boot Number of bootstrap to estimate a 95% confidence interval
-#' @param nCores Number of cores to parallelize
-#' @param smoothing (optional) Smoothing parameter, if you do not want to calibrate it
-#' @param nResampling Number of iterations in the cross-validation procedure
-#' @param calibrationRange Range of the smoothing parameter space to explore
-#' @param degree (optional) The degree parameter of the polynomial used in the 'loess' method
-#' @param windows Size or coordinates of the windows along the chromosome: eiher integer in basepairs (default = 10^5) or a data.frame of start/end coordinates
+#' @param x a 'mareyMap' object.
+#' @param chromosome the name of the chromosome to process.
+#' @param method an interpolation method, either 'loess' or 'splines'.
+#' @param K number of clusters to subset in K-fold cross-validation.
+#' @param boot number of bootstraps to estimate the confidence interval.
+#' @param nCores number of cores to parallelize.
+#' @param smoothing (optional) smoothing parameter, if you do not want to calibrate it.
+#' @param nResampling number of iterations in the cross-validation procedure.
+#' @param calibrationRange range of the smoothing parameter space to explore.
+#' @param degree (optional) the degree parameter of the polynomial used in the 'loess' method.
+#' @param windows size or coordinates of the windows along the chromosome: either integer in basepairs (default = 10^5) or a data.frame of start/end coordinates.
 #'
-#' @return A 'mareyMap' object with the estimated recombination map
+#' @return a 'mareyMap' object with the estimated recombination map.
 #' @export
 #'
 #' @import pbmcapply
 #' @import parallel
+#' @import utils
+#' @import stats
 #'
-#' @examples recombinationMap(x, chromosome = "1", method = "loess")
 recombinationMap = function(x,
                             chromosome = character(),
                             method = c("loess", "spline"),

@@ -7,16 +7,13 @@
 mareyMap(x = data.frame(), chromosomeLength = numeric())
 }
 \arguments{
-\item{x}{A data frame of a Marey map with columns "set",    "map",    "mkr",    "phys",    "gen",    "vld"}
+\item{x}{a data frame of a Marey map with columns "set",    "map",    "mkr",    "phys",    "gen",    "vld".}
 
-\item{chromosomeLength}{An optional vector of chromosome length in Mb}
+\item{chromosomeLength}{an optional vector of chromosome length in Mb.}
 }
 \value{
-A 'mareyMap' object
+a 'mareyMap' object.
 }
 \description{
 A Marey map object
-}
-\examples{
-mareyMap(df)
 }

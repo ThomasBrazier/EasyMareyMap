@@ -1,4 +1,13 @@
-summary.mareyMap = function(x) {
+#' Summary of a Marey map object
+#'
+#' @param x a Marey map object.
+#'
+#' @return a summary of the Marey map object.
+#' @export
+#'
+#' @import ggplot2
+#'
+summary.mareyMap = function(x, ...) {
   dataset = levels(x$mareyMap$set)
   nbChromosomes = length(x$chromosomeName)
   nameChromosomes = x$chromosomeName
@@ -14,7 +23,6 @@ summary.mareyMap = function(x) {
   }
   smoothingParam = x$smoothingParam
   interpolation = x$interpolationMethod
-  windowSize = x$windowSize
   nbWindows = nrow(x$recMap)
   nBootstrap = x$nBootstrap
   cat("============== Summary of the Marey map ==============\n",
@@ -32,7 +40,6 @@ summary.mareyMap = function(x) {
   if (length(recRate) > 0) {for (i in 1:nrow(recRate)) {cat(unlist(recRate[i,]), "\n")}}
   cat("Interpolation method: ", interpolation, "\n",
       "Smoothing parameter: ", smoothingParam, "\n",
-      "Windows size: ", windowSize, "\n",
       "Number of windows: ", nbWindows, "\n",
       "Number of bootstraps: ", nBootstrap, "\n")
 }

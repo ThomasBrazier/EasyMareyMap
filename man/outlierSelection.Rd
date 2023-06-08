@@ -7,16 +7,13 @@
 outlierSelection(x = mareyMap(), chromosome = character())
 }
 \arguments{
-\item{x}{A mareyMap object}
+\item{x}{a mareyMap object.}
 
-\item{chromosome}{A single chromosome name to display}
+\item{chromosome}{a single chromosome name to display.}
 }
 \value{
-A mareyMap object
+a mareyMap object.
 }
 \description{
 Remove outlying markers by visual zone selection on the Marey map
-}
-\examples{
-outlierSelection(x, chromosome = 1)
 }

@@ -21,12 +21,19 @@ The package is loaded with the following command.
 library(EasyMareyMap)
 ```
 
-You can import the example dataset based on a linkage map in *Arabidopsis thaliana* [@serin_construction_2017].
-The dataset is formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set', 'map, 'mkr', 'phys', 'gen', 'vld'. Genomic coordinates are in basepairs (bp) and genetic distances in cM.
+
+# Create a MareyMap object
+
+You can import the example dataset based on linkage maps for the five chromosomes of the plant *Arabidopsis thaliana* [@serin_construction_2017].
+
+
+The datasets for the 'EasyMareyMap' package are formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set', 'map, 'mkr', 'phys', 'gen', 'vld'. Genomic coordinates are in basepairs (bp) and genetic distances in cM.
 
 
 ```{r importMap}
-m = read.table("../data/Arabidopsis_thaliana.txt", header = T)
+m = read.table("../inst/extdata/Arabidopsis_thaliana.txt",
+               header = T,
+               sep = "\t")
 # The marey map is imported into a 'mareyMap' object
 df = mareyMap(m)
 # names of slots in the 'mareyMap' object
@@ -34,6 +41,10 @@ names(df)
 # Column names of the input Marey map
 names(df$mareyMap)
 ```
+
+
+
+# Quality control
 
 Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then rigth-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
@@ -52,10 +63,10 @@ df = removeChromosome(df, "5")
 ```
 
 
-There is a method to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. Here the whole chromosome 5 is discarded.
+There is a method to `plot` the Marey maps of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. Here the whole chromosome 5 is discarded.
 
 ```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana*. Invalid markers are shown in red."}
-plot(df)
+plot_marey(df)
 ```
 
 There is also a method to display a `summary` of a `mareyMap` object.
@@ -64,23 +75,16 @@ There is also a method to display a `summary` of a `mareyMap` object.
 summary(df)
 ```
 
+# Estimate a recombination map
 
-All the procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map.
+All the procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map. A description of the method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022].
 
-```{r estimateMap, echo=FALSE, message=FALSE}
+```{r estimateMap}
 res = recombinationMap(df, chromosome = "1", method = "loess")
 res = recombinationMap(res, chromosome = "2", method = "loess")
 res = recombinationMap(res, chromosome = "3", method = "spline")
 ```
 
-By default, a grid of windows of constant size is mapped along the chromosome. But you can also provide a data frame of custom start/end positions to estimate the recombination rate within.
-
-
-```{r estimateMap, echo=FALSE, message=FALSE}
-pos = data.frame(start = seq(20000, 40000000, by = 40000),
-                 end = seq(20000, 40000000, by = 40000) + 20000)
-res = recombinationMap(res, chromosome = "4", method = "loess", windows = pos)
-```
 
 
 ```{r headMap, echo=TRUE, message=FALSE}
@@ -97,3 +101,34 @@ Finally, the recombination landscape can be plotted with the `recombinationPlot(
 ```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
 recombinationPlot(res)
 ```
+
+
+## Pointwise estimates
+
+By default, a grid of windows of constant size is mapped along the chromosome. But you can also provide a data frame of custom start/end positions to estimate the recombination rate within.
+
+
+```{r customWindows}
+pos = data.frame(start = seq(20000, 40000000, by = 40000),
+                 end = seq(20000, 40000000, by = 40000) + 20000)
+res = recombinationMap(res, chromosome = "4", method = "loess", windows = pos)
+```
+
+This custom positions can represent any genomic feature (e.g. gene, exon) or marker (e.g. SNP) for which you want to estimate the average recombination rate. However keep in mind that interpolation is at a large scale (i.e. does not detect fine scale variations of recombination rates) and close markers can have very similar values due to the smoothing.
+
+
+
+```{r customWindows2}
+genes = data.frame(chromosome = "4",
+                   start = c(60000, 99000, 123000, 267400, 500000),
+                   end = c(65000, 99500, 1234000, 267401, 500001))
+pos = data.frame(start = genes$start,
+                 end = genes$end)
+res = recombinationMap(res, chromosome = "4", method = "loess", windows = pos)
+
+res$windows$`4`
+res$recMap[which(res$recMap$map == "4"),]
+```
+
+
+# References

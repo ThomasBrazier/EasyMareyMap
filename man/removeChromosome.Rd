@@ -7,16 +7,13 @@
 removeChromosome(x, chromosome = character())
 }
 \arguments{
-\item{x}{A mareyMap object}
+\item{x}{a mareyMap object.}
 
-\item{chromosome}{A single chromosome name}
+\item{chromosome}{a single chromosome name.}
 }
 \value{
-A mareyMap object
+a mareyMap object.
 }
 \description{
 Remove a complete chromosome of the dataset (markers set to vld = FALSE)
-}
-\examples{
-removeChromosome(x, "1")
 }

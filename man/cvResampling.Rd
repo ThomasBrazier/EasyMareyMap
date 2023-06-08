@@ -7,22 +7,19 @@
 cvResampling(x, K = 5, smooth = numeric(), method = "loess", degree = 2)
 }
 \arguments{
-\item{x}{A marey map (the 'mareyMap' slot of a mareyMap object)}
+\item{x}{a marey map (the 'mareyMap' slot of a mareyMap object).}
 
-\item{K}{Number of clusters to subset in K-fold cross-validation}
+\item{K}{number of clusters to subset in K-fold cross-validation.}
 
-\item{smooth}{Smoothing parameter}
+\item{smooth}{the smoothing parameter.}
 
-\item{method}{An interpolation method, either 'loess' or 'splines'}
+\item{method}{an interpolation method, either 'loess' or 'splines'.}
 
-\item{degree}{(optional) Degree value of the polynomial function of 'loess' method (default 2)}
+\item{degree}{(optional) the degree value of the polynomial function of 'loess' method (default 2).}
 }
 \value{
-Goodness-of-fit criterion (mean squared difference)
+the goodness-of-fit criterion (mean squared difference).
 }
 \description{
 K-fold systematic cross-validation of the smoothing parameter
-}
-\examples{
-cvResampling(x)
 }

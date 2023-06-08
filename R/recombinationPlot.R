@@ -1,13 +1,12 @@
 #' Plot the Marey maps
 #'
-#' @param x A Marey map object
+#' @param x a Marey map object.
 #'
-#' @return A plot of the Marey maps
+#' @return a plot of the Marey maps.
 #' @export
 #'
 #' @import ggplot2
 #'
-#' @examples recombinationPlot(x)
 recombinationPlot = function(x) {
   x$recMap$point = (x$recMap$start + x$recMap$end)/2
 

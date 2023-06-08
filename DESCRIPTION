@@ -1,11 +1,11 @@
 Package: EasyMareyMap
 Type: Package
-Title: Estimate local recombination rates using the Marey map method.
+Title: Estimate local recombination rates using the Marey map method
 Version: 0.1.0
 Author: Thomas Brazier
 Maintainer: Thomas Brazier <brazier.thomas@gmail.com>
-Description: Estimate local recombination rates using the Marey map method.
-License: GPL (>= 3)
+Description: Estimate local recombination rates using the Marey map method. Recombination rates are estimated by interpolating a mathematical function over the Marey map.
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 

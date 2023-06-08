@@ -15,38 +15,35 @@ recombinationMap(
   nResampling = 1000,
   calibrationRange = c(0.2, 0.5),
   degree = 2,
-  windowSize = 10^5
+  windows = 10^5
 )
 }
 \arguments{
-\item{x}{A 'mareyMap' object}
+\item{x}{a 'mareyMap' object.}
 
-\item{chromosome}{The name of the chromosome to process}
+\item{chromosome}{the name of the chromosome to process.}
 
-\item{method}{An interpolation method, either 'loess' or 'splines'}
+\item{method}{an interpolation method, either 'loess' or 'splines'.}
 
-\item{K}{Number of clusters to subset in K-fold cross-validation}
+\item{K}{number of clusters to subset in K-fold cross-validation.}
 
-\item{boot}{Number of bootstrap to estimate a 95% confidence interval}
+\item{boot}{number of bootstraps to estimate the confidence interval.}
 
-\item{nCores}{Number of cores to parallelize}
+\item{nCores}{number of cores to parallelize.}
 
-\item{smoothing}{(optional) Smoothing parameter, if you do not want to calibrate it}
+\item{smoothing}{(optional) smoothing parameter, if you do not want to calibrate it.}
 
-\item{nResampling}{Number of iterations in the cross-validation procedure}
+\item{nResampling}{number of iterations in the cross-validation procedure.}
 
-\item{calibrationRange}{Range of the smoothing parameter space to explore}
+\item{calibrationRange}{range of the smoothing parameter space to explore.}
 
-\item{degree}{(optional) The degree parameter of the polynomial used in the 'loess' method}
+\item{degree}{(optional) the degree parameter of the polynomial used in the 'loess' method.}
 
-\item{windowSize}{Size of the windows along the chromosome in basepairs (default = 10^5)}
+\item{windows}{size or coordinates of the windows along the chromosome: either integer in basepairs (default = 10^5) or a data.frame of start/end coordinates.}
 }
 \value{
-A 'mareyMap' object with the estimated recombination map
+a 'mareyMap' object with the estimated recombination map.
 }
 \description{
 Estimate the recombination map
-}
-\examples{
-recombinationMap(x, chromosome = "1", method = "loess")
 }

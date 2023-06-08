@@ -1,15 +1,14 @@
 #' K-fold systematic cross-validation of the smoothing parameter
 #'
-#' @param x A marey map (the 'mareyMap' slot of a mareyMap object)
-#' @param K Number of clusters to subset in K-fold cross-validation
-#' @param smooth Smoothing parameter
-#' @param method An interpolation method, either 'loess' or 'splines'
-#' @param degree (optional) Degree value of the polynomial function of 'loess' method (default 2)
+#' @param x a marey map (the 'mareyMap' slot of a mareyMap object).
+#' @param K number of clusters to subset in K-fold cross-validation.
+#' @param smooth the smoothing parameter.
+#' @param method an interpolation method, either 'loess' or 'splines'.
+#' @param degree (optional) the degree value of the polynomial function of 'loess' method (default 2).
 #'
-#' @return Goodness-of-fit criterion (mean squared difference)
+#' @return the goodness-of-fit criterion (mean squared difference).
 #' @export
 #'
-#' @examples cvResampling(x)
 cvResampling = function(x, K = 5, smooth = numeric(), method = "loess", degree = 2) {
   idx = sample(1:nrow(x), size = nrow(x)*((K-1)/K), replace = FALSE)
   training = x[idx,]

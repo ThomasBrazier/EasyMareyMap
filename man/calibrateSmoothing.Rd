@@ -16,28 +16,25 @@ calibrateSmoothing(
 )
 }
 \arguments{
-\item{x}{A 'mareyMap' object}
+\item{x}{a Marey map dataframe.}
 
-\item{method}{An interpolation method, either 'loess' or 'splines'}
+\item{method}{an interpolation method, either 'loess' or 'splines'.}
 
-\item{nResampling}{Number of iterations in the cross-validation procedure}
+\item{nResampling}{the number of iterations in the cross-validation procedure.}
 
-\item{K}{Number of clusters to subset in K-fold cross-validation}
+\item{K}{the number of clusters to subset in K-fold cross-validation.}
 
-\item{from}{Minimum of the range of smoothing values to explore}
+\item{from}{the minimum of the range of smoothing values to explore.}
 
-\item{to}{Maximum of the range of smoothing values to explore}
+\item{to}{the maximum of the range of smoothing values to explore.}
 
-\item{nCores}{Number of cores to parallelize}
+\item{nCores}{the number of cores to parallelize.}
 
-\item{degree}{(optional) The degree parameter of the polynomial used in the 'loess' method}
+\item{degree}{(optional) the degree parameter of the polynomial used in the 'loess' method.}
 }
 \value{
-The best smoothing parameter value
+the best smoothing parameter value.
 }
 \description{
 Automatic calibration of the smoothing parameter
-}
-\examples{
-calibrateSmoothing(x, "loess")
 }

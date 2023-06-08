@@ -19,11 +19,6 @@ Install the package in your R environment with `devtools`.
 ```
 library(devtools)
 devtools::install_github("ThomasBrazier/EasyMareyMap")
-```
-
-Finally load the package in your current R session with the following R command:
-
-```
 library(EasyMareyMap)
 ```
 
@@ -43,7 +38,7 @@ The input file is a tab-separated text file with five columns:
 An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
 
 
-![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/data/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
+![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/ints/extdata/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
 *Recombination landscape of *Arabidopsis thaliana* chromosome 1*
 
 

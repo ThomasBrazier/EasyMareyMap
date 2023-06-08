@@ -1,14 +1,13 @@
 #' Plot the Marey maps
 #'
-#' @param x A Marey map object
+#' @param x a Marey map object.
 #'
-#' @return A plot of the Marey maps
+#' @return a plot of the Marey maps.
 #' @export
 #'
 #' @import ggplot2
 #'
-#' @examples plot(x)
-plot.mareyMap = function(x) {
+plot_marey = function(x) {
   df= x$mareyMap
   p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen, colour = vld)) +
     geom_point() +

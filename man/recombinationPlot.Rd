@@ -7,14 +7,11 @@
 recombinationPlot(x)
 }
 \arguments{
-\item{x}{A Marey map object}
+\item{x}{a Marey map object.}
 }
 \value{
-A plot of the Marey maps
+a plot of the Marey maps.
 }
 \description{
 Plot the Marey maps
-}
-\examples{
-recombinationPlot(x)
 }
