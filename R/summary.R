@@ -1,30 +1,31 @@
 #' Summary of a Marey map object
 #'
-#' @param x a Marey map object.
+#' @param object a Marey map object.
+#' @param ... arguments passed to the generic summary function.
 #'
 #' @return a summary of the Marey map object.
 #' @export
 #'
 #' @import ggplot2
 #'
-summary.mareyMap = function(x, ...) {
-  dataset = levels(x$mareyMap$set)
-  nbChromosomes = length(x$chromosomeName)
-  nameChromosomes = x$chromosomeName
-  lengthChromosomes = x$chromosomeLength/10^6
-  lengthLinkageMap = x$linkageMapLength
-  nbMarkers = sum(x$mareyMap$vld == TRUE)
+summary.mareyMap = function(object, ...) {
+  dataset = levels(object$mareyMap$set)
+  nbChromosomes = length(object$chromosomeName)
+  nameChromosomes = object$chromosomeName
+  lengthChromosomes = object$chromosomeLength/10^6
+  lengthLinkageMap = object$linkageMapLength
+  nbMarkers = sum(object$mareyMap$vld == TRUE)
   densityMarkers = nbMarkers/sum(lengthChromosomes)
-  chromEst = names(x$smoothingParam)
-  if (nrow(x$recMap) > 0) {
-    recRate = aggregate(recRate ~ map, x$recMap, function(x) {summary(x, digits = 3)})
+  chromEst = names(object$smoothingParam)
+  if (nrow(object$recMap) > 0) {
+    recRate = aggregate(recRate ~ map, object$recMap, function(x) {summary(x, digits = 3)})
   } else {
     recRate = list()
   }
-  smoothingParam = x$smoothingParam
-  interpolation = x$interpolationMethod
-  nbWindows = nrow(x$recMap)
-  nBootstrap = x$nBootstrap
+  smoothingParam = object$smoothingParam
+  interpolation = object$interpolationMethod
+  nbWindows = nrow(object$recMap)
+  nBootstrap = object$nBootstrap
   cat("============== Summary of the Marey map ==============\n",
       "Dataset: ", dataset, "\n",
       "Number of chromosomes: ", nbChromosomes, "\n",

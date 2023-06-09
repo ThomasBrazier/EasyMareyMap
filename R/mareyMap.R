@@ -41,8 +41,16 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
                       lowerRecRate = numeric(),
                       upperRecRate = numeric())
 
+  mareyCI = data.frame(set = factor(),
+                      map = factor(),
+                      physicalPosition = numeric(),
+                      geneticPositioncM = numeric(),
+                      upperGeneticPositioncM = numeric(),
+                      lowerGeneticPositioncM = numeric())
+
   df = list(mareyMap = x,
             recMap = recMap,
+            mareyCI = mareyCI,
             chromosomeName = unique(x$map),
             chromosomeLength = chromosomeLength,
             linkageMapLength = linkageMapLength,

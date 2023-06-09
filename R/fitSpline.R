@@ -6,7 +6,7 @@
 #' @return a smoothed spline object.
 #' @export
 #'
-#' @importFrom smooth.spline
+#' @importFrom stats smooth.spline
 #'
 fitSpline = function(x, spar = numeric()) {
   fit = smooth.spline(x = x$phys, y = x$gen, spar = spar)

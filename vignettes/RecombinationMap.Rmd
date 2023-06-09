@@ -86,6 +86,11 @@ res = recombinationMap(res, chromosome = "3", method = "spline")
 ```
 
 
+```{r plotInterpolation, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana* with the Marey interpolation line and a 95% C.I. (invalid markers are shown in red)."}
+plot_marey(res)
+```
+
+
 
 ```{r headMap, echo=TRUE, message=FALSE}
 head(res$recMap)
@@ -99,7 +104,7 @@ summary(res)
 Finally, the recombination landscape can be plotted with the `recombinationPlot()` function.
 
 ```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
-recombinationPlot(res)
+plot_recombination(res)
 ```
 
 

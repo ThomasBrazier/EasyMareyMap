@@ -7,7 +7,7 @@
 #'
 #' @import ggplot2
 #'
-recombinationPlot = function(x) {
+plot_recombination = function(x) {
   x$recMap$point = (x$recMap$start + x$recMap$end)/2
 
   x$recMap$recRate = x$recMap$recRate * 10^6

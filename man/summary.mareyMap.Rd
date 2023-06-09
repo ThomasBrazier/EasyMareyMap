@@ -4,10 +4,12 @@
 \alias{summary.mareyMap}
 \title{Summary of a Marey map object}
 \usage{
-\method{summary}{mareyMap}(x, ...)
+\method{summary}{mareyMap}(object, ...)
 }
 \arguments{
-\item{x}{a Marey map object.}
+\item{object}{a Marey map object.}
+
+\item{...}{arguments passed to the generic summary function.}
 }
 \value{
 a summary of the Marey map object.

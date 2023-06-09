@@ -88,7 +88,17 @@ recombinationMap = function(x,
 
   physWindows$point = round((physWindows$end + physWindows$start)/2, digits = 0)
   bootPrediction = matrix(NA, nrow = nrow(physWindows), ncol = boot)
+  mareyPredictions = matrix(NA, nrow = nrow(physWindows), ncol = boot)
 
+  # Fit the Marey function to all points
+  if (method == "loess") {
+    fitMarey = fitLoess(df, span = smoothingParam, degree = degree)
+  }
+  if (method == "spline") {
+    fitMarey = fitSpline(df, spar = smoothingParam)
+  }
+
+  # Estimate a Marey function with Confidence Intervals
   pb = txtProgressBar(min = 1, max = boot, initial = 1)
   for (b in 1:boot) {
     setTxtProgressBar(pb, b)
@@ -106,18 +116,39 @@ recombinationMap = function(x,
       predicted.end = predict(fitMarey, physWindows$end)$y
     }
     bootPrediction[,b] = ((predicted.end - predicted.start) / (physWindows$end - physWindows$start))
+    mareyPredictions[,b] = (predicted.end - predicted.start)
   }
   Sys.sleep(1)
   close(pb)
 
+  cat("Estimate the Marey interpolation function with C.I.\n")
+  Y = rowMeans(mareyPredictions, na.rm = TRUE)
+  Yupper = apply(mareyPredictions, MARGIN = 1, FUN = upperCI)
+  Ylower = apply(mareyPredictions, MARGIN = 1, FUN = lowerCI)
+  Y[is.na(Y)] = 0
+  Yupper[is.na(Yupper)] = 0
+  Ylower[is.na(Ylower)] = 0
+
+  mareyCI = data.frame(
+    set = unique(df$set),
+    map = chromosome,
+    physicalPosition = physWindows$point,
+    geneticPositioncM = cumsum(Y),
+    upperGeneticPositioncM = cumsum(Y) + (Yupper - Y),
+    lowerGeneticPositioncM = cumsum(Y) - (Y - Ylower)
+  )
+
+  x$mareyCI = x$mareyCI[x$mareyCI$map != chromosome,]
+  x$mareyCI = rbind(x$mareyCI, mareyCI)
+
   cat("Estimate recombination rates.\n")
   # dX = rowMeans(embed(physWindows$point, 2))
-  upperCI = function(x) {
-    quantile(x, 0.975, na.rm = TRUE)
-  }
-  lowerCI = function(x) {
-    quantile(x, 0.025, na.rm = TRUE)
-  }
+  # upperCI = function(x) {
+  #   quantile(x, 0.975, na.rm = TRUE)
+  # }
+  # lowerCI = function(x) {
+  #   quantile(x, 0.025, na.rm = TRUE)
+  # }
   dY = rowMeans(bootPrediction, na.rm = TRUE)
   dYupper = apply(bootPrediction, MARGIN = 1, FUN = upperCI)
   dYlower = apply(bootPrediction, MARGIN = 1, FUN = lowerCI)
@@ -139,4 +170,14 @@ recombinationMap = function(x,
   x$recMap = rbind(x$recMap, estimates)
 
   return(x)
+}
+
+
+
+# Generic functions for Confidence Intervals
+upperCI = function(x) {
+  quantile(x, 0.975, na.rm = TRUE)
+}
+lowerCI = function(x) {
+  quantile(x, 0.025, na.rm = TRUE)
 }
