@@ -48,6 +48,7 @@ recombinationMap = function(x,
   df = df[which(df$map == chromosome), ]
   df = df[!is.na(df$gen), ]
   df = df[!is.na(df$phys), ]
+  df = df[which(df$vld == TRUE), ]
 
   if (length(smoothing) > 0) {
     if (is.numeric(smoothing)) {

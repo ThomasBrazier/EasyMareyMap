@@ -16,7 +16,7 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
   stopifnot(is.data.frame(x))
   stopifnot(is.numeric(chromosomeLength))
   if (!identical(colnames(x), c("set",	"map",	"mkr",	"phys",	"gen",	"vld"))) {
-    stop("Invalid column names in 'x'.\n", colnames(x))
+    stop("Invalid column names in 'x'.\n", paste(colnames(x), sep = ", "))
   }
   x$set = as.factor(x$set)
   x$map = as.factor(x$map)
