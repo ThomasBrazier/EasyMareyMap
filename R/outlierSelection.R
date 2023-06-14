@@ -1,5 +1,13 @@
 #' Remove outlying markers by visual zone selection on the Marey map
 #'
+#' This function allows to graphically remove/keep markers by zone selection.
+#'
+#' Select a zone by left-click around markers to remove/keep, and close the zone by a right-click.
+#'
+#' The 'vld' status of the points selected in the graphical windows is set to the opposite:
+#' - 'FALSE' if actual status is 'TRUE'
+#' - 'TRUE' otherwise
+#'
 #' @param x a mareyMap object.
 #' @param chromosome a single chromosome name to display.
 #'
@@ -12,7 +20,8 @@
 outlierSelection = function(x = mareyMap(), chromosome = character()) {
   tmp = x$mareyMap[which(x$mareyMap$map == chromosome),]
   idx = pointSelection(tmp)
-  x$mareyMap$vld[as.character(row.names(x$mareyMap)) %in% idx] = FALSE
+  status = !(x$mareyMap$vld[as.character(row.names(x$mareyMap)) %in% idx])
+  x$mareyMap$vld[as.character(row.names(x$mareyMap)) %in% idx] = status
   return(x)
 }
 

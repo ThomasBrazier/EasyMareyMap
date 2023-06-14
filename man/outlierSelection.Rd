@@ -15,5 +15,10 @@ outlierSelection(x = mareyMap(), chromosome = character())
 a mareyMap object.
 }
 \description{
-Remove outlying markers by visual zone selection on the Marey map
+This function allows to graphically remove/keep markers.
+}
+\details{
+The 'vld' status of the points selected in the graphical windows is set to the opposite:
+'FALSE' if actual status is 'TRUE'
+'TRUE' otherwise
 }
