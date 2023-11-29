@@ -15,10 +15,12 @@ outlierSelection(x = mareyMap(), chromosome = character())
 a mareyMap object.
 }
 \description{
-This function allows to graphically remove/keep markers.
+This function allows to graphically remove/keep markers by zone selection.
 }
 \details{
+Select a zone by left-click around markers to remove/keep, and close the zone by a right-click.
+
 The 'vld' status of the points selected in the graphical windows is set to the opposite:
-'FALSE' if actual status is 'TRUE'
-'TRUE' otherwise
+- 'FALSE' if actual status is 'TRUE'
+- 'TRUE' otherwise
 }

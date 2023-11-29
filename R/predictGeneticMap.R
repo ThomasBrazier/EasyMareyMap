@@ -1,3 +1,5 @@
+#' Interpolate new genetic positions
+#' 
 #' @description
 #' Interpolate genetic positions (i.e. cumulative gnetic distances)
 #' on a new set of physical positions
@@ -9,8 +11,7 @@
 #' @param smoothing (optional) smoothing parameter, if you do not want to calibrate it.
 #' @param degree (optional) the degree parameter of the polynomial used in the 'loess' method.
 #'
-#' @return a list with 'newGen', a vector of new genetic positions for each new marker position
-#' and 'se' the standard error of the interpolated result (if relevant for the method).
+#' @return a list with 'newGen', a vector of new genetic positions for each new marker position and 'se' the standard error of the interpolated result (if relevant for the method).
 #' @export
 #'
 #' @import pbmcapply

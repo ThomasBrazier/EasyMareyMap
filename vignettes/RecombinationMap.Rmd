@@ -13,6 +13,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+library(ggplot2)
 ```
 
 The package is loaded with the following command.
@@ -103,12 +105,12 @@ summary(res)
 
 Finally, the recombination landscape can be plotted with the `recombinationPlot()` function.
 
-```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
+```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
 plot_recombination(res)
 ```
 
 
-## Pointwise estimates
+## Custom or pointwise physical positions
 
 By default, a grid of windows of constant size is mapped along the chromosome. But you can also provide a data frame of custom start/end positions to estimate the recombination rate within.
 
@@ -157,14 +159,15 @@ newMap
 ```
 
 
-```{r newGeneticMap}
+```{r newGeneticMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "New positions on chromosome 1, with the confidence interval (+- 1.96*se)."}
 newMap$phys = new
 newMap = as.data.frame(newMap)
 
 ggplot2::ggplot(data = newMap, aes(x = phys/10^6, y = newGen)) +
-      geom_point(alpha = 0.4) +
-      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
-      theme(axis.line = element_line(),
+  geom_point(alpha = 0.4) +
+  labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
+  geom_errorbar(aes(ymin = newGen - 1.96*se, ymax = newGen + 1.96*se)) +
+  theme(axis.line = element_line(),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             panel.border = element_blank(),
