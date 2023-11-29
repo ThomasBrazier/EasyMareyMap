@@ -13,6 +13,7 @@ plot_marey = function(x) {
   marey = x$mareyCI
   if (nrow(marey) > 0) {
     marey$vld = TRUE
+
     p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen, colour = vld)) +
       geom_point(alpha = 0.4) +
       scale_colour_manual(values=c("TRUE" = "dodgerblue4", "FALSE" = "firebrick4")) +

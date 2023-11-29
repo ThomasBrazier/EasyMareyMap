@@ -136,4 +136,49 @@ res$recMap[which(res$recMap$map == "4"),]
 ```
 
 
+# Interpolate new genetic positions
+
+You may want to change your physical map and interpolate the genetic distances for your new set of markers. It is possible to interpolate these new positions with the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method). I implemented a generic `predictGeneticMap` function to do the job.
+
+
+It is recommended to re-use the smoothing parameter previously estimated with the automatic calibration procedure.
+
+
+```{r predictGeneticMap}
+# Example for chromosome 1
+phys = res$mareyMap$phys[which(res$mareyMap$map == "1")]
+gen = res$mareyMap$gen[which(res$mareyMap$map == "1")]
+# Re-map on a regular grid of evenly spaced markers
+new = seq(50000, 30450000, by = 1000000)
+smoothPar = res$smoothingParam[1]
+newMap = predictGeneticMap(phys, gen, new, method = "loess", smoothing = smoothPar)
+
+newMap
+```
+
+
+```{r newGeneticMap}
+newMap$phys = new
+newMap = as.data.frame(newMap)
+
+ggplot2::ggplot(data = newMap, aes(x = phys/10^6, y = newGen)) +
+      geom_point(alpha = 0.4) +
+      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
+      theme(axis.line = element_line(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            panel.background = element_blank(),
+            plot.title = element_text(color="black", face="bold.italic",hjust = 0.5),
+            plot.subtitle = element_text(color="black",hjust = 0.5),
+            axis.title.x = element_text(color="black"),
+            axis.title.y = element_text(color="black"),
+            axis.text=element_text(colour="black"),
+            legend.position = "right")
+```
+
+
+
+
+
 # References
