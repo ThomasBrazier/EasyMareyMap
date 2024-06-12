@@ -8,7 +8,7 @@ This R package provide an easy command line solution for the Marey map method, w
 Moreover, it adds new features not included in MareyMap original:
 * automatic calibration of the smoothing parameter
 * bootstraps to estimate a 95% confidence interval
-* graphical zone selection to exclude a bunch of outlier markers
+* graphical zone selection to easily exclude a bunch of outlier markers
 
 
 ## Installation
@@ -34,10 +34,10 @@ The input file is a tab-separated text file with five columns:
 
 ## Example
 
-An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
+An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome from [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
 
 
-![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/ints/extdata/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
+![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/inst/extdata/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
 *Recombination landscape of *Arabidopsis thaliana* chromosome 1*
 
 
