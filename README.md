@@ -12,6 +12,7 @@ Moreover, it adds new features not included in MareyMap original:
 * a statistical framework for comparative genomics (compare marey maps between species, populations or genomes
 
 
+
 ## Installation
 
 Install the package in your R environment with `devtools`.
@@ -43,10 +44,10 @@ A `mareyMap` object only contains one genetic map (i.e. one chromosome), but can
 
 ## Example
 
-An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
+An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome from [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
 
 
-![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/ints/extdata/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
+![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/inst/extdata/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
 *Recombination landscape of *Arabidopsis thaliana* chromosome 1*
 
 
