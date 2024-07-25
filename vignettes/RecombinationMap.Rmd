@@ -31,24 +31,28 @@ You can import the example dataset based on linkage maps for the five chromosome
 
 The datasets for the 'EasyMareyMap' package are formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set', 'map, 'mkr', 'phys', 'gen', 'vld'. Genomic coordinates are in basepairs (bp) and genetic distances in cM.
 
+You can create a `MareyMap` object. It must contain a single map (i.e. one chromosome).
+
 
 ```{r importMap}
 m = read.table("../inst/extdata/Arabidopsis_thaliana.txt",
                header = T,
                sep = "\t")
 # The marey map is imported into a 'mareyMap' object
-df = mareyMap(m)
+df = mareyMap(m, chromosome = '1')
 # names of slots in the 'mareyMap' object
 names(df)
 # Column names of the input Marey map
 names(df$mareyMap)
+
+head(df)
 ```
 
 
 
 # Quality control
 
-Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then rigth-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
+Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
 ```
 df = outlierSelection(df, "1")
@@ -57,19 +61,18 @@ df = outlierSelection(df, "1")
 <!-- TODO Add a photo of mkr selection -->
 
 
-Alternatively, you can remove a whole chromosome of your dataset with the following command.
+There is a method to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red.
 
 
-```{r removeChromosome}
-df = removeChromosome(df, "5")
-```
+```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
+#Arbitrary set a few un-valid markers in red
+df$mareyMap$vld[20:40] = FALSE
 
-
-There is a method to `plot` the Marey maps of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. Here the whole chromosome 5 is discarded.
-
-```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana*. Invalid markers are shown in red."}
 plot_marey(df)
+
+df$mareyMap$vld[20:40] = TRUE
 ```
+
 
 There is also a method to display a `summary` of a `mareyMap` object.
 
@@ -81,10 +84,9 @@ summary(df)
 
 All the procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map. A description of the method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022].
 
+
 ```{r estimateMap}
-res = recombinationMap(df, chromosome = "1", method = "loess")
-res = recombinationMap(res, chromosome = "2", method = "loess")
-res = recombinationMap(res, chromosome = "3", method = "spline")
+res = recombinationMap(df, method = "loess")
 ```
 
 
@@ -118,7 +120,7 @@ By default, a grid of windows of constant size is mapped along the chromosome. B
 ```{r customWindows}
 pos = data.frame(start = seq(20000, 40000000, by = 40000),
                  end = seq(20000, 40000000, by = 40000) + 20000)
-res = recombinationMap(res, chromosome = "4", method = "loess", windows = pos)
+res = recombinationMap(res, method = "loess", windows = pos)
 ```
 
 This custom positions can represent any genomic feature (e.g. gene, exon) or marker (e.g. SNP) for which you want to estimate the average recombination rate. However keep in mind that interpolation is at a large scale (i.e. does not detect fine scale variations of recombination rates) and close markers can have very similar values due to the smoothing.
@@ -131,10 +133,10 @@ genes = data.frame(chromosome = "4",
                    end = c(65000, 99500, 1234000, 267401, 500001))
 pos = data.frame(start = genes$start,
                  end = genes$end)
-res = recombinationMap(res, chromosome = "4", method = "loess", windows = pos)
+res = recombinationMap(res, method = "loess", windows = pos)
 
-res$windows$`4`
-res$recMap[which(res$recMap$map == "4"),]
+res$windows
+res$recMap
 ```
 
 
@@ -143,16 +145,15 @@ res$recMap[which(res$recMap$map == "4"),]
 You may want to change your physical map and interpolate the genetic distances for your new set of markers. It is possible to interpolate these new positions with the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method). I implemented a generic `predictGeneticMap` function to do the job.
 
 
-It is recommended to re-use the smoothing parameter previously estimated with the automatic calibration procedure.
+It is recommended to use the smoothing parameter previously estimated with the automatic calibration procedure.
 
 
 ```{r predictGeneticMap}
-# Example for chromosome 1
-phys = res$mareyMap$phys[which(res$mareyMap$map == "1")]
-gen = res$mareyMap$gen[which(res$mareyMap$map == "1")]
+phys = res$mareyMap$phys
+gen = res$mareyMap$gen
 # Re-map on a regular grid of evenly spaced markers
 new = seq(50000, 30450000, by = 1000000)
-smoothPar = res$smoothingParam[1]
+smoothPar = res$smoothingParam
 newMap = predictGeneticMap(phys, gen, new, method = "loess", smoothing = smoothPar)
 
 newMap

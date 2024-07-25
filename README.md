@@ -2,13 +2,14 @@
 
 Estimate local recombination rates with the Marey map method as described in [Brazier and Glémin 2022](https://doi.org/10.1371/journal.pgen.1010141).
 
-This R package provide an easy command line solution for the Marey map method, which is described in more details in the original MareyMap package. The original MareyMap package is designed for interactive graphical use only and does not provide scripting capabilities. It does not allow to process many maps at a time. Hence we re-implemented the method in a more machine-friendly approach, in order to use it for batch processing and reproducible scripts. See the original MareyMap package here [Rezvoy et al. 2007](https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btm315) and [Siberchicot et al. 2017](https://CRAN.R-project.org/package=MareyMap).
+This R package provides an easy command line solution for the Marey map method, which is described in more detail in the original MareyMap package. The original MareyMap package is designed for interactive graphical use only and does not provide scripting capabilities. It does not allow to process many maps at a time. Hence we re-implemented the method in a more machine-friendly approach, in order to use it for batch processing and reproducible scripts. See the original MareyMap package here [Rezvoy et al. 2007](https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btm315) and [Siberchicot et al. 2017](https://CRAN.R-project.org/package=MareyMap).
 
 
 Moreover, it adds new features not included in MareyMap original:
 * automatic calibration of the smoothing parameter
 * bootstraps to estimate a 95% confidence interval
 * graphical zone selection to exclude a bunch of outlier markers
+* a statistical framework for comparative genomics (compare marey maps between species, populations or genomes
 
 
 ## Installation
@@ -23,6 +24,8 @@ library(EasyMareyMap)
 
 ## Usage
 
+### Input Data
+
 The input file is a tab-separated text file with five columns:
 * 'set' dataset name
 * 'map' chromosome name
@@ -30,6 +33,12 @@ The input file is a tab-separated text file with five columns:
 * 'phys' physical position on a reference genome (bp)
 * 'gen' genetic position on a linkage map (cM)
 * 'vld' only markers TRUE are valid and used in analyses
+
+
+### mareyMap objects
+
+A `mareyMap` object only contains one genetic map (i.e. one chromosome), but can contain multiple physical maps (e.g. different genomes, different distances absolute/relative).
+
 
 
 ## Example

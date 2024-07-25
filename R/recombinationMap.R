@@ -1,7 +1,6 @@
 #' Estimate the recombination map
 #'
 #' @param x a 'mareyMap' object.
-#' @param chromosome the name of the chromosome to process.
 #' @param method an interpolation method, either 'loess' or 'splines'.
 #' @param K number of clusters to subset in K-fold cross-validation.
 #' @param boot number of bootstraps to estimate the confidence interval.
@@ -21,7 +20,6 @@
 #' @import stats
 #'
 recombinationMap = function(x,
-                            chromosome = character(),
                             method = c("loess", "spline"),
                             K = 5,
                             boot = 1000,
@@ -38,14 +36,11 @@ recombinationMap = function(x,
   calibrationFrom = calibrationRange[1]
   calibrationTo = calibrationRange[2]
 
-  chromosome = as.character(chromosome)
-
   nCores = min(nCores,
                (parallel::detectCores(all.tests = FALSE, logical = TRUE)-1))
 
-  cat("Processing chromosome ", chromosome, "...\n")
+  cat("Processing...\n")
   df = x$mareyMap
-  df = df[which(df$map == chromosome), ]
   df = df[!is.na(df$gen), ]
   df = df[!is.na(df$phys), ]
   df = df[which(df$vld == TRUE), ]
@@ -67,10 +62,10 @@ recombinationMap = function(x,
     )
   }
 
-  x$interpolationMethod[chromosome] = method
-  x$smoothingParam[chromosome] = smoothingParam
-  x$windows[chromosome] = list(windows)
-  x$nBootstrap[chromosome] = boot
+  x$interpolationMethod = method
+  x$smoothingParam = smoothingParam
+  x$windows = list(windows)
+  x$nBootstrap = boot
 
   cat("Fit the model.\n")
   if (is.numeric(windows)) {
@@ -132,15 +127,14 @@ recombinationMap = function(x,
 
   mareyCI = data.frame(
     set = unique(df$set),
-    map = chromosome,
+    map = unique(df$map),
     physicalPosition = physWindows$point,
     geneticPositioncM = cumsum(Y),
     upperGeneticPositioncM = cumsum(Y) + (Yupper - Y),
     lowerGeneticPositioncM = cumsum(Y) - (Y - Ylower)
   )
 
-  x$mareyCI = x$mareyCI[x$mareyCI$map != chromosome,]
-  x$mareyCI = rbind(x$mareyCI, mareyCI)
+  x$mareyCI = mareyCI
 
   cat("Estimate recombination rates.\n")
   # dX = rowMeans(embed(physWindows$point, 2))
@@ -159,7 +153,7 @@ recombinationMap = function(x,
 
   estimates = data.frame(
     set = unique(df$set),
-    map = chromosome,
+    map = unique(df$map),
     start = physWindows$start,
     end = physWindows$end,
     recRate = dY,
@@ -167,8 +161,7 @@ recombinationMap = function(x,
     lowerRecRate = dYlower
   )
 
-  x$recMap = x$recMap[x$recMap$map != chromosome,]
-  x$recMap = rbind(x$recMap, estimates)
+  x$recMap = estimates
 
   return(x)
 }

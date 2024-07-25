@@ -4,10 +4,12 @@
 \alias{mareyMap}
 \title{A Marey map object}
 \usage{
-mareyMap(x = data.frame(), chromosomeLength = numeric())
+mareyMap(x = data.frame(), chromosome = NA, chromosomeLength = numeric())
 }
 \arguments{
-\item{x}{a data frame of a Marey map with columns "set",    "map",    "mkr",    "phys",    "gen",    "vld".}
+\item{x}{a data frame of a Marey map with columns "set",    "map",    "mkr",    "phys",    "gen",    "vld". If 'chromosome' names is not provided, this data.frame must contain only a single chromosome.}
+
+\item{chromosome}{the name of the chromosome/map to import from 'x'.}
 
 \item{chromosomeLength}{an optional vector of chromosome length in Mb.}
 }

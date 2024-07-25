@@ -6,7 +6,6 @@
 \usage{
 recombinationMap(
   x,
-  chromosome = character(),
   method = c("loess", "spline"),
   K = 5,
   boot = 1000,
@@ -20,8 +19,6 @@ recombinationMap(
 }
 \arguments{
 \item{x}{a 'mareyMap' object.}
-
-\item{chromosome}{the name of the chromosome to process.}
 
 \item{method}{an interpolation method, either 'loess' or 'splines'.}
 

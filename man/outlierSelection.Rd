@@ -4,12 +4,10 @@
 \alias{outlierSelection}
 \title{Remove outlying markers by visual zone selection on the Marey map}
 \usage{
-outlierSelection(x = mareyMap(), chromosome = character())
+outlierSelection(x = mareyMap())
 }
 \arguments{
 \item{x}{a mareyMap object.}
-
-\item{chromosome}{a single chromosome name to display.}
 }
 \value{
 a mareyMap object.
