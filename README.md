@@ -9,13 +9,15 @@ Moreover, it adds new features not included in MareyMap original:
 * automatic calibration of the smoothing parameter
 * bootstraps to estimate a 95% confidence interval
 * graphical zone selection to exclude a bunch of outlier markers
-* a statistical framework for comparative genomics (compare marey maps between species, populations or genomes
+* a statistical framework for comparative genomics (compare marey maps between species, populations or genomes)
 
 
 
 ## Installation
 
 Install the package in your R environment with `devtools`.
+
+STILL IN DEVELLOPMENT
 
 ```
 library(devtools)
@@ -38,7 +40,7 @@ The input file is a tab-separated text file with five columns:
 
 ### mareyMap objects
 
-A `mareyMap` object only contains one genetic map (i.e. one chromosome), but can contain multiple physical maps (e.g. different genomes, different distances absolute/relative).
+A `mareyMap` object must contain only one genetic map (i.e. one chromosome), but the input data can contain multiple chromosome (hence chromosome name must be specified).
 
 
 

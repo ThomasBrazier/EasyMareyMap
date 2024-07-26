@@ -39,13 +39,13 @@ m = read.table("../inst/extdata/Arabidopsis_thaliana.txt",
                header = T,
                sep = "\t")
 # The marey map is imported into a 'mareyMap' object
-df = mareyMap(m, chromosome = '1')
+marey = mareyMap(m, chromosome = '1')
 # names of slots in the 'mareyMap' object
-names(df)
+names(marey)
 # Column names of the input Marey map
-names(df$mareyMap)
+names(marey$mareyMap)
 
-head(df)
+head(marey)
 ```
 
 
@@ -55,7 +55,7 @@ head(df)
 Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
 ```
-df = outlierSelection(df, "1")
+marey = outlierSelection(marey, "1")
 ```
 
 <!-- TODO Add a photo of mkr selection -->
@@ -66,18 +66,18 @@ There is a method to `plot` the Marey map of a `mareyMap` object. Markers kept f
 
 ```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
 #Arbitrary set a few un-valid markers in red
-df$mareyMap$vld[20:40] = FALSE
+marey$mareyMap$vld[20:40] = FALSE
 
-plot_marey(df)
+plot_marey(marey)
 
-df$mareyMap$vld[20:40] = TRUE
+marey$mareyMap$vld[20:40] = TRUE
 ```
 
 
 There is also a method to display a `summary` of a `mareyMap` object.
 
 ```{r summary}
-summary(df)
+summary(marey)
 ```
 
 # Estimate a recombination map
@@ -86,7 +86,7 @@ All the procedure to estimate the recombination map is done with the `recombinat
 
 
 ```{r estimateMap}
-res = recombinationMap(df, method = "loess")
+res = recombinationMap(marey, method = "loess")
 ```
 
 
@@ -140,6 +140,12 @@ res$recMap
 ```
 
 
+# Quality control and map validation
+
+
+
+
+
 # Interpolate new genetic positions
 
 You may want to change your physical map and interpolate the genetic distances for your new set of markers. It is possible to interpolate these new positions with the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method). I implemented a generic `predictGeneticMap` function to do the job.
@@ -180,6 +186,101 @@ ggplot2::ggplot(data = newMap, aes(x = phys/10^6, y = newGen)) +
             axis.text=element_text(colour="black"),
             legend.position = "right")
 ```
+
+
+# Analysing and comparing Marey landscapes
+
+
+## Chromosome-wide statistics
+
+
+These statistics, estimated on the whole chromosomes, can be used to compare chromosomes, populations or species.
+
+Intra-chromosomal genetic shuffling (Veller et al. 2019).
+
+```{r veller}
+genome_size = 119050000
+veller(res, genomeSize = genome_size, mappingFunction = "none")
+veller(res, genomeSize = genome_size, mappingFunction = "haldane")
+veller(res, genomeSize = genome_size, mappingFunction = "kosambi")
+```
+
+
+The periphery-bias ratio, as computed in Brazier and Glémin (2022). 
+
+```{r peripherybias}
+peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "random")
+peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "left")
+peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "right")
+peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "both")
+```
+
+
+
+The coefficient of variation.
+
+
+```{r coefficient_variation}
+coefficientVariation(res)
+```
+
+
+The Gini index.
+
+
+```{r gini}
+gini(res)
+```
+
+
+The Lorenz curve.
+
+```{r lorenz}
+lore = lorenz(res)
+diagonal = data.frame(x = seq(0, 1, by = 0.01),
+                      y = seq(0, 1, by = 0.01))
+ggplot(data = lore, aes(x = relativePhys, y = relativeGen)) +
+  geom_line() +
+  geom_line(data = diagonal, aes(x = x, y = y), color = "Grey") +
+  xlim(0, 1) +
+  ylim(0, 1) +
+  xlab("Proportion of genomic distance") +
+  ylab("Proportion of genetic distance") +
+  theme_bw()
+```
+
+
+
+
+
+## Comparing whole chromosomes
+
+Different genetic map, same physical map
+Compare chromosome landscapes between sexes, populations, with physical positions mapped on the same reference genome.
+
+e.g. heterochiasmy, compare males and females
+
+
+Relative distances
+
+
+
+
+## Same genetic map, but different physical positions
+
+
+Transform physical positions (e.g. gene distances)
+Interpolation/predict new positions
+
+
+
+
+## Comparing blocks and intervals
+
+
+SVs
+Synteny in closed species
+Homeolog groups in polyploids
 
 
 

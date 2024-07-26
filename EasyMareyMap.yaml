@@ -1,0 +1,9 @@
+name: easymareymap
+channels:
+  - conda-forge
+dependencies:
+  - r-ggplot2
+  - r-gatepoints
+  - r-testthat
+  - r-pkg
+  - r-pbmcapply

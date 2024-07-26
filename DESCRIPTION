@@ -17,6 +17,10 @@ Imports:
     gatepoints,
     ggplot2,
     pbmcapply,
-    parallel
+    parallel,
+    GenomicRanges,
+    IRanges,
+    dineq,
+    S4Vectors
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
