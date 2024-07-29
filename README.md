@@ -15,9 +15,7 @@ Moreover, it adds new features not included in MareyMap original:
 
 ## Installation
 
-Install the package in your R environment with `devtools`.
-
-STILL IN DEVELLOPMENT
+Install the package in your R environment with `devtools` (development version).
 
 ```
 library(devtools)
@@ -46,7 +44,9 @@ A `mareyMap` object must contain only one genetic map (i.e. one chromosome), but
 
 ## Example
 
-An example dataset is provided to play with the package in the `data/` directory. It is a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome from [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full).
+Some example datasets are provided to play with the package in the `data/` directory.
+* a linkage map of *Arabidopsis thaliana* with markers mapped onto a reference genome from [Serin et al. 2017](http://journal.frontiersin.org/article/10.3389/fgene.2017.00201/full)
+* female, male and sex-averaged maps of Human, from MareyMapOnline [Rezvoy et al. 2007](https://doi.org/10.1093/bioinformatics/btm315)
 
 
 ![Recombination landscape of *Arabidopsis thaliana* chromosome 1](https://github.com/ThomasBrazier/EasyMareyMap/blob/main/inst/extdata/Arabidopsis_thaliana_chromosome1.jpg?raw=true)
@@ -56,6 +56,9 @@ An example dataset is provided to play with the package in the `data/` directory
 ## References
 
 Brazier, Thomas, and Sylvain Glémin. “Diversity and Determinants of Recombination Landscapes in Flowering Plants.” Edited by Ian R. Henderson. PLOS Genetics 18, no. 8 (August 30, 2022): e1010141. https://doi.org/10.1371/journal.pgen.1010141.
+
+Rezvoy, C., Charif, D., Gueguen, L., & Marais, G. A. B. (2007). MareyMap : An R-based tool with graphical interface for estimating recombination rates. Bioinformatics, 23(16), Article 16. https://doi.org/10.1093/bioinformatics/btm315
+
 
 Serin, Elise A. R., L. B. Snoek, Harm Nijveen, Leo A. J. Willems, Jose M. Jiménez-Gómez, Henk W. M. Hilhorst, and Wilco Ligterink. “Construction of a High-Density Genetic Map from RNA-Seq Data for an Arabidopsis Bay-0 × Shahdara RIL Population.” Frontiers in Genetics 8 (December 5, 2017): 201. https://doi.org/10.3389/fgene.2017.00201.
 

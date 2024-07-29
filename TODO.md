@@ -30,6 +30,7 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [ ] Flip a segment
 
 
+
 [x] A map object is only a single chromosome, clean and simple. The unit is the genetic map
 
 [ ] Manipulate mareyMap objects
@@ -41,12 +42,17 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 
 [ ] Quality control and map validation
       [ ] Save model outputs: errors...
+      [ ] Difference entre MareyCI fitted-bootstrapped et true y
       [ ] mesure de noisyness, erreurs de la fonction d'interpolation
 
  
 [ ] Block-wise cM/Mb
+      [ ] Estimate recombination rates in a set of intervals (estimate on the whole Marey map but output a new rec map on these intervals)
       [ ] From Marey map directly + bootstrap
       [ ] From interpolation + bootstrap
+
+
+
 
 [x] Method to get chromosome-wide statistics
       [x] Gini index
@@ -62,10 +68,19 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 ¨The slopes of the regression lines for each homolog arm were tested for equality in an analysis of covariance by introducing, where necessary, up to three dummy variables (to code for the presence or absence of a homolog) per chromosome arm per parent (Andrade and Estévez-Pérez 2014). ¨
 
 
+## Tests
+
+[ ]
+
+
+## Documentation
+
+[ ]
+
 
 ## Diffusion
 
-* Conda recipe
-* Pip recipe
-* CRAN
-* Biocontainer Docker
+[ ] Conda recipe
+[ ] Pip recipe
+[ ] CRAN
+[ ] Biocontainer Docker
