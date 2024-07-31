@@ -12,7 +12,8 @@ calibrateSmoothing(
   from = 0.2,
   to = 0.5,
   nCores = 1,
-  degree = 2
+  degree = 2,
+  verbose = TRUE
 )
 }
 \arguments{

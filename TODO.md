@@ -27,23 +27,36 @@ Assuming you’re in a package directory, just run usethis::use_test("name") to 
 
 [ ] Cleaning steps
 See ¨The quality of the genetic map was evaluated visually by generating diagnostic plots in polymapR¨
-[ ] Flip a segment
+[x] Flip interval/selection/chromosome (flip genetic distances, not genomic, so don't change the mapping)
+[x] Mask interval/selection/chromosome
+[x] How to treat negative values (set to zero, don't change, NA)
 
+
+[x] verbose recombinationMap interpolation
+
+
+[x] plot_marey -> plot.marey et plot.marey.R
+[x] summary.marey.R
+[x] Add statistics and goodness of fit to summary
+
+
+[ ] Commenter jeux de données
 
 
 [x] A map object is only a single chromosome, clean and simple. The unit is the genetic map
+[x] Add a slot distances relatives, pour la carte de Marey, et pour la fonction interpolee. NO, keep it simple
 
-[ ] Manipulate mareyMap objects
-      [ ] A method to reduce a mareyMap object to a given interval
-      [ ] A method to change x-axis in relative distances/positions
-      [ ] A map object support multiple X axes mapping, and can compare between these mappings
-      [ ] Different map objects can be compared
+
+[ ] Interpolation
+      [ ] Penalized spline
 
 
 [ ] Quality control and map validation
-      [ ] Save model outputs: errors...
-      [ ] Difference entre MareyCI fitted-bootstrapped et true y
-      [ ] mesure de noisyness, erreurs de la fonction d'interpolation
+      [x] Save model outputs: errors...
+      [x] Difference entre MareyCI fitted-bootstrapped et true y
+      [x] "Ordinary least squares regression indicates that the estimated positions fit well for each chrome (R2 > 0.99) relative to the true genetic map positions" MapFuser
+      [x] fitted genetic dist ~ true/data genetic distance
+      [x] mesure de noisyness, erreurs de la fonction d'interpolation, dstance fitter/observed
 
  
 [ ] Block-wise cM/Mb
@@ -62,6 +75,11 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
       [x] Veller r-bar
 [ ] Graphical method to compare different maps
       [ ] Compare statistics from different blocks/intervals + pairwise blocks (e.g. synteny, homeologs)
+      [ ] Lorenz curve : prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
+      [ ] Relative maps : representer les cartes de Marey en distances relatives, prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
+      [ ] Exprimer la difference entre deux cartes (comme avec distances en genes) + mesure statistique de la difference chromosome-wide
+      [ ] Difference (ratio) entre deux cartes, le long du genomes, est permise par le passage en distances relatives
+      
 
 
 [ ] Comparison in polyploids: Bourke et al. 2015 https://doi.org/10.1534/genetics.115.181008

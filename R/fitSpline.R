@@ -1,9 +1,9 @@
-#' Fit a LOESS function to the Marey map
+#' Fit a cubic smoothing spline function to the Marey map
 #'
 #' @param x a 'mareyMap' object.
-#' @param spar	smoothing parameter, typically (but not necessarily) in (0,1].
+#' @param spar a smoothing parameter, typically (but not necessarily) in (0,1].
 #'
-#' @return a smoothed spline object.
+#' @return a cubic smoothing spline object.
 #' @export
 #'
 #' @importFrom stats smooth.spline

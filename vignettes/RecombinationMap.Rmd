@@ -50,7 +50,17 @@ head(marey)
 
 
 
-# Quality control
+There is also a method to display a `summary` of a `mareyMap` object.
+
+```{r summary}
+summary(marey)
+```
+
+
+# Maniupulate a Marey map
+
+
+Coorection for outliers. Removing outliers.
 
 Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
@@ -61,24 +71,48 @@ marey = outlierSelection(marey, "1")
 <!-- TODO Add a photo of mkr selection -->
 
 
-There is a method to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red.
+There is a method to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. Markers can be masked (unmasked) in genomi intervals with the 'mask.interval' function ('unmask.interval' rspectively).
 
 
 ```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
 #Arbitrary set a few un-valid markers in red
-marey$mareyMap$vld[20:40] = FALSE
+interv = data.frame(start = marey$mareyMap$phys[20], end = marey$mareyMap$phys[40])
+marey = mask.interval(marey, interv)
 
-plot_marey(marey)
+plot(marey)
 
-marey$mareyMap$vld[20:40] = TRUE
+marey = unmask.interval(marey, interv)
 ```
 
 
-There is also a method to display a `summary` of a `mareyMap` object.
 
-```{r summary}
-summary(marey)
+
+
+Error correction.
+Flip an interval or an entire chromosome.
+
+
+```{r plotFlip, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping a genomic interval."}
+plot(marey)
+interv = data.frame(start = c(1, 25000000), end = c(10000000, 50000000))
+tmp = flip.interval(marey, intervals = interv)
+
+plot(tmp)
 ```
+
+
+```{r plotFlipChromosome, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping the entire chromosome"}
+wholechromosome = data.frame(start = c(1), end = c(marey$chromosomeLength))
+tmp = flip.interval(marey, intervals = wholechromosome)
+
+plot(tmp)
+```
+
+
+Mask a region
+
+
+
 
 # Estimate a recombination map
 
@@ -91,7 +125,7 @@ res = recombinationMap(marey, method = "loess")
 
 
 ```{r plotInterpolation, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana* with the Marey interpolation line and a 95% C.I. (invalid markers are shown in red)."}
-plot_marey(res)
+plot(res)
 ```
 
 
@@ -112,7 +146,59 @@ plot_recombination(res)
 ```
 
 
-## Custom or pointwise physical positions
+
+# Quality control and map validation
+
+
+Compare loess and smooth splines.
+
+First fit a loess and print the goodness of fit.
+
+```{r fitLoess, echo=TRUE, message=FALSE}
+res_loess = recombinationMap(marey, method = "loess", verbose = FALSE)
+summary.mareyMap(res_loess)
+```
+
+
+Then fit a spline and print the goodness of fit again.
+
+```{r fitSpline, echo=TRUE, message=FALSE}
+res_spline = recombinationMap(marey, method = "spline", verbose = FALSE)
+summary(res_spline)
+```
+
+
+In this case, the two interpolation methods are similarly good.
+
+
+```{r fitFigure, echo=TRUE, message=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Goodness of fit of the Marey interpolated function, either with Loess regression or smooth Splines interpolation."}
+df_loess = data.frame(method = "loess",
+                     y = res_loess$mareyMap$gen,
+                     fitted = res_loess$fitted,
+                     residuals = res_loess$residuals)
+df_spline = data.frame(method = "spline",
+                     y = res_spline$mareyMap$gen,
+                     fitted = res_spline$fitted,
+                     residuals = res_spline$residuals) 
+df_compare = rbind(df_loess, df_spline)
+
+p1 = ggplot(df_compare, aes(x = y, y = fitted)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  facet_wrap(~ method) +
+  theme_bw()
+p1
+
+p2 = ggplot(df_compare, aes(x = residuals, y = fitted)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  facet_wrap(~ method) +
+  theme_bw()
+p2
+```
+
+
+# Custom or pointwise physical positions
 
 By default, a grid of windows of constant size is mapped along the chromosome. But you can also provide a data frame of custom start/end positions to estimate the recombination rate within.
 
@@ -120,10 +206,10 @@ By default, a grid of windows of constant size is mapped along the chromosome. B
 ```{r customWindows}
 pos = data.frame(start = seq(20000, 40000000, by = 40000),
                  end = seq(20000, 40000000, by = 40000) + 20000)
-res = recombinationMap(res, method = "loess", windows = pos)
+res = recombinationMap(res, method = "loess", windows = pos, verbose = FALSE)
 ```
 
-This custom positions can represent any genomic feature (e.g. gene, exon) or marker (e.g. SNP) for which you want to estimate the average recombination rate. However keep in mind that interpolation is at a large scale (i.e. does not detect fine scale variations of recombination rates) and close markers can have very similar values due to the smoothing.
+This custom positions can represent any genomic feature (e.g. gene, exon) or marker (e.g. SNP) for which you want to estimate the average recombination rate. However keep in mind that interpolation is at a large scale (i.e. does not detect fine scale variations of recombination rates) and close markers can have exactly or very similar values due to the large scale smoothing.
 
 
 
@@ -133,14 +219,13 @@ genes = data.frame(chromosome = "4",
                    end = c(65000, 99500, 1234000, 267401, 500001))
 pos = data.frame(start = genes$start,
                  end = genes$end)
-res = recombinationMap(res, method = "loess", windows = pos)
+res = recombinationMap(res, method = "loess", windows = pos, verbose = FALSE)
 
 res$windows
 res$recMap
 ```
 
 
-# Quality control and map validation
 
 
 
@@ -253,15 +338,18 @@ ggplot(data = lore, aes(x = relativePhys, y = relativeGen)) +
 
 
 
-## Comparing whole chromosomes
+## Compare multiple maps mapped on the same chromosome
 
 Different genetic map, same physical map
 Compare chromosome landscapes between sexes, populations, with physical positions mapped on the same reference genome.
 
 e.g. heterochiasmy, compare males and females
 
+Figures ggplot
 
-Relative distances
+
+Quantitative measures
+
 
 
 
@@ -273,6 +361,19 @@ Transform physical positions (e.g. gene distances)
 Interpolation/predict new positions
 
 
+Homeolog chromosomes in polyploids
+
+
+
+Relative distances
+
+
+Figures ggplot
+
+
+Quantitative measures
+
+
 
 
 ## Comparing blocks and intervals
@@ -280,7 +381,17 @@ Interpolation/predict new positions
 
 SVs
 Synteny in closed species
-Homeolog groups in polyploids
+Homeolog regions in polyploids
+
+
+
+Quantitative measures
+Whole chromosomes
+Blocks/interval
+...
+Random resampling?
+
+
 
 
 

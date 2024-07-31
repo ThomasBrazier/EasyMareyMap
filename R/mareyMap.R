@@ -75,6 +75,9 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
             model = NULL,
             fitted = numeric(),
             residuals = numeric(),
+            goodness.r.squared = numeric(),
+            goodness.adj.r.squared = numeric(),
+            goodness.p = numeric(),
             windows = numeric(),
             smoothingParam = numeric(),
             nBootstrap = integer())

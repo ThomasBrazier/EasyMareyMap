@@ -7,7 +7,7 @@
 #'
 #' @import ggplot2
 #'
-plot_marey = function(x) {
+plot.mareyMap = function(x) {
   df = x$mareyMap
   # Add the Marey interpolated function
   marey = x$mareyCI

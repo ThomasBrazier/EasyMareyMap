@@ -20,7 +20,8 @@ calibrateSmoothing = function(x,
                               from = 0.2,
                               to = 0.5,
                               nCores = 1,
-                              degree = 2) {
+                              degree = 2,
+                              verbose = TRUE) {
 
   if (nrow(x) > 10000) {
     warning("Dataset too large (>10,000 markers). Subsampling 10%...\n")
@@ -38,10 +39,17 @@ calibrateSmoothing = function(x,
 
   for (s in smooth2test) {
     MSEBoot = numeric(nResampling)
-    cat("Fitting smoothing parameter", s, "...\n")
-    MSEBoot = unlist(pbmcapply::pbmclapply(X = 1:nResampling,
-                                function(X) {cvResampling(x, K = K, smooth = s, method = method, degree = degree)},
-                                mc.cores = nCores))
+    if (verbose) {
+      cat("Fitting smoothing parameter", s, "...\n")
+      MSEBoot = unlist(pbmcapply::pbmclapply(X = 1:nResampling,
+                                             function(X) {cvResampling(x, K = K, smooth = s, method = method, degree = degree)},
+                                             mc.cores = nCores))
+    } else {
+      MSEBoot = unlist(mclapply(X = 1:nResampling,
+                                             function(X) {cvResampling(x, K = K, smooth = s, method = method, degree = degree)},
+                                             mc.cores = nCores))
+    }
+
     crossvalidation$MSE[which(crossvalidation$smoothParam == s)] = mean(MSEBoot, na.rm = TRUE)
   }
 
