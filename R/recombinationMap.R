@@ -44,10 +44,7 @@ recombinationMap = function(x,
                (parallel::detectCores(all.tests = FALSE, logical = TRUE)-1))
 
   if(verbose) {cat("Processing...\n")}
-  df = x$mareyMap
-  df = df[!is.na(df$gen), ]
-  df = df[!is.na(df$phys), ]
-  df = df[which(df$vld == TRUE), ]
+  df = getMareyMap(x)
 
   if (length(smoothing) > 0) {
     if (is.numeric(smoothing)) {
@@ -146,7 +143,7 @@ lowerCI = function(x) {
 #' @export
 #'
 bootstrapMareyMap = function(x, intervals, nboot = boot, verbose = TRUE) {
-  stopifnot(class(x) == "mareyMap")
+  stopifnot(is(x, "mareyMap"))
 
   df = x$mareyMap
   fitMarey = x$model
@@ -159,12 +156,12 @@ bootstrapMareyMap = function(x, intervals, nboot = boot, verbose = TRUE) {
 
     resampled = df[sample(1:nrow(df), replace = TRUE), ]
 
-    if (class(fitMarey) == "loess") {
+    if (is(fitMarey, "loess")) {
       fitMarey = fitLoess(resampled, span = fitMarey$pars$span, degree = fitMarey$pars$degree)
       predicted.start = predict(fitMarey, newdata = intervals$start)
       predicted.end = predict(fitMarey, newdata = intervals$end)
     }
-    if (class(fitMarey) == "smooth.spline") {
+    if (is(fitMarey, "ss")) {
       fitMarey = fitSpline(resampled, spar = fitMarey$spar)
       predicted.start = predict(fitMarey, intervals$start)$y
       predicted.end = predict(fitMarey, intervals$end)$y
@@ -220,12 +217,12 @@ bootstrapRecMap = function(x, intervals, nboot = boot, setNegativeValues = 0, ve
 
     resampled = df[sample(1:nrow(df), replace = TRUE), ]
 
-    if (class(fitMarey) == "loess") {
+    if (is(fitMarey, "loess")) {
       fitMarey = fitLoess(resampled, span = fitMarey$pars$span, degree = fitMarey$pars$degree)
       predicted.start = predict(fitMarey, newdata = intervals$start)
       predicted.end = predict(fitMarey, newdata = intervals$end)
     }
-    if (class(fitMarey) == "smooth.spline") {
+    if (is(fitMarey, "ss")) {
       fitMarey = fitSpline(resampled, spar = fitMarey$spar)
       predicted.start = predict(fitMarey, intervals$start)$y
       predicted.end = predict(fitMarey, intervals$end)$y

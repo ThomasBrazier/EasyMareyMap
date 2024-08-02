@@ -2,7 +2,7 @@
 #'
 #' @description
 #' The Lorenz curve is a graphical representation of the heterogeneity of rates in a dataset, here recombination rates.
-#' It plots the ordered distribution of relative recombination rates as a function of their relative physical position.
+#' It plots the ordered distribution of relative recombination rates as a function of their relative physical size.
 #' A Lorenz curve always starts at (0,0) and ends at (1,1).
 #' The more the curve is close to the diagonal, the less heterogeneous is the distribution of recombination rates.
 #'
@@ -15,6 +15,8 @@
 #'
 lorenz = function(x) {
   df = x$recMap
+
+  df = df[!is.na(df$recRate),]
 
   df$width = df$end - df$start
 

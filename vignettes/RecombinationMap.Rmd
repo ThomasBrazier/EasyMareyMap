@@ -38,19 +38,40 @@ You can create a `MareyMap` object. It must contain a single map (i.e. one chrom
 m = read.table("../inst/extdata/Arabidopsis_thaliana.txt",
                header = T,
                sep = "\t")
-# The marey map is imported into a 'mareyMap' object
-marey = mareyMap(m, chromosome = '1')
-# names of slots in the 'mareyMap' object
-names(marey)
 # Column names of the input Marey map
-names(marey$mareyMap)
-
-head(marey)
+colnames(m)
+head(m)
 ```
 
 
+```{r mareyMapObject}
+# The marey map is imported into a 'mareyMap' object
+marey = mareyMap(m)
+# names of slots in the 'mareyMap' object
+names(marey)
 
-There is also a method to display a `summary` of a `mareyMap` object.
+# See details in ?mareyMap
+colnames(marey$mareyMap)
+colnames(marey$recMap)
+colnames(marey$mareyCI)
+```
+
+
+The `EasyMareyMap` package provides many functions to directly access data or compute summary statistics directly. Moreover, to allow further development and implementation of new features, data and metadata are stored in the `mareyMap` object and easily accessible.
+
+
+The `mareyMap` object is a S3 class object (see [S3 class](https://adv-r.hadley.nz/s3.html)). It contains a list of slots:
+- `mareyMap` stores the input Marey map, in the format specified above.
+- `recMap` stores the estimated recombination map (cM/Mb), with confidence intervals estimated by bootstrap.
+- `mareyCI` stores estimated genetic positions of the same genomic windows as the recombination map, instead of recombination rates, with confidence intervals estimated by bootstrap. It can be a good practice to compare genetic positions interpolated in `mareyCI` with genetic positions observed in `mareyMap` to evaluate the quality of the interpolation method.
+- then a list of attributes of the Marey map and recombination map (e.g. chromosome name and length, interpolation method...). It is important to note that the interpolation model is stored in the `model` slot and all its attributes can be accessed.
+
+
+
+
+
+
+There is a function to display a `summary` of a `mareyMap` object.
 
 ```{r summary}
 summary(marey)
@@ -60,9 +81,36 @@ summary(marey)
 # Maniupulate a Marey map
 
 
-Coorection for outliers. Removing outliers.
+The quality of the input data (the Marey map) is crucial for the performance of the Marey map interpolation function. The input data must be checked carefully before interpolation, and ambiguous markers and errors must be removed or corrected.
 
-Here is the command to do outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
+
+The `EasyMareyMap` package provides user-friendly functions to evaluate data quality and correct the most frequent errors. You can also look the `mapFuser` package for similar procedures and more features such as consensus maps [@van2017mapfuser].
+
+
+
+Maps with a low quality often show outlying markers that will strongly negatively affect the performance of interpolation. Outlying markers are mapped outside the global trend of the Marey map. In the figure below, I add some outlier markers to the Marey map around the position 17Mb, just to learn how to remove them. There is a function to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. 
+
+
+```{r plotOutliers, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Add random outliers in the Marey map."}
+marey_outliers = marey
+
+tmp = marey_outliers$mareyMap
+
+d = data.frame(set = unique(tmp$set),
+               map = unique(tmp$map),
+               mkr = "outlier",
+               phys = c(17855000, 17853000, 17858000, 17840000, 17890000),
+               gen = c(34, 32, 36, 33, 27),
+               vld = TRUE)
+tmp = rbind(tmp, d)
+marey_outliers$mareyMap = tmp
+rm(tmp)
+
+plot(marey_outliers)
+```
+
+
+It is possible to perform outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
 ```
 marey = outlierSelection(marey, "1")
@@ -71,56 +119,64 @@ marey = outlierSelection(marey, "1")
 <!-- TODO Add a photo of mkr selection -->
 
 
-There is a method to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. Markers can be masked (unmasked) in genomi intervals with the 'mask.interval' function ('unmask.interval' rspectively).
+Markers can be masked (unmasked) in genomic intervals with the `mask.interval` function (`unmask.interval` respectively).
 
 
 ```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
-#Arbitrary set a few un-valid markers in red
-interv = data.frame(start = marey$mareyMap$phys[20], end = marey$mareyMap$phys[40])
-marey = mask.interval(marey, interv)
+phys = c(17855000, 17853000, 17858000, 17840000, 17890000)
+gen = c(34, 32, 36, 33, 27)
+pos = data.frame(phys = phys, gen = gen)
+marey_outliers = mask.marker(marey_outliers, pos)
 
-plot(marey)
+plot(marey_outliers)
 
-marey = unmask.interval(marey, interv)
+rm(marey_outliers)
 ```
 
 
 
 
 
-Error correction.
-Flip an interval or an entire chromosome.
+
+
+The Marey map must be a monotonous increasing function. However, if some regions are not in the same order in the linkage map and the reference genome, they appear as a large segment decreasing with genomic distance. This can be due to biological reasons (structural variants, i.e. inversions) or alignment errors in the genome assembly (the scaffold has been ordered in the wrong direction). It is advised to evaluate the putative cause of this particular error before to correct it. If the cause is not well understood, we advise to discard the entire map. Otherwise, if you think it is an assembly error that can corrected, we provide a function `flip.interval()` to flip the genetic distances on this interval, in order to get them in the same order as the reference genome. Though the error is probably due to the assembly, we made the choice to flip genetic distances in order to conserve the genome annotation.
+
+Below I flipped two intervals, simulating what is happening when some scaffolds of the reference genome and the linkage map are not in the same order. Then I use the same `flip.interval()` function to put them back in the right order.
+
 
 
 ```{r plotFlip, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping a genomic interval."}
-plot(marey)
 interv = data.frame(start = c(1, 25000000), end = c(10000000, 50000000))
 tmp = flip.interval(marey, intervals = interv)
+plot(tmp)
 
+tmp = flip.interval(tmp, intervals = interv)
 plot(tmp)
 ```
+
+
+You can flip the whole chromosome by specifying a single interval from one to the chromosome length.
 
 
 ```{r plotFlipChromosome, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping the entire chromosome"}
 wholechromosome = data.frame(start = c(1), end = c(marey$chromosomeLength))
 tmp = flip.interval(marey, intervals = wholechromosome)
+plot(tmp)
 
+tmp = flip.interval(tmp, intervals = wholechromosome)
 plot(tmp)
 ```
-
-
-Mask a region
 
 
 
 
 # Estimate a recombination map
 
-All the procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map. A description of the method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022].
+Once you have checked (and eventually corrected) the Marey map, you can estimate the recombination rates along the chromosome. Recombination rates are in cM/bp. It is the core feature of the `EasyMareyMap` package. The procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map (`recMap` slot). A description of the interpolation method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022]. The `recombinationMap()` is designed to be user-friendly (only requires a few arguments, functions to plot and summarize), script-friendly to batch analyses (e.g. hundreds of genetic maps), highly automated (automatic fine-tuning of the smoothing parameter) and provide high reproducibility (all parameters and settings are stored in the `mareyMap` object and easily accessible).
 
 
 ```{r estimateMap}
-res = recombinationMap(marey, method = "loess")
+res = recombinationMap(marey, method = "loess", verbose = FALSE)
 ```
 
 
@@ -139,10 +195,12 @@ head(res$recMap)
 summary(res)
 ```
 
-Finally, the recombination landscape can be plotted with the `recombinationPlot()` function.
+The recombination landscape can be plotted with the `plot_recombinationMap()` function. We implemented a bootstrapped procedure (random resampling of markers) to estimate confidence intervals along the genome. It is an important feature to evaluate the quality of the recombination map.
+
+
 
 ```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
-plot_recombination(res)
+plot_recombinationMap(res)
 ```
 
 
@@ -150,17 +208,17 @@ plot_recombination(res)
 # Quality control and map validation
 
 
-Compare loess and smooth splines.
+The validity and goodness of fit of statistical interpolation can be assessed with the linear regression of fitted values as a function of observed genetic distances. Once I fitted a loess function, I print the goodness of fit with `summary`.
 
-First fit a loess and print the goodness of fit.
 
 ```{r fitLoess, echo=TRUE, message=FALSE}
 res_loess = recombinationMap(marey, method = "loess", verbose = FALSE)
-summary.mareyMap(res_loess)
+summary(res_loess)
 ```
 
+It can be used to compare the goodness of fit of different interpolation methods and hyperparameters (i.e. smoothing parameter)
+I can compare the performance of loess and smooth splines on the same Marey map.
 
-Then fit a spline and print the goodness of fit again.
 
 ```{r fitSpline, echo=TRUE, message=FALSE}
 res_spline = recombinationMap(marey, method = "spline", verbose = FALSE)
@@ -168,7 +226,7 @@ summary(res_spline)
 ```
 
 
-In this case, the two interpolation methods are similarly good.
+In this case, the two interpolation methods are similarly good. It can be verified by visual comparison.
 
 
 ```{r fitFigure, echo=TRUE, message=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Goodness of fit of the Marey interpolated function, either with Loess regression or smooth Splines interpolation."}
@@ -198,9 +256,15 @@ p2
 ```
 
 
-# Custom or pointwise physical positions
+# Changing the physical map
 
-By default, a grid of windows of constant size is mapped along the chromosome. But you can also provide a data frame of custom start/end positions to estimate the recombination rate within.
+Genetic positions are mapped onto a reference genome (physical positions). Hence manipulating genomic intervals on this physical reference (comparing genomic intervals) or changing the mapping of genetic markers for a new reference map are important features for comparative analyses (e.g. comparing between genomic distances and gene distances as in Brazier and Glémin 2022).
+
+
+## Estimating recombination rates for a list of genomic intervals
+
+
+By default, a grid of windows of constant size is mapped along the chromosome to produce the recombination map. But you can also provide a data frame of custom start/end positions to estimate the recombination rate within specific genomic intervals or in a custom set of genomic windows along the genome.
 
 
 ```{r customWindows}
@@ -219,10 +283,9 @@ genes = data.frame(chromosome = "4",
                    end = c(65000, 99500, 1234000, 267401, 500001))
 pos = data.frame(start = genes$start,
                  end = genes$end)
-res = recombinationMap(res, method = "loess", windows = pos, verbose = FALSE)
+res2 = recombinationMap(res, method = "loess", windows = pos, verbose = FALSE)
 
-res$windows
-res$recMap
+res2$recMap
 ```
 
 
@@ -231,12 +294,13 @@ res$recMap
 
 
 
-# Interpolate new genetic positions
-
-You may want to change your physical map and interpolate the genetic distances for your new set of markers. It is possible to interpolate these new positions with the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method). I implemented a generic `predictGeneticMap` function to do the job.
+## Interpolate new genetic positions
 
 
-It is recommended to use the smoothing parameter previously estimated with the automatic calibration procedure.
+
+You may want to interpolate the genetic distances for a new set of markers. It is possible to interpolate these new positions with the `predictGeneticMap()` function, passing to the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method).
+
+It is recommended to use the same smoothing parameter previously estimated with the automatic calibration procedure.
 
 
 ```{r predictGeneticMap}
@@ -248,13 +312,13 @@ smoothPar = res$smoothingParam
 newMap = predictGeneticMap(phys, gen, new, method = "loess", smoothing = smoothPar)
 
 newMap
+
+newMap$phys = new
+newMap = as.data.frame(newMap)
 ```
 
 
 ```{r newGeneticMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "New positions on chromosome 1, with the confidence interval (+- 1.96*se)."}
-newMap$phys = new
-newMap = as.data.frame(newMap)
-
 ggplot2::ggplot(data = newMap, aes(x = phys/10^6, y = newGen)) +
   geom_point(alpha = 0.4) +
   labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
@@ -273,15 +337,28 @@ ggplot2::ggplot(data = newMap, aes(x = phys/10^6, y = newGen)) +
 ```
 
 
-# Analysing and comparing Marey landscapes
+# Comparative analysis of recombination landscapes
 
 
 ## Chromosome-wide statistics
 
 
-These statistics, estimated on the whole chromosomes, can be used to compare chromosomes, populations or species.
+To  quantitatively describe and compare recombination maps, it is important to estimate summary statistics of the mean and variance of recombination rates. Many summary statistic functions of heterogeneity in recombination rates can be applied directly to the `mareyMap` object.
+These statistics, estimated on the whole chromosome, can be used to compare chromosomes in a single species, but also chromosomes between populations or species.
 
-Intra-chromosomal genetic shuffling (Veller et al. 2019).
+The most simple statistics are the mean, weighted mean (weighted by the windows length), median and the variance.
+
+```{r sumStats}
+mean(res)
+median(res)
+weighted.mean(res)
+variance(res)
+```
+
+
+
+Veller et al. (2019) proposed a rigorous measure of intra-chromosomal genetic shuffling [@veller2019rigorous]. The measure depends on the distribution of crossovers along the chromosome and total genome size. The genetic distances must be transformed back to recombinant fractions. The inverse of the mapping function used to calculate genetic distances must be applied.
+
 
 ```{r veller}
 genome_size = 119050000
@@ -291,7 +368,8 @@ veller(res, genomeSize = genome_size, mappingFunction = "kosambi")
 ```
 
 
-The periphery-bias ratio, as computed in Brazier and Glémin (2022). 
+The periphery-bias ratio, as computed in Brazier and Glémin (2022), is a measure of the relative recombination rate in the periphery of the chromosome (default is 10%) compared to the chromosome average recombination rate. A periphery-bias ratio close to one indicate equal recombination at the periphery and the rest of the chromosome, while a ratio higher than one indicates less recombination at the periphery. Because chromosomes can be asymmetric, the measure can be calculated either on the left or right half of the chromosome, both sides or one side at random.
+
 
 ```{r peripherybias}
 peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "random")
@@ -302,7 +380,7 @@ peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "both")
 
 
 
-The coefficient of variation.
+The coefficient of variation is a standardized measure of dispersion of a probability distribution or frequency distribution. It is defined as the ratio of the standard deviation to the mean.
 
 
 ```{r coefficient_variation}
@@ -310,7 +388,8 @@ coefficientVariation(res)
 ```
 
 
-The Gini index.
+The Gini index is a measure of statistical dispersion intended to represent inequality between measures, here recombination rates.
+A Gini coefficient of 0 reflects perfect equality, while a Gini coefficient of 1 reflects maximal inequality among values
 
 
 ```{r gini}
@@ -318,7 +397,11 @@ gini(res)
 ```
 
 
-The Lorenz curve.
+The Lorenz curve is a graphical representation of the heterogeneity of rates in a dataset, here recombination rates.
+It plots the ordered distribution of relative recombination rates as a function of their relative physical size.
+A Lorenz curve always starts at (0,0) and ends at (1,1).
+The more the curve is close to the diagonal, the less heterogeneous is the distribution of recombination rates.
+
 
 ```{r lorenz}
 lore = lorenz(res)
@@ -340,56 +423,134 @@ ggplot(data = lore, aes(x = relativePhys, y = relativeGen)) +
 
 ## Compare multiple maps mapped on the same chromosome
 
-Different genetic map, same physical map
-Compare chromosome landscapes between sexes, populations, with physical positions mapped on the same reference genome.
 
-e.g. heterochiasmy, compare males and females
-
-Figures ggplot
+Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo spaiens*, a species experiencing heterochiasmy [].
 
 
-Quantitative measures
+```{r dataHeterochiasmy}
+m = read.table("../data/Homo_sapiens_female.txt",
+               header = T,
+               sep = " ")
+m = m[which(m$map == "Chromosome 01"),]
+marey_female = mareyMap(m)
+marey_female = recombinationMap(marey_female, method = "loess", verbose = FALSE)
+
+
+m = read.table("../data/Homo_sapiens_male.txt",
+               header = T,
+               sep = " ")
+m = m[which(m$map == "Chromosome 01"),]
+marey_male = mareyMap(m)
+marey_male = recombinationMap(marey_male, method = "loess", verbose = FALSE)
+
+
+m = read.table("../data/Homo_sapiens_mean.txt",
+               header = T,
+               sep = " ")
+m = m[which(m$map == "Chromosome 01"),]
+marey_avg = mareyMap(m)
+marey_avg = recombinationMap(marey_avg, method = "loess", verbose = FALSE)
+```
+
+
+
+```{r statsHeterochiasmy}
+mean(marey_male)
+mean(marey_female)
+mean(marey_avg)
+
+gini(marey_male)
+gini(marey_female)
+gini(marey_avg)
+
+peripherybias(marey_male, proportion_periphery = 0.1,  chromosome_arm = "random")
+peripherybias(marey_female, proportion_periphery = 0.1,  chromosome_arm = "random")
+peripherybias(marey_avg, proportion_periphery = 0.1,  chromosome_arm = "random")
+```
+
+
+```{r plotMareyHeterochiasmy, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged Marey maps of *Homo sapiens* chromosome 1."}
+df_female = marey_female$mareyMap
+df_male = marey_male$mareyMap
+df_avg = marey_avg$mareyMap
+
+df = rbind(df_female,
+           df_male,
+           df_avg)
+
+  
+ggplot(data = df, aes(x = phys/10^6, y = gen, colour = set, group = set)) +
+      geom_point() +
+      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
+      theme_bw()
+```
+
+
+
+```{r plotMapHeterochiasmy, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 1. The shaded area is the 95% confidence interval around the mean estimate."}
+df_female = marey_female$recMap
+df_male = marey_male$recMap
+df_avg = marey_avg$recMap
+
+df = rbind(df_female,
+           df_male,
+           df_avg)
+
+df$point = (df$start + df$end)/2
+
+df$recRate = df$recRate * 10^6
+df$upperRecRate = df$upperRecRate * 10^6
+df$lowerRecRate = df$lowerRecRate * 10^6
+
+ggplot(data = df, aes(x = point/10^6, y = recRate)) +
+    geom_line(aes(group = set, color = set)) +
+    geom_ribbon(aes(x = point/10^6, ymin = lowerRecRate, ymax = upperRecRate, fill = set), alpha = 0.2) +
+    facet_grid(~as.factor(set)) +
+    facet_wrap(~as.factor(map), scales = "free") +
+    labs(x = "Genomic position (Mb)", y = "Recombination rate (cM/Mb)")  
+```
+
+
+
+
+When you compare different populations or different studies, the recombination maps may not share physical positions (markers are not shared).
+
+
+Predict new shared positions (bins?)
+
+
+Gini  and Veller
+
+Plot maps
 
 
 
 
 
-## Same genetic map, but different physical positions
+
+## Compare between chromosomes
 
 
 Transform physical positions (e.g. gene distances)
 Interpolation/predict new positions
 
 
-Homeolog chromosomes in polyploids
+
+Between two contrasted species, Arabidopsis and maize.
 
 
-
-Relative distances
 
 
 Figures ggplot
+Lorenz
 
-
-Quantitative measures
-
-
-
-
-## Comparing blocks and intervals
-
-
-SVs
-Synteny in closed species
-Homeolog regions in polyploids
+Relative positions
+Comparative mapping
 
 
 
 Quantitative measures
-Whole chromosomes
-Blocks/interval
-...
-Random resampling?
+
 
 
 

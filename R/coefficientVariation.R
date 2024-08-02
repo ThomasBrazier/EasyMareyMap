@@ -2,7 +2,7 @@
 #'
 #' @description
 #' The coefficient of variation (CV) is defined as the ratio of the standard deviation to the mean
-#' CV = standard deviation/mean
+#' CV = standard deviation/mean. It is estimated on recombination rates.
 #'
 #' @param x a Marey map object, with a recombination map already estimated.
 #'

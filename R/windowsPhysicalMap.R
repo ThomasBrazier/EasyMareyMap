@@ -65,10 +65,12 @@ windowsPhysicalMap = function(x, windows = GRanges(), method = "mean") {
     windows$lowerRecRate = unlist(lapply(1:length(windows), function(x) {median(recMap$lowerRecRate[subjectHits(hits)[which(queryHits(hits) == x)]], na.rm = TRUE)}))
   }
 
+  windows = as.data.frame(windows)
+
   df2 = data.frame(set = windows$set,
-                   map = seqnames(windows),
-                   start = start(windows),
-                   end = end(windows),
+                   map = windows$seqnames,
+                   start = windows$start,
+                   end = windows$end,
                    recRate = windows$recRate,
                    upperRecRate = windows$upperRecRate,
                    lowerRecRate = windows$lowerRecRate)

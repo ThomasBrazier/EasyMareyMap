@@ -10,7 +10,7 @@
 #'
 #'
 veller = function(x, genomeSize = NA, mappingFunction = "none") {
-  d = x$mareyMap
+  d = getMareyMap(x)
   # Chromosome length
   chrlength = x$chromosomeLength
 

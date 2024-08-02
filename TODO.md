@@ -47,11 +47,11 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [x] Add a slot distances relatives, pour la carte de Marey, et pour la fonction interpolee. NO, keep it simple
 
 
-[ ] Interpolation
-      [ ] Penalized spline
+[x] Interpolation
+      [x] Penalized spline
 
 
-[ ] Quality control and map validation
+[x] Quality control and map validation
       [x] Save model outputs: errors...
       [x] Difference entre MareyCI fitted-bootstrapped et true y
       [x] "Ordinary least squares regression indicates that the estimated positions fit well for each chrome (R2 > 0.99) relative to the true genetic map positions" MapFuser
@@ -59,24 +59,28 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
       [x] mesure de noisyness, erreurs de la fonction d'interpolation, dstance fitter/observed
 
  
-[ ] Block-wise cM/Mb
-      [ ] Estimate recombination rates in a set of intervals (estimate on the whole Marey map but output a new rec map on these intervals)
-      [ ] From Marey map directly + bootstrap
-      [ ] From interpolation + bootstrap
+
 
 
 
 
 [x] Method to get chromosome-wide statistics
+      [X] Mean, weighted mean, median
       [x] Gini index
       [x] AUC curves and AUC/Lorenz curve
       [x] coefficient of variation
       [x] periphery-bias ratio
       [x] Veller r-bar
+      
+
+[ ] Block-wise cM/Mb
+      [x] Estimate recombination rates in a set of intervals (estimate on the whole Marey map but output a predicted rec rate for each interval)
+      [ ] Example: comparing synteny blocks
+      
 [ ] Graphical method to compare different maps
       [ ] Compare statistics from different blocks/intervals + pairwise blocks (e.g. synteny, homeologs)
-      [ ] Lorenz curve : prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
-      [ ] Relative maps : representer les cartes de Marey en distances relatives, prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
+      [ ] compare.Lorenz curve : prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
+      [ ] compare.Relative maps : representer les cartes de Marey/cartes de rec. en distances relatives, prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
       [ ] Exprimer la difference entre deux cartes (comme avec distances en genes) + mesure statistique de la difference chromosome-wide
       [ ] Difference (ratio) entre deux cartes, le long du genomes, est permise par le passage en distances relatives
       
@@ -88,7 +92,8 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 
 ## Tests
 
-[ ]
+[ ] Tests
+[ ] github actions
 
 
 ## Documentation

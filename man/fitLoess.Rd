@@ -7,7 +7,7 @@
 fitLoess(x, span = numeric(), degree = 2)
 }
 \arguments{
-\item{x}{a 'mareyMap' object.}
+\item{x}{a 'mareyMap' data frame.}
 
 \item{span}{the span parameter which controls the degree of smoothing.}
 
