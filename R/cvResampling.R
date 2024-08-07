@@ -25,7 +25,7 @@ cvResampling = function(x, K = 5, smooth = numeric(), method = "loess", degree =
     validation$pred = predict$y
   }
 
-  df = validation[,c(4,5,7)]
+  df = validation[, c("phys", "gen", "pred")]
   colnames(df) = c("phys", "obs", "pred")
   mean_diff = mean((df$obs - df$pred)^2, na.rm = TRUE)
   return(mean_diff)

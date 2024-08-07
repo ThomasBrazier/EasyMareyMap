@@ -1,4 +1,4 @@
-#' Provide a numerical data frame to plot the Lorenz curve
+#' Plot the Lorenz curve
 #'
 #' @description
 #' The Lorenz curve is a graphical representation of the heterogeneity of rates in a dataset, here recombination rates.
@@ -8,13 +8,15 @@
 #'
 #'
 #' @param x a Marey map object (the Marey map is used).
+#' @param return.plot TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)
 #'
 #' @return a data frame with relative physical and genetic position ordered.
 #' @export
 #'
 #'
-lorenz = function(x) {
+lorenz = function(x, return.plot = TRUE) {
   df = x$recMap
+
 
   df = df[!is.na(df$recRate),]
 
@@ -32,5 +34,21 @@ lorenz = function(x) {
                    map = df$map,
                    relativeGen = df$relativeGen,
                    relativePhys = df$relativePhys)
-  return(out)
+
+  diagonal = data.frame(x = seq(0, 1, by = 0.01),
+                        y = seq(0, 1, by = 0.01))
+  p = ggplot(data = out, aes(x = relativePhys, y = relativeGen)) +
+        geom_line() +
+        geom_line(data = diagonal, aes(x = x, y = y), color = "Grey") +
+        xlim(0, 1) +
+        ylim(0, 1) +
+        xlab("Proportion of genomic distance") +
+        ylab("Proportion of genetic distance") +
+        theme_bw()
+
+  if (return.plot) {
+    return(p)
+  } else {
+    return(out)
+  }
 }

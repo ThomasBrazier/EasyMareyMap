@@ -67,13 +67,14 @@ plot.mareyMap = function(x, return.plot = TRUE) {
 #' Plot the recombination map
 #'
 #' @param x a Marey map object.
+#' @param return.plot TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)
 #'
 #' @return a plot of the recombination map.
 #' @export
 #'
 #' @import ggplot2
 #'
-plot_recombinationMap = function(x) {
+plot_recombinationMap = function(x, return.plot = TRUE) {
   x$recMap$point = (x$recMap$start + x$recMap$end)/2
 
   x$recMap$recRate = x$recMap$recRate * 10^6
@@ -97,6 +98,10 @@ plot_recombinationMap = function(x) {
           axis.title.y = element_text(color="black"),
           axis.text=element_text(colour="black"),
           legend.position = "right")
-  return(p)
+  if (return.plot) {
+    return(p)
+  } else {
+    return(df)
+  }
 }
 

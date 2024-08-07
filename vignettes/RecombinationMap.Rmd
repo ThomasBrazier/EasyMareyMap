@@ -46,6 +46,7 @@ head(m)
 
 ```{r mareyMapObject}
 # The marey map is imported into a 'mareyMap' object
+m = m[which(m$map == "1"),]
 marey = mareyMap(m)
 # names of slots in the 'mareyMap' object
 names(marey)
@@ -78,7 +79,7 @@ summary(marey)
 ```
 
 
-# Maniupulate a Marey map
+# Manipulate a Marey map
 
 
 The quality of the input data (the Marey map) is crucial for the performance of the Marey map interpolation function. The input data must be checked carefully before interpolation, and ambiguous markers and errors must be removed or corrected.
@@ -101,7 +102,8 @@ d = data.frame(set = unique(tmp$set),
                mkr = "outlier",
                phys = c(17855000, 17853000, 17858000, 17840000, 17890000),
                gen = c(34, 32, 36, 33, 27),
-               vld = TRUE)
+               vld = TRUE,
+               predict.se = NA)
 tmp = rbind(tmp, d)
 marey_outliers$mareyMap = tmp
 rm(tmp)
@@ -109,6 +111,8 @@ rm(tmp)
 plot(marey_outliers)
 ```
 
+
+## Visual outlier selection
 
 It is possible to perform outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
@@ -119,7 +123,12 @@ marey = outlierSelection(marey, "1")
 <!-- TODO Add a photo of mkr selection -->
 
 
-Markers can be masked (unmasked) in genomic intervals with the `mask.interval` function (`unmask.interval` respectively).
+
+
+## Mask genomic regions
+
+
+Markers can be masked (unmasked) in genomic intervals with the `mask.interval` function (`unmask.interval` respectively). Fo example, you might want to mask regions where markers are difficult to map or have higher sequencing/calling error.
 
 
 ```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
@@ -136,7 +145,7 @@ rm(marey_outliers)
 
 
 
-
+## Correction of scaffold order
 
 
 The Marey map must be a monotonous increasing function. However, if some regions are not in the same order in the linkage map and the reference genome, they appear as a large segment decreasing with genomic distance. This can be due to biological reasons (structural variants, i.e. inversions) or alignment errors in the genome assembly (the scaffold has been ordered in the wrong direction). It is advised to evaluate the putative cause of this particular error before to correct it. If the cause is not well understood, we advise to discard the entire map. Otherwise, if you think it is an assembly error that can corrected, we provide a function `flip.interval()` to flip the genetic distances on this interval, in order to get them in the same order as the reference genome. Though the error is probably due to the assembly, we made the choice to flip genetic distances in order to conserve the genome annotation.
@@ -290,10 +299,6 @@ res2$recMap
 
 
 
-
-
-
-
 ## Interpolate new genetic positions
 
 
@@ -304,25 +309,19 @@ It is recommended to use the same smoothing parameter previously estimated with 
 
 
 ```{r predictGeneticMap}
-phys = res$mareyMap$phys
-gen = res$mareyMap$gen
-# Re-map on a regular grid of evenly spaced markers
+# Re-map on a new set of markers
 new = seq(50000, 30450000, by = 1000000)
-smoothPar = res$smoothingParam
-newMap = predictGeneticMap(phys, gen, new, method = "loess", smoothing = smoothPar)
+newMap = predictGeneticMap(res, new)
 
-newMap
-
-newMap$phys = new
-newMap = as.data.frame(newMap)
+summary(newMap)
 ```
 
 
 ```{r newGeneticMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "New positions on chromosome 1, with the confidence interval (+- 1.96*se)."}
-ggplot2::ggplot(data = newMap, aes(x = phys/10^6, y = newGen)) +
+ggplot2::ggplot(data = newMap$mareyMap, aes(x = phys/10^6, y = gen)) +
   geom_point(alpha = 0.4) +
   labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
-  geom_errorbar(aes(ymin = newGen - 1.96*se, ymax = newGen + 1.96*se)) +
+  geom_errorbar(aes(ymin = gen - 1.96*predict.se, ymax = gen + 1.96*predict.se)) +
   theme(axis.line = element_line(),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
@@ -404,17 +403,7 @@ The more the curve is close to the diagonal, the less heterogeneous is the distr
 
 
 ```{r lorenz}
-lore = lorenz(res)
-diagonal = data.frame(x = seq(0, 1, by = 0.01),
-                      y = seq(0, 1, by = 0.01))
-ggplot(data = lore, aes(x = relativePhys, y = relativeGen)) +
-  geom_line() +
-  geom_line(data = diagonal, aes(x = x, y = y), color = "Grey") +
-  xlim(0, 1) +
-  ylim(0, 1) +
-  xlab("Proportion of genomic distance") +
-  ylab("Proportion of genetic distance") +
-  theme_bw()
+lorenz(res)
 ```
 
 
@@ -505,52 +494,94 @@ df$lowerRecRate = df$lowerRecRate * 10^6
 ggplot(data = df, aes(x = point/10^6, y = recRate)) +
     geom_line(aes(group = set, color = set)) +
     geom_ribbon(aes(x = point/10^6, ymin = lowerRecRate, ymax = upperRecRate, fill = set), alpha = 0.2) +
-    facet_grid(~as.factor(set)) +
-    facet_wrap(~as.factor(map), scales = "free") +
     labs(x = "Genomic position (Mb)", y = "Recombination rate (cM/Mb)")  
 ```
 
 
 
 
-When you compare different populations or different studies, the recombination maps may not share physical positions (markers are not shared).
 
 
-Predict new shared positions (bins?)
-
-
-Gini  and Veller
-
-Plot maps
+## Compare between chromosomes/species
 
 
 
 
+```{r importMapMaize}
+m = read.table("../data/Zea_mays_MaizeGDBConsensus_v4.txt",
+               header = T,
+               sep = "\t")
+m = m[which(m$map == "2"),]
+maize = mareyMap(m)
+
+maize = recombinationMap(maize, verbose = FALSE)
+
+summary(maize)
+```
 
 
-## Compare between chromosomes
-
-
-Transform physical positions (e.g. gene distances)
-Interpolation/predict new positions
-
-
-
-Between two contrasted species, Arabidopsis and maize.
-
-
-
-
-Figures ggplot
-Lorenz
-
-Relative positions
-Comparative mapping
+In order to compare maps between two species with contrasted recombination landscapes, for example Arabidopsis and maize, visual methods like the Lorenz curve or expressing physical distances in relative distances cam be very efficient. If you need to compare quantitatively a large number of maps, summary statistics like the Gini index or the periphery-bias ratio are efficient measure of the heterogeneity of recombination rates along the chromosome.
 
 
 
-Quantitative measures
+In order to get the data frame instead of the Lorenz plot, you can specify `return.plot = FALSE`. It works also for the `plot.mareyMap` and `plot_recombination` functions.
 
+
+```{r lorenzCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative Lorenz curves between Arabidopsis chromosome 1 and maize chromosome 1."}
+lorenz_arabido = lorenz(res, return.plot = FALSE)
+lorenz_maize = lorenz(maize, return.plot = FALSE)
+
+df =  rbind(lorenz_arabido, lorenz_maize)
+
+diagonal = data.frame(x = seq(0, 1, by = 0.01),
+                        y = seq(0, 1, by = 0.01))
+ggplot(data = df, aes(x = relativePhys, y = relativeGen, color = set)) +
+    geom_line() +
+    geom_line(data = diagonal, aes(x = x, y = y), color = "Grey") +
+    xlim(0, 1) +
+    ylim(0, 1) +
+    xlab("Proportion of genomic distance") +
+    ylab("Proportion of genetic distance") +
+    theme_bw()
+```
+
+
+
+```{r relativeCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size."}
+relative_arabido = res$recMap
+relative_maize = maize$recMap
+
+relative_arabido$relative_start = relative_arabido$start / res$chromosomeLength
+relative_arabido$relative_end = relative_arabido$end / res$chromosomeLength
+relative_arabido$relative_recRate = relative_arabido$recRate / max(relative_arabido$recRate, na.rm = TRUE)
+relative_arabido$relative_lowerRecRate = relative_arabido$lowerRecRate / max(relative_arabido$lowerRecRate, na.rm = TRUE)
+relative_arabido$relative_upperRecRate = relative_arabido$upperRecRate / max(relative_arabido$upperRecRate, na.rm = TRUE)
+
+
+relative_maize$relative_start = relative_maize$start / maize$chromosomeLength
+relative_maize$relative_end = relative_maize$end / maize$chromosomeLength
+relative_maize$relative_recRate = relative_maize$recRate / max(relative_maize$recRate, na.rm = TRUE)
+relative_maize$relative_lowerRecRate = relative_maize$lowerRecRate / max(relative_maize$lowerRecRate, na.rm = TRUE)
+relative_maize$relative_upperRecRate = relative_maize$upperRecRate / max(relative_maize$upperRecRate, na.rm = TRUE)
+
+
+df = rbind(relative_arabido,
+           relative_maize)
+
+df$point = (df$relative_start + df$relative_end)/2
+
+
+ggplot(data = df, aes(x = point, y = recRate)) +
+    geom_line(aes(group = set, color = set)) +
+    geom_ribbon(aes(x = point, ymin = lowerRecRate, ymax = upperRecRate, fill = set), alpha = 0.2) +
+    labs(x = "Relative genomic position", y = "Recombination rate (cM/Mb)") 
+
+
+ggplot(data = df, aes(x = point, y = relative_recRate)) +
+    geom_line(aes(group = set, color = set)) +
+    geom_ribbon(aes(x = point, ymin = relative_lowerRecRate, ymax = relative_upperRecRate, fill = set), alpha = 0.2) +
+    labs(x = "Relative genomic position", y = "Relative recombination rate") 
+```
 
 
 

@@ -4,7 +4,8 @@
 #' @param ... arguments passed to the generic summary function.
 #'
 #' @return a summary of the Marey map object.
-#' @export
+#' @exportS3Method base::summary
+#' @export summary
 #'
 #' @import ggplot2
 #'
@@ -36,7 +37,7 @@ summary.mareyMap = function(object, ...) {
       "Recombination rates (cM/Mb):\n",
       "Min.   1st Qu.    Median      Mean   3rd Qu.      Max.\n")
   if (length(recRate) > 0) {for (i in 1:nrow(recRate)) {cat(unlist(recRate[i,]) * 1e6, "\n")}}
-  cat("============== Iterpolation ==============\n")
+  cat("============== Interpolation ==============\n")
   cat("Interpolation method: ", interpolation, "\n",
       "Smoothing parameter: ", smoothingParam, "\n",
       "Number of windows: ", nbWindows, "\n",

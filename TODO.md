@@ -16,6 +16,13 @@ devtools::check()
 devtools::build()
 ```
 
+In order to interactively reload the package during development (local session).
+
+```
+document() # Regenerate the NAMESPACE
+load_all()
+```
+
 ### Tests
 
 Assuming you’re in a package directory, just run usethis::use_test("name") to create a test file, and set up all the other infrastructure you need. If you’re using RStudio, press Cmd/Ctrl + Shift + T (or run devtools::test() if not) to run all the tests in a package.
@@ -24,6 +31,10 @@ Assuming you’re in a package directory, just run usethis::use_test("name") to 
 
 
 ## TODO List
+
+
+[ ] Bugs
+      # [ ] Avis : aucun argument trouvé pour min ; Inf est renvoyéErreur dans simpleLoess(y, x, w, span, degree = degree, parametric = parametric,  :   argument 'span' incorrect
 
 [ ] Cleaning steps
 See ¨The quality of the genetic map was evaluated visually by generating diagnostic plots in polymapR¨
@@ -40,7 +51,10 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [x] Add statistics and goodness of fit to summary
 
 
-[ ] Commenter jeux de données
+[ ] Commenter jeux de données, avec references
+
+
+[ ] Bug in recombinationMap loess with Maize chromosome 1
 
 
 [x] A map object is only a single chromosome, clean and simple. The unit is the genetic map
@@ -83,7 +97,7 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
       [ ] compare.Relative maps : representer les cartes de Marey/cartes de rec. en distances relatives, prendre une liste de cartes en argument, renvoyer figure ggplot ou data frame
       [ ] Exprimer la difference entre deux cartes (comme avec distances en genes) + mesure statistique de la difference chromosome-wide
       [ ] Difference (ratio) entre deux cartes, le long du genomes, est permise par le passage en distances relatives
-      
+      [ ] Broken stick (large dataset)
 
 
 [ ] Comparison in polyploids: Bourke et al. 2015 https://doi.org/10.1534/genetics.115.181008

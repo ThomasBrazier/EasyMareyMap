@@ -4,32 +4,20 @@
 \alias{predictGeneticMap}
 \title{Interpolate new genetic positions}
 \usage{
-predictGeneticMap(
-  phys,
-  gen,
-  new,
-  method = "loess",
-  smoothing = 0.3,
-  degree = 2
-)
+predictGeneticMap(x, new)
 }
 \arguments{
-\item{phys}{a vector of physical positions.}
-
-\item{gen}{a vector of genetic positions.}
+\item{x}{a 'mareyMap' object, with a recombination map.}
 
 \item{new}{a vector of new physical positions.}
-
-\item{method}{an interpolation method, either 'loess' or 'splines'.}
-
-\item{smoothing}{(optional) smoothing parameter, if you do not want to calibrate it.}
-
-\item{degree}{(optional) the degree parameter of the polynomial used in the 'loess' method.}
 }
 \value{
-a list with 'newGen', a vector of new genetic positions for each new marker position and 'se' the standard error of the interpolated result (if relevant for the method).
+a new 'mareyMap' object with the new set of markers
 }
 \description{
-Interpolate genetic positions (i.e. cumulative gnetic distances)
+Interpolate genetic positions (i.e. cumulative genetic distances)
 on a new set of physical positions
+and return a new 'mareyMap' object with the new set of markers (i.e. new genetic and physical distances)
+When the 'predictGeneticMap' function is used, the standard error of predictions is saved in the 'predcit.se' column of the mareyMap slot.
+(only for the "loess" regression)
 }

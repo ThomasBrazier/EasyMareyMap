@@ -2,12 +2,14 @@
 % Please edit documentation in R/lorenz.R
 \name{lorenz}
 \alias{lorenz}
-\title{Provide a numerical data frame to plot the Lorenz curve}
+\title{Plot the Lorenz curve}
 \usage{
-lorenz(x)
+lorenz(x, return.plot = TRUE)
 }
 \arguments{
 \item{x}{a Marey map object (the Marey map is used).}
+
+\item{return.plot}{TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)}
 }
 \value{
 a data frame with relative physical and genetic position ordered.

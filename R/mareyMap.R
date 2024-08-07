@@ -41,6 +41,7 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
   x$phys = as.integer(x$phys)
   x$gen = as.integer(x$gen)
   x$vld = as.logical(x$vld)
+  x$predict.se = NA
 
   if (length(chromosomeLength) == 0) {
     chrLength = aggregate(x$phys, by = list(x$map), function(x) {max(x, na.rm = TRUE)})

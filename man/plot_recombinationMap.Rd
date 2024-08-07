@@ -4,10 +4,12 @@
 \alias{plot_recombinationMap}
 \title{Plot the recombination map}
 \usage{
-plot_recombinationMap(x)
+plot_recombinationMap(x, return.plot = TRUE)
 }
 \arguments{
 \item{x}{a Marey map object.}
+
+\item{return.plot}{TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)}
 }
 \value{
 a plot of the recombination map.
