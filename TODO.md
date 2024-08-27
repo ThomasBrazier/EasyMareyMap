@@ -33,8 +33,7 @@ Assuming you’re in a package directory, just run usethis::use_test("name") to 
 ## TODO List
 
 
-[ ] Bugs
-      # [ ] Avis : aucun argument trouvé pour min ; Inf est renvoyéErreur dans simpleLoess(y, x, w, span, degree = degree, parametric = parametric,  :   argument 'span' incorrect
+
 
 [ ] Cleaning steps
 See ¨The quality of the genetic map was evaluated visually by generating diagnostic plots in polymapR¨
@@ -42,6 +41,7 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [x] Mask interval/selection/chromosome
 [x] How to treat negative values (set to zero, don't change, NA)
 
+[ ] mareyMap function impoort directly from path to file
 
 [x] verbose recombinationMap interpolation
 
@@ -121,3 +121,7 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [ ] Pip recipe
 [ ] CRAN
 [ ] Biocontainer Docker
+
+
+## Bugs
+      # [x] Avis : aucun argument trouvé pour min ; Inf est renvoyéErreur dans simpleLoess(y, x, w, span, degree = degree, parametric = parametric,  :   argument 'span' incorrect

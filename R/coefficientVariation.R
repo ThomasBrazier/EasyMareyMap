@@ -18,7 +18,5 @@ coefficientVariation = function(x) {
   m = mean(df$recRate, na.rm = TRUE)
   cv = std/m
 
-  return(list(variance = v,
-         std.deviation = std,
-         CV = cv))
+  return(cv)
 }
