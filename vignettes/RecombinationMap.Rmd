@@ -14,12 +14,12 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-library(ggplot2)
 ```
 
 The package is loaded with the following command.
 
-```{r setup}
+```{r setup, message=FALSE, warning=FALSE}
+library(ggplot2)
 library(EasyMareyMap)
 ```
 
@@ -92,7 +92,7 @@ The `EasyMareyMap` package provides user-friendly functions to evaluate data qua
 Maps with a low quality often show outlying markers that will strongly negatively affect the performance of interpolation. Outlying markers are mapped outside the global trend of the Marey map. In the figure below, I add some outlier markers to the Marey map around the position 17Mb, just to learn how to remove them. There is a function to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. 
 
 
-```{r plotOutliers, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Add random outliers in the Marey map."}
+```{r plotOutliers, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Add random outliers in the Marey map."}
 marey_outliers = marey
 
 tmp = marey_outliers$mareyMap
@@ -131,7 +131,7 @@ marey = outlierSelection(marey, "1")
 Markers can be masked (unmasked) in genomic intervals with the `mask.interval` function (`unmask.interval` respectively). Fo example, you might want to mask regions where markers are difficult to map or have higher sequencing/calling error.
 
 
-```{r plot, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
+```{r plot, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of chromosome 1 in *Arabidopsis thaliana*. Invalid markers are shown in red."}
 phys = c(17855000, 17853000, 17858000, 17840000, 17890000)
 gen = c(34, 32, 36, 33, 27)
 pos = data.frame(phys = phys, gen = gen)
@@ -154,7 +154,7 @@ Below I flipped two intervals, simulating what is happening when some scaffolds 
 
 
 
-```{r plotFlip, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping a genomic interval."}
+```{r plotFlip, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping a genomic interval."}
 interv = data.frame(start = c(1, 25000000), end = c(10000000, 50000000))
 tmp = flip.interval(marey, intervals = interv)
 plot(tmp)
@@ -167,7 +167,7 @@ plot(tmp)
 You can flip the whole chromosome by specifying a single interval from one to the chromosome length.
 
 
-```{r plotFlipChromosome, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping the entire chromosome"}
+```{r plotFlipChromosome, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Flipping the entire chromosome"}
 wholechromosome = data.frame(start = c(1), end = c(marey$chromosomeLength))
 tmp = flip.interval(marey, intervals = wholechromosome)
 plot(tmp)
@@ -189,7 +189,7 @@ res = recombinationMap(marey, method = "loess", verbose = FALSE)
 ```
 
 
-```{r plotInterpolation, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana* with the Marey interpolation line and a 95% C.I. (invalid markers are shown in red)."}
+```{r plotInterpolation, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana* with the Marey interpolation line and a 95% C.I. (invalid markers are shown in red)."}
 plot(res)
 ```
 
@@ -208,7 +208,7 @@ The recombination landscape can be plotted with the `plot_recombinationMap()` fu
 
 
 
-```{r plotMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
+```{r plotMap, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
 plot_recombinationMap(res)
 ```
 
@@ -317,7 +317,7 @@ summary(newMap)
 ```
 
 
-```{r newGeneticMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "New positions on chromosome 1, with the confidence interval (+- 1.96*se)."}
+```{r newGeneticMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "New genetic positions (cM) on chromosome 1, with the confidence interval (+- 1.96*se) of the prediction."}
 ggplot2::ggplot(data = newMap$mareyMap, aes(x = phys/10^6, y = gen)) +
   geom_point(alpha = 0.4) +
   labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
@@ -367,7 +367,7 @@ veller(res, genomeSize = genome_size, mappingFunction = "kosambi")
 ```
 
 
-The periphery-bias ratio, as computed in Brazier and Glémin (2022), is a measure of the relative recombination rate in the periphery of the chromosome (default is 10%) compared to the chromosome average recombination rate. A periphery-bias ratio close to one indicate equal recombination at the periphery and the rest of the chromosome, while a ratio higher than one indicates less recombination at the periphery. Because chromosomes can be asymmetric, the measure can be calculated either on the left or right half of the chromosome, both sides or one side at random.
+The periphery-bias ratio, as computed in Brazier and Glémin (2022), is a measure of the relative recombination rate at the periphery of the chromosome (default is 10%) compared to the chromosome average recombination rate. A periphery-bias ratio close to one indicate equal recombination at the periphery and the rest of the chromosome, while a ratio higher than one indicates less recombination at the periphery. Because chromosomes can be asymmetric, the measure can be calculated either on the left or right half of the chromosome, both sides or one side at random.
 
 
 ```{r peripherybias}
@@ -379,7 +379,7 @@ peripherybias(res, proportion_periphery = 0.1,  chromosome_arm = "both")
 
 
 
-The coefficient of variation is a standardized measure of dispersion of a probability distribution or frequency distribution. It is defined as the ratio of the standard deviation to the mean.
+The coefficient of variation is a standardized measure of dispersion of a probability distribution or frequency distribution. It is defined as the ratio of the standard deviation divided by the mean.
 
 
 ```{r coefficient_variation}
@@ -413,7 +413,7 @@ lorenz(res)
 ## Compare multiple maps mapped on the same chromosome
 
 
-Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo spaiens*, a species experiencing heterochiasmy [].
+Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo sapiens*, a species experiencing heterochiasmy.
 
 
 ```{r dataHeterochiasmy}
@@ -458,7 +458,7 @@ peripherybias(marey_avg, proportion_periphery = 0.1,  chromosome_arm = "random")
 ```
 
 
-```{r plotMareyHeterochiasmy, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged Marey maps of *Homo sapiens* chromosome 1."}
+```{r plotMareyHeterochiasmy, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged Marey maps of *Homo sapiens* chromosome 1."}
 df_female = marey_female$mareyMap
 df_male = marey_male$mareyMap
 df_avg = marey_avg$mareyMap
@@ -476,7 +476,7 @@ ggplot(data = df, aes(x = phys/10^6, y = gen, colour = set, group = set)) +
 
 
 
-```{r plotMapHeterochiasmy, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 1. The shaded area is the 95% confidence interval around the mean estimate."}
+```{r plotMapHeterochiasmy, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 1. The shaded area is the 95% confidence interval around the mean estimate."}
 df_female = marey_female$recMap
 df_male = marey_male$recMap
 df_avg = marey_avg$recMap
@@ -520,7 +520,7 @@ summary(maize)
 ```
 
 
-In order to compare maps between two species with contrasted recombination landscapes, for example Arabidopsis and maize, visual methods like the Lorenz curve or expressing physical distances in relative distances cam be very efficient. If you need to compare quantitatively a large number of maps, summary statistics like the Gini index or the periphery-bias ratio are efficient measure of the heterogeneity of recombination rates along the chromosome.
+In order to compare maps between two species with contrasted recombination landscapes, for example Arabidopsis and maize, visual methods like the Lorenz curve or expressing physical distances in relative distances cam be very efficient. If you need to compare quantitatively a large number of maps, summary statistics like the Gini index or the periphery-bias ratio are efficient measures of the heterogeneity of recombination rates along the chromosome.
 
 
 
@@ -545,6 +545,8 @@ ggplot(data = df, aes(x = relativePhys, y = relativeGen, color = set)) +
     theme_bw()
 ```
 
+
+Moreover, to compare between species, it can be interesting to use relative genomic positions and relative recombination rates, instead of absolute ones.
 
 
 ```{r relativeCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size."}
