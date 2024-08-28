@@ -12,7 +12,7 @@ gini(x, bootstrap = NULL)
 \item{bootstrap}{a numeric value of the number of iterations for a bootstrapped 95\% C.I. Set NULL if no bootstrap.}
 }
 \value{
-a single value of the Gini index if no bootstrap, otherwise a list of numeric values of the Gini index, and lower/upper 95\% C.I.
+The value of the Gini index
 }
 \description{
 The Gini index is a measure of statistical dispersion intended to represent inequality between measures, here recombination rates

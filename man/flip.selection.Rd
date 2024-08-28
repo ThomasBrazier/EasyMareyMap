@@ -4,7 +4,7 @@
 \alias{flip.selection}
 \title{Flip genetic positions with visual selection of markers}
 \usage{
-flip.selection(marey)
+flip.selection(x)
 }
 \arguments{
 \item{x}{a 'mareyMap' object.}

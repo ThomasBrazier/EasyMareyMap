@@ -342,7 +342,7 @@ ggplot2::ggplot(data = newMap$mareyMap, aes(x = phys/10^6, y = gen)) +
 ## Chromosome-wide statistics
 
 
-To  quantitatively describe and compare recombination maps, it is important to estimate summary statistics of the mean and variance of recombination rates. Many summary statistic functions of heterogeneity in recombination rates can be applied directly to the `mareyMap` object.
+To  quantitatively describe and compare recombination maps, it is important to estimate summary statistics of the mean and variance of recombination rates. Many summary statistics of heterogeneity in recombination rates can be calculated directly with the `mareyMap` object.
 These statistics, estimated on the whole chromosome, can be used to compare chromosomes in a single species, but also chromosomes between populations or species.
 
 The most simple statistics are the mean, weighted mean (weighted by the windows length), median and the variance.
@@ -417,7 +417,7 @@ Different genetic map can be generated in different populations, or between sexe
 
 
 ```{r dataHeterochiasmy}
-m = read.table("../data/Homo_sapiens_female.txt",
+m = read.table("../inst/extdata/Homo_sapiens_female.txt",
                header = T,
                sep = " ")
 m = m[which(m$map == "Chromosome 01"),]
@@ -425,7 +425,7 @@ marey_female = mareyMap(m)
 marey_female = recombinationMap(marey_female, method = "loess", verbose = FALSE)
 
 
-m = read.table("../data/Homo_sapiens_male.txt",
+m = read.table("../inst/extdata/Homo_sapiens_male.txt",
                header = T,
                sep = " ")
 m = m[which(m$map == "Chromosome 01"),]
@@ -433,7 +433,7 @@ marey_male = mareyMap(m)
 marey_male = recombinationMap(marey_male, method = "loess", verbose = FALSE)
 
 
-m = read.table("../data/Homo_sapiens_mean.txt",
+m = read.table("../inst/extdata/Homo_sapiens_mean.txt",
                header = T,
                sep = " ")
 m = m[which(m$map == "Chromosome 01"),]
@@ -508,7 +508,7 @@ ggplot(data = df, aes(x = point/10^6, y = recRate)) +
 
 
 ```{r importMapMaize}
-m = read.table("../data/Zea_mays_MaizeGDBConsensus_v4.txt",
+m = read.table("../inst/extdata/Zea_mays_MaizeGDBConsensus_v4.txt",
                header = T,
                sep = "\t")
 m = m[which(m$map == "2"),]

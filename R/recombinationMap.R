@@ -142,6 +142,8 @@ lowerCI = function(x) {
 #' @return a data frame of a Marey map with bootstrapped genetic positions.
 #' @export
 #'
+#' @importFrom methods is
+#'
 bootstrapMareyMap = function(x, intervals, nboot = boot, verbose = TRUE) {
   stopifnot(is(x, "mareyMap"))
 

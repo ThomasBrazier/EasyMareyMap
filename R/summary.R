@@ -3,12 +3,12 @@
 #' @param object a Marey map object.
 #' @param ... arguments passed to the generic summary function.
 #'
-#' @return a summary of the Marey map object.
-#' @exportS3Method base::summary
-#' @export summary
-#'
 #' @import ggplot2
 #'
+#' @return a summary of the Marey map object.
+#'
+#' @method summary mareyMap
+#' @export
 summary.mareyMap = function(object, ...) {
   dataset = levels(object$mareyMap$set)
   nameChromosome = object$chromosomeName

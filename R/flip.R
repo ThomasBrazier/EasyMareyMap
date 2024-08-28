@@ -7,7 +7,6 @@
 #'
 #' @return the input data frame with flipped genetic positions.
 #' @export
-#'
 flip = function(x) {
   # A vector of genetic distances values to work on
   vec = x$gen
@@ -26,14 +25,11 @@ flip = function(x) {
 #' Each row is an interval with start and end positions in bp.
 #' You can flip the whole chromosome by giving a single interval with an end equal or larger than chromosome size.
 #'
-#' @usage flip.interval(marey, intervals = data.frame(start = 1000, end = 90000))
-#'
 #' @param x a 'mareyMap' object.
 #' @param intervals a data frame of genomic intervals to flip, with physical positions in columns 'start' and 'end'.
 #'
 #' @return the input 'mareyMap' object with flipped genetic positions.
 #' @export
-#'
 flip.interval = function(x, intervals) {
   start = intervals$start
   end = intervals$end
@@ -59,13 +55,12 @@ flip.interval = function(x, intervals) {
 #'
 #' @description This function allows to flip the genetic positions by visually selecting the segment to flip.
 #'
-#' @usage flip.selection(marey)
+#' @usage flip.selection(x)
 #'
 #' @param x a 'mareyMap' object.
 #'
 #' @return the input 'mareyMap' object with flipped genetic positions.
 #' @export
-#'
 flip.selection = function(x) {
   marey = x$mareyMap
   idx = pointSelection(marey)

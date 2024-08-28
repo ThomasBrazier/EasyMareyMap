@@ -41,7 +41,7 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [x] Mask interval/selection/chromosome
 [x] How to treat negative values (set to zero, don't change, NA)
 
-[ ] mareyMap function impoort directly from path to file
+[ ] mareyMap function import directly from path to file
 
 [x] verbose recombinationMap interpolation
 
@@ -51,10 +51,10 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 [x] Add statistics and goodness of fit to summary
 
 
-[ ] Commenter jeux de données, avec references
+[x] Commenter jeux de données, avec references
 
 
-[ ] Bug in recombinationMap loess with Maize chromosome 1
+[x] Bug in recombinationMap loess with Maize chromosome 1
 
 
 [x] A map object is only a single chromosome, clean and simple. The unit is the genetic map
@@ -107,7 +107,7 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 ## Tests
 
 [ ] Tests
-[ ] github actions
+[ ] github actions R CMD check --as-cran
 
 
 ## Documentation
@@ -125,3 +125,20 @@ See ¨The quality of the genetic map was evaluated visually by generating diagno
 
 ## Bugs
       # [x] Avis : aucun argument trouvé pour min ; Inf est renvoyéErreur dans simpleLoess(y, x, w, span, degree = degree, parametric = parametric,  :   argument 'span' incorrect
+      
+      
+      
+## Publication
+
+
+
+
+Molecular Ecology Resources
+Computer Programs
+
+new computer software or substantial updates of existing programs
+Authors should clearly describe the need for the program and the rationale behind its design, as well as a summary of functions, usage and output.
+When relevant, authors should present an evaluation of a program’s performance compared to existing software based on real or simulated data.
+Programmers are urged to remember that ‘user-friendly’ programs are more likely to be adopted by the community, and that it is helpful if programs require standard input/output file formats (e.g., Genepop or Arlequin).
+Submissions should include a user manual or README file with adequate guidance for new users.
+Software and documentation should be accessible from a long-term server (e.g., github), but can additionally be made available at academic websites.

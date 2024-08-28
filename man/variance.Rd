@@ -10,7 +10,7 @@ variance(x)
 \item{x}{a Marey map object.}
 }
 \value{
-numeric, the variance of recombination rates.
+(numeric) the variance of recombination rates.
 }
 \description{
 Variance of recombination rates

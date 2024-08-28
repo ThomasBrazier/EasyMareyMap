@@ -2,11 +2,9 @@
 #'
 #' @param x a Marey map object.
 #'
-#' @return numeric, the variance of recombination rates.
+#' @return (numeric) the variance of recombination rates.
 #'
-#' @export variance
-#'
-#'
+#' @export
 variance = function(x) {
   rec = x$recMap$recRate
   m = var(rec, na.rm = TRUE)

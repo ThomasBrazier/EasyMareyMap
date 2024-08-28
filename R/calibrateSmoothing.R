@@ -8,6 +8,7 @@
 #' @param to the maximum of the range of smoothing values to explore.
 #' @param nCores the number of cores to parallelize.
 #' @param degree (optional) the degree parameter of the polynomial used in the 'loess' method.
+#' @param verbose (logical) whether or not to print progress bars
 #'
 #' @return the best smoothing parameter value.
 #' @export

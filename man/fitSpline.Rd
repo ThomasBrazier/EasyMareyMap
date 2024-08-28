@@ -24,13 +24,13 @@ fitSpline(
 
 \item{all.knots}{If TRUE, all distinct points in x are used as knots. If FALSE (default), a sequence knots is placed at the quantiles of the unique x values; in this case, the input nknots specifies the number of knots in the sequence. Ignored if the knot values are input using the knots argument.}
 
-\item{lamdba}{Computational smoothing parameter. This value is weighted by n to form the penalty coefficient (see Details). Ignored if spar is provided.}
+\item{lambda}{Computational smoothing parameter. This value is weighted by n to form the penalty coefficient (see Details). Ignored if spar is provided.}
 }
 \value{
 a smoothing spline object.
 }
 \description{
 Fit a smoothing spline to the Marey map with the 'npreg' statistical package
-which offers more smoothing parameter selection methods and more smoothing types than the regular `smooth.spline()`.
+which offers more smoothing parameter selection methods and more smoothing types than the regular 'smooth.spline()'.
 NOTE that for now the automatic calibration only tune the 'spar' parameter, with other parameters set to DEFAULT.
 }

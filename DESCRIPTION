@@ -1,10 +1,10 @@
 Package: EasyMareyMap
 Type: Package
 Title: Estimate local recombination rates using the Marey map method
-Version: 0.1.0
+Version: 0.2.0
 Author: Thomas Brazier
 Maintainer: Thomas Brazier <brazier.thomas@gmail.com>
-Description: Estimate local recombination rates using the Marey map method. Recombination rates are estimated by interpolating a mathematical function over the Marey map genetic distances in cM expressed as a function of the genomic position in Mb).
+Description: Estimate local recombination rates using the Marey map method. Recombination rates are estimated by interpolating a mathematical function over the Marey map (genetic distances in cM expressed as a function of the genomic position in Mb).
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -24,6 +24,7 @@ Imports:
     IRanges,
     dineq,
     S4Vectors,
-    npreg
+    npreg,
+    methods
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3

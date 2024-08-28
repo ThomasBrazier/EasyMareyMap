@@ -4,7 +4,7 @@
 \alias{summary.mareyMap}
 \title{Summary of a Marey map object}
 \usage{
-summary.mareyMap(object, ...)
+\method{summary}{mareyMap}(object, ...)
 }
 \arguments{
 \item{object}{a Marey map object.}

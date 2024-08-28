@@ -10,6 +10,7 @@
 #' @import GenomicRanges
 #' @import IRanges
 #' @import S4Vectors
+#' @importFrom methods as
 windowsPhysicalMap = function(x, windows = GRanges(), method = "mean") {
   df = x$recMap
 
@@ -36,8 +37,8 @@ windowsPhysicalMap = function(x, windows = GRanges(), method = "mean") {
       overlaps = recMap[subjectHits(hits)[which(queryHits(hits) == x)]]
       overlaps = unlist(as(lapply(1:length(overlaps),
                                   function(y) {restrict(overlaps[y],
-                                                        start = start(intervals)[x],
-                                                        end = end(intervals)[x])}),
+                                                        start = start(windows)[x],
+                                                        end = end(windows)[x])}),
                            "GRangesList"))
       return(weighted.mean(overlaps$recRate, width(overlaps), na.rm = TRUE))}))
 
@@ -45,8 +46,8 @@ windowsPhysicalMap = function(x, windows = GRanges(), method = "mean") {
       overlaps = recMap[subjectHits(hits)[which(queryHits(hits) == x)]]
       overlaps = unlist(as(lapply(1:length(overlaps),
                                   function(y) {restrict(overlaps[y],
-                                                        start = start(intervals)[x],
-                                                        end = end(intervals)[x])}),
+                                                        start = start(windows)[x],
+                                                        end = end(windows)[x])}),
                            "GRangesList"))
       return(weighted.mean(overlaps$upperRecRate, width(overlaps), na.rm = TRUE))}))
 
@@ -54,8 +55,8 @@ windowsPhysicalMap = function(x, windows = GRanges(), method = "mean") {
       overlaps = recMap[subjectHits(hits)[which(queryHits(hits) == x)]]
       overlaps = unlist(as(lapply(1:length(overlaps),
                                   function(y) {restrict(overlaps[y],
-                                                        start = start(intervals)[x],
-                                                        end = end(intervals)[x])}),
+                                                        start = start(windows)[x],
+                                                        end = end(windows)[x])}),
                            "GRangesList"))
       return(weighted.mean(overlaps$lowerRecRate, width(overlaps), na.rm = TRUE))}))
   }

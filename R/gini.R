@@ -9,21 +9,12 @@
 #' @param x a Marey map object, with a recombination map already estimated.
 #' @param bootstrap a numeric value of the number of iterations for a bootstrapped 95\% C.I. Set NULL if no bootstrap.
 #'
-#' @return a single value of the Gini index if no bootstrap, otherwise a list of numeric values of the Gini index, and lower/upper 95\% C.I.
+#' @return The value of the Gini index
 #' @export
 #'
 #' @import dineq
 gini = function(x, bootstrap = NULL) {
   df = x$recMap
-
   g = gini.wtd(df$recRate, weights = NULL)
-
-  if (is.null(bootstrap)) {
-    return(g)
-  } else {
-
-    return(list(gini = g,
-                upper = up,
-                lower = lo))
-  }
+  return(g)
 }

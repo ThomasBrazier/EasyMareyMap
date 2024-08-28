@@ -32,6 +32,8 @@ calibrateSmoothing(
 \item{nCores}{the number of cores to parallelize.}
 
 \item{degree}{(optional) the degree parameter of the polynomial used in the 'loess' method.}
+
+\item{verbose}{(logical) whether or not to print progress bars}
 }
 \value{
 the best smoothing parameter value.

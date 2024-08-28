@@ -4,7 +4,7 @@
 \alias{flip.interval}
 \title{Flip genetic positions in interval}
 \usage{
-flip.interval(marey, intervals = data.frame(start = 1000, end = 90000))
+flip.interval(x, intervals)
 }
 \arguments{
 \item{x}{a 'mareyMap' object.}

@@ -15,6 +15,7 @@
 #'
 #' @import utils
 #' @import stats
+#' @importFrom methods is
 predictGeneticMap = function(x, new) {
   # Predict new positions fro the fitted model
   if (is(x$model, "loess")) {

@@ -4,10 +4,12 @@
 \alias{median.mareyMap}
 \title{Median of recombination rates}
 \usage{
-\method{median}{mareyMap}(x)
+\method{median}{mareyMap}(x, ...)
 }
 \arguments{
 \item{x}{a Marey map object.}
+
+\item{...}{arguments passed to the generic summary function.}
 }
 \value{
 numeric, the median of recombination rates.

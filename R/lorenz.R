@@ -12,11 +12,10 @@
 #'
 #' @return a data frame with relative physical and genetic position ordered.
 #' @export
-#'
+#' @importFrom ggplot2 .data
 #'
 lorenz = function(x, return.plot = TRUE) {
   df = x$recMap
-
 
   df = df[!is.na(df$recRate),]
 
@@ -37,9 +36,9 @@ lorenz = function(x, return.plot = TRUE) {
 
   diagonal = data.frame(x = seq(0, 1, by = 0.01),
                         y = seq(0, 1, by = 0.01))
-  p = ggplot(data = out, aes(x = relativePhys, y = relativeGen)) +
+  p = ggplot(data = out, aes(x = .data$relativePhys, y = .data$relativeGen)) +
         geom_line() +
-        geom_line(data = diagonal, aes(x = x, y = y), color = "Grey") +
+        geom_line(data = diagonal, aes(x = .data$x, y = .data$y), color = "Grey") +
         xlim(0, 1) +
         ylim(0, 1) +
         xlab("Proportion of genomic distance") +

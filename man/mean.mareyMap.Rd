@@ -4,10 +4,12 @@
 \alias{mean.mareyMap}
 \title{Mean of recombination rates}
 \usage{
-mean.mareyMap(x)
+\method{mean}{mareyMap}(x, ...)
 }
 \arguments{
 \item{x}{a Marey map object.}
+
+\item{...}{arguments passed to the generic summary function.}
 }
 \value{
 numeric, the mean of recombination rates.
