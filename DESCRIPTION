@@ -24,6 +24,8 @@ Imports:
     dineq,
     S4Vectors,
     npreg,
-    methods
+    methods,
+    reshape2,
+    segmented
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2

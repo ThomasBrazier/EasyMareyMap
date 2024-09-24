@@ -57,7 +57,7 @@ comparative_marey_map = function(x = data.frame(),
 #'
 comparative_recombination_maps = function(x,
                                           method = 'loess',
-                                          verbose = TRUE) {
+                                          verbose = TRUE, ...) {
   l = x$data
   
   x$data = lapply(l, function(x) recombinationMap(x, method = method, verbose = verbose))
@@ -85,10 +85,10 @@ comparative_recombination_maps = function(x,
 #' @return a list of summary statistics
 #' @export
 #'
-compute_stats_marey = function(x, statistics = c('mean', 'median')) {
+compute_stats_marey = function(x, statistics = c('mean', 'median'), ...) {
   list_stats = list()
-  list_stats$sets = as.character(x$set)
-  list_stats$maps = as.character(x$map)
+  list_stats$set = as.character(x$set)
+  list_stats$map = as.character(x$map)
   
   # marey = comparative_marey_to_dataframe(x)
   recmap = comparative_recmap_to_dataframe(x)
@@ -170,24 +170,24 @@ plot_comparative_marey = function(x, group = 'set + map') {
   if (group == 'set') {
     grouping = as.formula(~as.factor(set))
     facet = facet_wrap(grouping, scales = "free")
-    point_rec = geom_point(aes(group = as.factor(map)), alpha = 0.4)
-    line_rec = geom_line(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, group = as.factor(map)), colour = "black")
+    point_rec = geom_point(aes(colour = as.factor(map), fill = as.factor(map)), alpha = 0.2)
+    line_rec = geom_line(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, group = as.factor(map)), fill = "black")
     ribbon_rec = geom_ribbon(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, ymin = lowerGeneticPositioncM, ymax = upperGeneticPositioncM, group = as.factor(map)),
-                             fill = "darkorange", colour = "darkorange", alpha = 0.3)
+                             alpha = 0.4)
 
   }
   if (group == 'map') {
-    grouping = as.formula(~as.factor(map))
+    grouping = as.formula(~ as.factor(map))
     facet = facet_wrap(grouping, scales = "free")
-    point_rec = geom_point(aes(group = as.factor(set)), alpha = 0.4)
-    line_rec = geom_line(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, group = as.factor(set)), colour = "black")
+    point_rec = geom_point(aes(colour = as.factor(set), fill = as.factor(set)), alpha = 0.2)
+    line_rec = geom_line(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, group = as.factor(set)), fill = "black")
     ribbon_rec = geom_ribbon(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, ymin = lowerGeneticPositioncM, ymax = upperGeneticPositioncM, group = as.factor(set)),
-                             fill = "darkorange", colour = "darkorange", alpha = 0.3)
+                             alpha = 0.4)
   }
   if (group == 'set + map') {
     grouping = as.formula(~as.factor(map) + as.factor(set))
     facet = facet_grid(grouping, scales = "free")
-    point_rec = geom_point(alpha = 0.4)
+    point_rec = geom_point(alpha = 0.2)
     line_rec = geom_line(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM), colour = "black")
     ribbon_rec = geom_ribbon(data = marey, aes(x = physicalPosition/10^6, y = geneticPositioncM, ymin = lowerGeneticPositioncM, ymax = upperGeneticPositioncM),
                                fill = "darkorange", colour = "darkorange", alpha = 0.3)
@@ -197,11 +197,10 @@ plot_comparative_marey = function(x, group = 'set + map') {
   if (nrow(marey) > 0) {
     marey$vld = TRUE
     
-    p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen, colour = vld)) +
+    p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen)) +
       point_rec +
       line_rec +
       ribbon_rec +
-      scale_colour_manual(values=c("TRUE" = "dodgerblue4", "FALSE" = "firebrick4")) +
       facet +
       labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
       theme(axis.line = element_line(),
@@ -216,11 +215,10 @@ plot_comparative_marey = function(x, group = 'set + map') {
             axis.text=element_text(colour="black"),
             legend.position = "right")
   } else {
-    p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen, colour = vld)) +
+    p = ggplot2::ggplot(data = df, aes(x = phys/10^6, y = gen)) +
       point_rec +
-      scale_colour_manual(values=c("TRUE" = "dodgerblue4", "FALSE" = "firebrick4")) +
       facet +
-      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
+      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)", colour = "dataset") +
       theme(axis.line = element_line(),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
@@ -310,7 +308,23 @@ plot_comparative_recmap = function(x, group = 'set + map') {
 #' @export
 #'
 merge_comparative_marey = function(x = list()) {
-  stop('Not implemented yet')
+  
+  new_object = comparative_marey_map()
+  
+  n_list = length(x)
+  
+  for (i in 1:n_list) {
+    d = x[[i]]
+    new_object$data = c(new_object$data, d$data)
+    new_object$set = c(new_object$set, d$set)
+    new_object$map = c(new_object$map, d$map)
+  }
+  
+  # check consistency
+  stopifnot(length(new_object$set) == length(new_object$data))
+  stopifnot(length(new_object$set) == length(new_object$map))
+  
+  return(new_object)
 }
 
 
@@ -332,6 +346,39 @@ subset_comparative_marey = function(x,
   
   return(x2)
 }
+
+
+
+
+#' Summary of a `comparative_marey_map` object
+#'
+#' @param x a `comparative_marey_map` object to summarize
+#' 
+#' @return a summary
+#'
+#' @method summary comparative_marey_map
+#' @export
+#' 
+summary.comparative_marey_map = function(x, ...) {
+  dataset = paste0(c(as.character(head(x$set, 3)), "..."))
+  n_maps = length(x$set)
+  length_linkage_map = unlist(lapply(x$data, function(x) max(x[[1]]$gen)))
+  length_genome_Mb = unlist(lapply(x$data, function(x) max(x[[1]]$phys)))
+  length_genome_Mb = length_genome_Mb / 1000000
+  n_markers = unlist(lapply(x$data, function(x) length(x[[1]]$gen)))
+  density_markers = n_markers / length_genome_Mb
+  
+  cat("============== Summary of the comparative marey map ==============\n",
+      "Datasets: ", dataset, "\n",
+      "Number of maps: ", n_maps, "\n",
+      "Mean linkage map length (cM): ", mean(length_linkage_map, na.rm = TRUE), "\n",
+      "Mean chromosome size (Mb): ", mean(length_genome_Mb, na.rm = TRUE), "\n",
+      "Mean number of markers: ", mean(n_markers, na.rm = TRUE), "\n",
+      "Mean marker density (marker/Mb): ", mean(density_markers, na.rm = TRUE), "\n",
+      "==================================================================\n")
+}
+
+
 
 
 

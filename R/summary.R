@@ -3,7 +3,6 @@
 #' @param object a Marey map object.
 #' @param ... arguments passed to the generic summary function.
 #'
-#' @import ggplot2
 #'
 #' @return a summary of the Marey map object.
 #'
@@ -26,24 +25,25 @@ summary.mareyMap = function(object, ...) {
   interpolation = object$interpolationMethod
   nbWindows = nrow(object$recMap)
   nBootstrap = object$nBootstrap
-  cat("============== Summary of the Marey map ==============\n",
+  cat("===================== Summary of the Marey map ==================\n",
       "Dataset: ", dataset, "\n",
       "Chromosome name: ", nameChromosome, "\n",
       "Chromosome length (Mb): ", lengthChromosome, "\n",
       "Linkage map length (cM): ", lengthLinkageMap, "\n",
       "Number of markers: ", nbMarkers, "\n",
       "Markers density (marker/Mb): ", densityMarkers, "\n",
-      "============== Recombination map ==============\n",
+      "=========================== Recombination map ===================\n",
       "Recombination rates (cM/Mb):\n",
       "Min.   1st Qu.    Median      Mean   3rd Qu.      Max.\n")
   if (length(recRate) > 0) {for (i in 1:nrow(recRate)) {cat(unlist(recRate[i,]) * 1e6, "\n")}}
-  cat("============== Interpolation ==============\n")
+  cat("======================== Interpolation ==========================\n")
   cat("Interpolation method: ", interpolation, "\n",
       "Smoothing parameter: ", smoothingParam, "\n",
       "Number of windows: ", nbWindows, "\n",
       "Number of bootstraps: ", nBootstrap, "\n")
-  cat("============== Goodness of fit (fitted ~ y) ==============\n",
+  cat("================= Goodness of fit (fitted ~ y) ===================\n",
       "fitted ~ y R squared: ", object$goodness.r.squared, "\n",
       "fitted ~ y adjusted R squared: ", object$goodness.adj.r.squared, "\n",
-      "fitted ~ y p-value ", object$goodness.p, "\n")
+      "fitted ~ y p-value ", object$goodness.p, "\n",
+      "==================================================================\n")
 }

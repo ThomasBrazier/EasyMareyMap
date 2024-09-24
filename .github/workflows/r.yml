@@ -32,8 +32,9 @@ jobs:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck", "gatepoints", "ggplot2", "pbmcapply", "paralle", "BiocManager", "dineq", "npreg", "reshape2", "segmented", "knitr"))
           remotes::install_deps(dependencies = TRUE)
+          BiocManager::install("GenomicRanges")
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")

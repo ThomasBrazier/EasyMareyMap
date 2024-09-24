@@ -63,7 +63,7 @@ lorenz = function(x, return.plot = TRUE) {
                         y = seq(0, 1, by = 0.01))
   
   p = ggplot(data = out, aes(x = relativePhys, y = relativeGen, fill = as.factor(map), colour = as.factor(set))) +
-    geom_line() +
+    geom_line(alpha = 0.3) +
     # facet_wrap(~ as.factor(set)) +
     geom_line(data = diagonal, aes(x = x, y = y, fill = NA, colour = NA), color = "black") +
     xlim(0, 1) +

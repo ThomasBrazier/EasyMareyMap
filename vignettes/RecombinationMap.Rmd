@@ -16,6 +16,10 @@ knitr::opts_chunk$set(
 
 ```
 
+
+The `EasyMareyMap` package for R has been implemented to estimate recombination maps from genetic maps (or linkage maps) using the Marey map approach [@rezvoy_mareymap:_2007]. It is designed to provide easy access to the data (stored in slots within objects) and the functions via the command line, in order to maximize scriptability, reproducibility and scalability to large datasets. It offers a statistical framework to estimate recombination maps with the automatic calibration of hyperparameters and a bootstrap procedure to measure the uncertainty of our estimates. The method has been used and validated in [@brazierDiversityDeterminantsRecombination2022].
+
+
 The package is loaded with the following command.
 
 ```{r setup, message=FALSE, warning=FALSE}
@@ -31,7 +35,7 @@ You can import the example dataset based on linkage maps for the five chromosome
 
 The datasets for the 'EasyMareyMap' package are formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set', 'map, 'mkr', 'phys', 'gen', 'vld'. Genomic coordinates are in basepairs (bp) and genetic distances in cM.
 
-You can create a `MareyMap` object. It must contain a single map (i.e. one chromosome).
+You can create a `MareyMap` object. It must contain a single map (i.e. one chromosome). We will see later how to treat multiple maps in a convenient way.
 
 
 ```{r importMap}
@@ -184,9 +188,16 @@ plot(tmp)
 Once you have checked (and eventually corrected) the Marey map, you can estimate the recombination rates along the chromosome. Recombination rates are in cM/bp. It is the core feature of the `EasyMareyMap` package. The procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map (`recMap` slot). A description of the interpolation method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022]. The `recombinationMap()` is designed to be user-friendly (only requires a few arguments, functions to plot and summarize), script-friendly to batch analyses (e.g. hundreds of genetic maps), highly automated (automatic fine-tuning of the smoothing parameter) and provide high reproducibility (all parameters and settings are stored in the `mareyMap` object and easily accessible).
 
 
-```{r estimateMap}
+```{r estimateMap, eval=FALSE}
 res = recombinationMap(marey, method = "loess", verbose = FALSE)
 ```
+
+
+```{r, echo=FALSE}
+# saveRDS(res, "../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
+res = readRDS("../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
+```
+
 
 
 ```{r plotInterpolation, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Marey maps of five chromosomes in *Arabidopsis thaliana* with the Marey interpolation line and a 95% C.I. (invalid markers are shown in red)."}
@@ -220,8 +231,17 @@ plot_recombinationMap(res)
 The validity and goodness of fit of statistical interpolation can be assessed with the linear regression of fitted values as a function of observed genetic distances. Once I fitted a loess function, I print the goodness of fit with `summary`.
 
 
-```{r fitLoess, echo=TRUE, message=FALSE}
+```{r fitLoess, echo=TRUE, eval=FALSE}
 res_loess = recombinationMap(marey, method = "loess", verbose = FALSE)
+```
+
+
+```{r, echo=FALSE, message=FALSE}
+res_loess = readRDS("../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
+```
+
+
+```{r, echo=TRUE, message=FALSE}
 summary(res_loess)
 ```
 
@@ -229,8 +249,16 @@ It can be used to compare the goodness of fit of different interpolation methods
 I can compare the performance of loess and smooth splines on the same Marey map.
 
 
-```{r fitSpline, echo=TRUE, message=FALSE}
+```{r fitSpline, echo=TRUE, eval=FALSE}
 res_spline = recombinationMap(marey, method = "spline", verbose = FALSE)
+```
+
+```{r, echo=FALSE, message=FALSE}
+# saveRDS(res_spline, "../inst/extdata/Arabidopsis_thaliana_chromosome1_spline.Rds")
+res_spline = readRDS("../inst/extdata/Arabidopsis_thaliana_chromosome1_spline.Rds")
+```
+
+```{r, echo=TRUE}
 summary(res_spline)
 ```
 
@@ -238,7 +266,7 @@ summary(res_spline)
 In this case, the two interpolation methods are similarly good. It can be verified by visual comparison.
 
 
-```{r fitFigure, echo=TRUE, message=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Goodness of fit of the Marey interpolated function, either with Loess regression or smooth Splines interpolation."}
+```{r fitFigure, echo=FALSE, message=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Goodness of fit of ttwo Marey interpolated functions, either with Loess regression or Smooth Splines interpolation. *Arabidopsis thaliana* chromosome 1."}
 df_loess = data.frame(method = "loess",
                      y = res_loess$mareyMap$gen,
                      fitted = res_loess$fitted,
@@ -342,6 +370,14 @@ ggplot2::ggplot(data = newMap$mareyMap, aes(x = phys/10^6, y = gen)) +
 ## Chromosome-wide statistics
 
 
+
+```{r, echo=FALSE, message=FALSE}
+# Reload data
+res = readRDS("../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
+```
+
+
+
 To  quantitatively describe and compare recombination maps, it is important to estimate summary statistics of the mean and variance of recombination rates. Many summary statistics of heterogeneity in recombination rates can be calculated directly with the `mareyMap` object.
 These statistics, estimated on the whole chromosome, can be used to compare chromosomes in a single species, but also chromosomes between populations or species.
 
@@ -413,88 +449,124 @@ lorenz(res)
 ## Compare multiple maps mapped on the same chromosome
 
 
-Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo sapiens*, a species experiencing heterochiasmy.
+Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo sapiens*, a species with heterochiasmy (i.e. recombination rates are different between sexes).
 
 
-```{r dataHeterochiasmy}
-m = read.table("../inst/extdata/Homo_sapiens_female.txt",
-               header = T,
-               sep = " ")
-m = m[which(m$map == "Chromosome 01"),]
-marey_female = mareyMap(m)
-marey_female = recombinationMap(marey_female, method = "loess", verbose = FALSE)
+```{r dataHeterochiasmy, echo = FALSE}
+# m = read.table("../inst/extdata/Homo_sapiens_female.txt",
+#                header = T,
+#                sep = " ")
+# m = m[which(m$map == "Chromosome 01"),]
+# marey_female = mareyMap(m)
+# marey_female = recombinationMap(marey_female, method = "loess", verbose = FALSE)
+# 
+# 
+# m = read.table("../inst/extdata/Homo_sapiens_male.txt",
+#                header = T,
+#                sep = " ")
+# m = m[which(m$map == "Chromosome 01"),]
+# marey_male = mareyMap(m)
+# marey_male = recombinationMap(marey_male, method = "loess", verbose = FALSE)
+# 
+# 
+# m = read.table("../inst/extdata/Homo_sapiens_mean.txt",
+#                header = T,
+#                sep = " ")
+# m = m[which(m$map == "Chromosome 01"),]
+# marey_avg = mareyMap(m)
+# marey_avg = recombinationMap(marey_avg, method = "loess", verbose = FALSE)
 
 
-m = read.table("../inst/extdata/Homo_sapiens_male.txt",
-               header = T,
-               sep = " ")
-m = m[which(m$map == "Chromosome 01"),]
-marey_male = mareyMap(m)
-marey_male = recombinationMap(marey_male, method = "loess", verbose = FALSE)
+human = readRDS("../inst/extdata/Homo_sapiens_comparative.Rds")
+```
 
+It is the time to present the `comparative_marey_map` object. It is a meta-object storing multiple maps (i.e. multiple chromosomes and multiple datasets). It allows to perform operations on a list of maps (e.g. estimating recombination rates), compute summary statistics (e.g. mean, median recombination rates or the gini index) and plot these maps in the same figure in a comparative manner. The `EasyMareyMap` package has also functions to easily manipulate `comparative_marey_map` objects.
 
-m = read.table("../inst/extdata/Homo_sapiens_mean.txt",
-               header = T,
-               sep = " ")
-m = m[which(m$map == "Chromosome 01"),]
-marey_avg = mareyMap(m)
-marey_avg = recombinationMap(marey_avg, method = "loess", verbose = FALSE)
+```{r comparative_object}
+# A short summary of the data stored
+summary(human)
+
+# The slots in the comparative_marey_map object
+names(human)
+
+# The class
+class(human)
 ```
 
 
+The recombination maps cna be estimated in batch for the whole comparative dataset with the function `comparative_recombination_maps()`.
+
+
+```{r, echo=TRUE, eval=FALSE}
+human = comparative_recombination_maps(human)
+```
+
+
+There are functions to easily get the Marey maps or the recombination maps from a `comparative_marey_map` object.
+
+```{r, echo=T}
+head(comparative_marey_to_dataframe(human))
+
+head(comparative_interpolation_to_dataframe(human))
+
+head(comparative_recmap_to_dataframe(human))
+```
+
+
+Let's work with only two chromosomes and the three datasets to show how to subset maps in a `comparative_marey_map` object. Each map in the `comparative_marey_map` object is a single `mareyMap` object. hence you can iterate over each element of `comparative_marey_map$data` to perform custom operations on `mareyMap` objects. There is also a function `merge_comparative_marey()` to merge `comparative_marey_map` objects.
+
+
+```{r subset_comparative_object}
+# Make a logical vector of maps to keep
+subs = (human$map %in% c("Chromosome 02" ,"Chromosome 05"))
+human_subset = subset_comparative_marey(human, subset = subs)
+```
+
+And now compute three summary statistics on each map.
 
 ```{r statsHeterochiasmy}
-mean(marey_male)
-mean(marey_female)
-mean(marey_avg)
+compute_stats_marey(human_subset, statistics = c("mean", "gini", "peripherybias"))
+```
 
-gini(marey_male)
-gini(marey_female)
-gini(marey_avg)
+It is easy to compute statistics on a large set of maps (22 chromosomes in three datasets).
 
-peripherybias(marey_male, proportion_periphery = 0.1,  chromosome_arm = "random")
-peripherybias(marey_female, proportion_periphery = 0.1,  chromosome_arm = "random")
-peripherybias(marey_avg, proportion_periphery = 0.1,  chromosome_arm = "random")
+
+```{r, echo = TRUE}
+st = compute_stats_marey(human, statistics = c("mean", "gini", "peripherybias"))
+st = as.data.frame(st)
+
+ggplot(st, aes(x = set, y = mean, fill = set)) +
+  geom_boxplot() +
+  geom_point() +
+  xlab("Dataset") +
+  ylab("Mean recombination rate (per chromosome)") +
+  theme_bw()
+
+
+ggplot(st, aes(x = set, y = gini, fill = set)) +
+  geom_boxplot() +
+  geom_point() +
+  xlab("Dataset") +
+  ylab("Gini index") +
+  theme_bw()
 ```
 
 
-```{r plotMareyHeterochiasmy, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged Marey maps of *Homo sapiens* chromosome 1."}
-df_female = marey_female$mareyMap
-df_male = marey_male$mareyMap
-df_avg = marey_avg$mareyMap
+You can plot either the Marey maps or the recombination maps with the `plot_comparative_marey()` or the `plot_comparative_recmap()` functions. They return a ggplot object that can be stored or customized. They allow a grouping factor for the plot. Maps can be grouped by `set`, `map` or both (i.e. `set + map`).
 
-df = rbind(df_female,
-           df_male,
-           df_avg)
 
-  
-ggplot(data = df, aes(x = phys/10^6, y = gen, colour = set, group = set)) +
-      geom_point() +
-      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
-      theme_bw()
+```{r plotMareyHeterochiasmy, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5."}
+plot_comparative_marey(human_subset, group = "set")
+plot_comparative_marey(human_subset, group = "map")
+plot_comparative_marey(human_subset, group = "set + map")
 ```
 
 
 
-```{r plotMapHeterochiasmy, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 1. The shaded area is the 95% confidence interval around the mean estimate."}
-df_female = marey_female$recMap
-df_male = marey_male$recMap
-df_avg = marey_avg$recMap
-
-df = rbind(df_female,
-           df_male,
-           df_avg)
-
-df$point = (df$start + df$end)/2
-
-df$recRate = df$recRate * 10^6
-df$upperRecRate = df$upperRecRate * 10^6
-df$lowerRecRate = df$lowerRecRate * 10^6
-
-ggplot(data = df, aes(x = point/10^6, y = recRate)) +
-    geom_line(aes(group = set, color = set)) +
-    geom_ribbon(aes(x = point/10^6, ymin = lowerRecRate, ymax = upperRecRate, fill = set), alpha = 0.2) +
-    labs(x = "Genomic position (Mb)", y = "Recombination rate (cM/Mb)")  
+```{r plotMapHeterochiasmy, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate."}
+plot_comparative_recmap(human_subset, group = "set")
+plot_comparative_recmap(human_subset, group = "map")
+plot_comparative_recmap(human_subset, group = "set + map")
 ```
 
 
@@ -507,49 +579,73 @@ ggplot(data = df, aes(x = point/10^6, y = recRate)) +
 
 
 
-```{r importMapMaize}
+```{r importMapMaize, echo=FALSE, eval=FALSE}
 m = read.table("../inst/extdata/Zea_mays_MaizeGDBConsensus_v4.txt",
                header = T,
                sep = "\t")
-m = m[which(m$map == "2"),]
-maize = mareyMap(m)
 
-maize = recombinationMap(maize, verbose = FALSE)
+comp_m = comparative_marey_map(m)
+summary(comp_m)
 
-summary(maize)
+comp_rec = comparative_recombination_maps(comp_m)
+  
+saveRDS(comp_rec, "../inst/extdata/Zea_mays_MaizeGDBConsensus_v4.Rds")
 ```
 
 
-In order to compare maps between two species with contrasted recombination landscapes, for example Arabidopsis and maize, visual methods like the Lorenz curve or expressing physical distances in relative distances cam be very efficient. If you need to compare quantitatively a large number of maps, summary statistics like the Gini index or the periphery-bias ratio are efficient measures of the heterogeneity of recombination rates along the chromosome.
+
+```{r importMapArabidopsis, echo=FALSE, eval=FALSE}
+m = read.table("../inst/extdata/Arabidopsis_thaliana.txt",
+               header = T,
+               sep = "\t")
+
+comp_m = comparative_marey_map(m)
+summary(comp_m)
+
+comp_rec = comparative_recombination_maps(comp_m)
+  
+saveRDS(comp_rec, "../inst/extdata/Arabidopsis_thaliana.Rds")
+```
+
+
+
+```{r mergeMaps, echo=TRUE}
+maize = readRDS("../inst/extdata/Zea_mays_MaizeGDBConsensus_v4.Rds")
+arabidopsis = readRDS("../inst/extdata/Arabidopsis_thaliana.Rds")
+
+summary(maize)
+summary(arabidopsis)
+
+compar = merge_comparative_marey(list(arabidopsis, maize))
+
+summary(compar)
+```
+
+
+In order to compare maps between two species with contrasted recombination landscapes, for example *Arabidopsis thaliana* and maize, visual methods like the Lorenz curve or expressing physical distances in relative distances cam be very efficient. If you need to compare quantitatively a large number of maps, summary statistics like the Gini index or the periphery-bias ratio are efficient measures of the heterogeneity of recombination rates along the chromosome.
 
 
 
 In order to get the data frame instead of the Lorenz plot, you can specify `return.plot = FALSE`. It works also for the `plot.mareyMap` and `plot_recombination` functions.
 
 
-```{r lorenzCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative Lorenz curves between Arabidopsis chromosome 1 and maize chromosome 1."}
-lorenz_arabido = lorenz(res, return.plot = FALSE)
-lorenz_maize = lorenz(maize, return.plot = FALSE)
+```{r lorenzCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative Lorenz curves between *Arabidopsis thaliana* and maize."}
+lorenz(compar)
+```
 
-df =  rbind(lorenz_arabido, lorenz_maize)
 
-diagonal = data.frame(x = seq(0, 1, by = 0.01),
-                        y = seq(0, 1, by = 0.01))
-ggplot(data = df, aes(x = relativePhys, y = relativeGen, color = set)) +
-    geom_line() +
-    geom_line(data = diagonal, aes(x = x, y = y), color = "Grey") +
-    xlim(0, 1) +
-    ylim(0, 1) +
-    xlab("Proportion of genomic distance") +
-    ylab("Proportion of genetic distance") +
-    theme_bw()
+The Broken stick model, as described in Brazier and Glémin (2022), is also an appropriate representation to compare the distribution of recombination rates along the genome across a large set of Marey maps.
+
+
+```{r brokenStick, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "The broken stick model applied to *Arabidopsis thaliana* and maize."}
+brokenstick(compar)
 ```
 
 
 Moreover, to compare between species, it can be interesting to use relative genomic positions and relative recombination rates, instead of absolute ones.
 
 
-```{r relativeCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size."}
+```{r relativeCompare, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size."}
 relative_arabido = res$recMap
 relative_maize = maize$recMap
 
