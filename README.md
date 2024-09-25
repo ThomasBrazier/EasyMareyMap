@@ -1,5 +1,11 @@
 # EasyMareyMap
 
+![license](https://badgen.net/badge/license/GPL3.0/blue)
+![release](https://badgen.net/badge/release/0.2.0/green?icon=github)
+![r-workflow](https://github.com/github/docs/actions/workflows/r.yml/badge.svg)
+
+
+
 Estimate local recombination rates with the Marey map method as described in [Brazier and Glémin 2022](https://doi.org/10.1371/journal.pgen.1010141).
 
 This R package provides an easy command line solution for the Marey map method, which is described in more detail in the original MareyMap package. The original MareyMap package is designed for interactive graphical use only and does not provide scripting capabilities. It does not allow to process many maps at a time. Hence we re-implemented the method in a more machine-friendly approach, in order to use it for batch processing and reproducible scripts. See the original MareyMap package here [Rezvoy et al. 2007](https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btm315) and [Siberchicot et al. 2017](https://CRAN.R-project.org/package=MareyMap).

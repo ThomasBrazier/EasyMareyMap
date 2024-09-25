@@ -13,22 +13,35 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
 ```
 
 
-The `EasyMareyMap` package for R has been implemented to estimate recombination maps from genetic maps (or linkage maps) using the Marey map approach [@rezvoy_mareymap:_2007]. It is designed to provide easy access to the data (stored in slots within objects) and the functions via the command line, in order to maximize scriptability, reproducibility and scalability to large datasets. It offers a statistical framework to estimate recombination maps with the automatic calibration of hyperparameters and a bootstrap procedure to measure the uncertainty of our estimates. The method has been used and validated in [@brazierDiversityDeterminantsRecombination2022].
+The `EasyMareyMap` package for R has been implemented to estimate recombination maps from genetic maps (or linkage maps) using the Marey map approach [@rezvoy_mareymap:_2007]. The original MareyMap package was designed for interactive graphical use only and does not provide scripting capabilities. It does not allow to process many maps at a time. See the original MareyMap package here [Rezvoy et al. 2007](https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btm315) and [Siberchicot et al. 2017](https://CRAN.R-project.org/package=MareyMap).
+
+
+Our `EasyMareyMap` package is designed to provide easy access to the data (stored in slots within objects) and the functions via the command line, hence a more machine-friendly approach, in order to maximize scriptability, reproducibility and scalability to large datasets. It offers a statistical framework to estimate recombination maps with the automatic calibration of hyperparameters and a bootstrap procedure to measure the uncertainty of our estimates. The method has been used and validated in [@brazierDiversityDeterminantsRecombination2022].
+
+
+
+Moreover, it offers a statistical framework to estimate recombination maps with the automatic calibration of hyperparameters and a bootstrap procedure to measure the uncertainty of our estimates, which is an advantage for robust data analyses. The method has been used and validated in [@brazierDiversityDeterminantsRecombination2022]. Our `EasyMareyMap` package adds these new features:
+* automatic calibration of the smoothing parameter
+* bootstraps to estimate a 95% confidence interval
+* graphical zone selection to exclude a bunch of outlier markers
+* a graphical and statistical framework for comparative genomics (compare Marey maps between species, populations or genomes)
+
+
+
 
 
 The package is loaded with the following command.
 
 ```{r setup, message=FALSE, warning=FALSE}
-library(ggplot2)
 library(EasyMareyMap)
+library(ggplot2)
 ```
 
 
-# Create a MareyMap object
+# Create a `MareyMap` object
 
 You can import the example dataset based on linkage maps for the five chromosomes of the plant *Arabidopsis thaliana* [@serin_construction_2017].
 

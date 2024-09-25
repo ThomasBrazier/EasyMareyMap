@@ -8,6 +8,7 @@
 #'
 #' @method summary mareyMap
 #' @export
+#' 
 summary.mareyMap = function(object, ...) {
   dataset = levels(object$mareyMap$set)
   nameChromosome = object$chromosomeName

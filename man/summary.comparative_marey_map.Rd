@@ -4,10 +4,12 @@
 \alias{summary.comparative_marey_map}
 \title{Summary of a `comparative_marey_map` object}
 \usage{
-\method{summary}{comparative_marey_map}(x, ...)
+\method{summary}{comparative_marey_map}(object, ...)
 }
 \arguments{
-\item{x}{a `comparative_marey_map` object to summarize}
+\item{object}{a `comparative_marey_map` object to summarize}
+
+\item{...}{additional arguments}
 }
 \value{
 a summary

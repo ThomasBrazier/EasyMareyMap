@@ -11,7 +11,7 @@ compute_stats_marey(x, statistics = c("mean", "median"), ...)
 
 \item{statistics}{a vector of statistics to compute}
 
-\item{verbose}{whether to print messages and progress bar}
+\item{...}{additional arguments}
 }
 \value{
 a list of summary statistics

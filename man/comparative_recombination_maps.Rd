@@ -12,6 +12,8 @@ comparative_recombination_maps(x, method = "loess", verbose = TRUE, ...)
 \item{method}{the interpolation method to apply}
 
 \item{verbose}{whether to print messages and progress bar}
+
+\item{...}{additional arguments}
 }
 \value{
 a `comparative_marey_map` object with recombination maps updated

@@ -4,10 +4,10 @@
 \alias{brokenstick}
 \title{Plot the broken stick}
 \usage{
-brokenstick(marey, k = 10, method = "strict", plot = TRUE)
+brokenstick(x, k = 10, method = "strict", plot = TRUE)
 }
 \arguments{
-\item{marey}{a `comparative_marey_map` object}
+\item{x}{a `comparative_marey_map` object}
 
 \item{k}{the number of segments (default = 10)}
 

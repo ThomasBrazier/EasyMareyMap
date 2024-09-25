@@ -19,10 +19,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: [macos-latest, linux]
     strategy:
       matrix:
-        r-version: ['3.6.3', '4.1.1']
+        r-version: ['4.4.1']
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck", "gatepoints", "ggplot2", "pbmcapply", "paralle", "BiocManager", "dineq", "npreg", "reshape2", "segmented", "knitr"))
+          install.packages(c("remotes", "rcmdcheck", "gatepoints", "ggplot2", "pbmcapply", "parallel", "BiocManager", "dineq", "npreg", "reshape2", "segmented", "knitr"))
           remotes::install_deps(dependencies = TRUE)
           BiocManager::install("GenomicRanges")
         shell: Rscript {0}

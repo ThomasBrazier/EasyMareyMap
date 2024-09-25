@@ -6,6 +6,13 @@
 \usage{
 brokenstick_one_map(marey, k = 10, method = "strict")
 }
+\arguments{
+\item{marey}{a single `mareyMap` object}
+
+\item{k}{the number of segments (default = 10)}
+
+\item{method}{the method used to infer segments breakpoints}
+}
 \description{
 Estimate the proportions of a broken stick model for a `comparative_marey_map` object
 i.e. proportion of relative genetic length (cM) in k segments of equal genomic size (bp) along the chromosome

@@ -7,7 +7,7 @@
 #' Diversity and determinants of recombination landscapes in flowering plants.
 #' PLOS Genetics, 18(8), Article 8. https://doi.org/10.1371/journal.pgen.1010141
 #'
-#' @param marey a `comparative_marey_map` object
+#' @param x a `comparative_marey_map` object
 #' @param k the number of segments (default = 10)
 #' @param method the method to infer the breakpoint of segments, either `strict` to cut a marker position, or `segmented` to interpolate segments breakpoints
 #' @param plot (logical) whether to plot the broken stick directly or return a data frame (default = `TRUE` will plot the figure)
@@ -25,11 +25,11 @@
 #' 
 #' @export
 #' 
-brokenstick = function(marey, k = 10, method = "strict", plot = TRUE) {
+brokenstick = function(x, k = 10, method = "strict", plot = TRUE) {
   
   # the list of set and names to process
-  s = marey$set
-  n = marey$map
+  s = x$set
+  n = x$map
   
   list_bs = list()
   
@@ -37,7 +37,7 @@ brokenstick = function(marey, k = 10, method = "strict", plot = TRUE) {
     idx = (s == s[i] & n == n[i])
     cat(s[i], n[i], "\n")
     
-    subs = subset_comparative_marey(marey, subset = idx)
+    subs = subset_comparative_marey(x, subset = idx)
     subs = comparative_marey_to_dataframe(subs)
     
     bs = list(brokenstick_one_map(subs, k = k, method = method))
@@ -67,7 +67,7 @@ brokenstick = function(marey, k = 10, method = "strict", plot = TRUE) {
   # Besides, estimates the ratio expected/observed (longer than expected will have lower relative recombination rate)
   brokenstick$ratio = brokenstick$proportion.length/(1/k)
   
-  p = ggplot(data = brokenstick, aes(x=sample, y=proportion.length, fill = log10(ratio)))+
+  p = ggplot(data = brokenstick, aes(x=.data$sample, y=.data$proportion.length, fill = log10(.data$ratio)))+
     geom_bar(stat='identity', width = 1) +
     # scale_fill_manual(values = color) +
     scale_fill_viridis_c(breaks = c(-1, 0, 1), labels = c("-1", "0", "1"), direction = -1, limits = c(-1, 1),
@@ -109,6 +109,12 @@ brokenstick = function(marey, k = 10, method = "strict", plot = TRUE) {
 #' @description
 #' Estimate the proportions of a broken stick model for a `comparative_marey_map` object
 #' i.e. proportion of relative genetic length (cM) in k segments of equal genomic size (bp) along the chromosome
+#' 
+#' @param marey a single `mareyMap` object
+#' @param k the number of segments (default = 10)
+#' @param method the method used to infer segments breakpoints
+#' 
+#' 
 brokenstick_one_map = function(marey, k = 10, method = "strict") {
   
   marey$map = as.character(marey$map)

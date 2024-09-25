@@ -15,10 +15,10 @@
 #' @importFrom ggplot2 .data
 #'
 lorenz = function(x, return.plot = TRUE) {
-  if (class(x) == 'mareyMap') {
+  if (is(x, 'mareyMap')) {
     df = x$recMap
   } else {
-    if (class(x) == 'comparative_marey_map') {
+    if (is(x, 'comparative_marey_map')) {
       df = comparative_recmap_to_dataframe(x)
     }
   }
@@ -62,10 +62,10 @@ lorenz = function(x, return.plot = TRUE) {
   diagonal = data.frame(x = seq(0, 1, by = 0.01),
                         y = seq(0, 1, by = 0.01))
   
-  p = ggplot(data = out, aes(x = relativePhys, y = relativeGen, fill = as.factor(map), colour = as.factor(set))) +
+  p = ggplot(data = out, aes(x = .data$relativePhys, y = .data$relativeGen, fill = as.factor(.data$map), colour = as.factor(.data$set))) +
     geom_line(alpha = 0.3) +
     # facet_wrap(~ as.factor(set)) +
-    geom_line(data = diagonal, aes(x = x, y = y, fill = NA, colour = NA), color = "black") +
+    geom_line(data = diagonal, aes(x = .data$x, y = .data$y, fill = NA, colour = NA), color = "black") +
     xlim(0, 1) +
     ylim(0, 1) +
     xlab("Proportion of genomic distance") +

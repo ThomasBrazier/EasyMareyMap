@@ -4,7 +4,7 @@
 \alias{plot_comparative_marey}
 \title{Plot comparative Marey maps}
 \usage{
-plot_comparative_marey(x, group = "set + map")
+plot_comparative_marey(x, group = "set + map", ...)
 }
 \arguments{
 \item{x}{a `comparative_marey_map` object}
