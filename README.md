@@ -1,8 +1,8 @@
 # EasyMareyMap
 
-![license](https://badgen.net/badge/license/GPL3.0/blue)
+![license](https://badgen.net/badge/license/GPL-3.0/blue)
 ![release](https://badgen.net/badge/release/0.2.0/green?icon=github)
-![r-workflow](https://github.com/github/docs/actions/workflows/r.yml/badge.svg)
+![r-workflow](https://github.com/ThomasBrazier/EasyMareyMap/tree/main/.github/workflows/r.yml/badge.svg)
 
 
 
