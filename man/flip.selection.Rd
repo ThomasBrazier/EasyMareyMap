@@ -10,7 +10,7 @@ flip.selection(x)
 \item{x}{a `marey_map` object.}
 }
 \value{
-the input 'mareyMap' object with flipped genetic positions.
+the input `marey_map` object with flipped genetic positions.
 }
 \description{
 This function allows to flip the genetic positions by visually selecting the segment to flip.
