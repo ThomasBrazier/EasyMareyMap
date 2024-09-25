@@ -17,6 +17,23 @@ Moreover, it adds new features not included in MareyMap original:
 * a graphical and statistical framework for comparative genomics (compare Marey maps between species, populations or genomes)
 
 
+Two S3 objects are at the core of the package:
+* the `marey_map` object contains all the data and metadata associated with a single map. It contains slots with the Marey map, the recombination map (after estimating it), and additional metadata, such as model goodness of fit.
+* the `comparative_marey_map` object is a collection of `marey_map` objects over which you can apply `EasyMareyMap` functions or iterate with your custom function. Hence it is a convenient object for manipulating, computing and comparing mutliple maps (i.e. multiple chromosomes and/or datasets).
+
+
+`EasyMareyMap` functions allow you to:
+* estimate the recombination map from the Marey map, using loess or smooth spline regression
+* estimate a bootstrapped confidence interval for recombination rates
+* predict genetic positions for a new set of markers
+* plot one or many Marey maps, plot one or many recombination maps
+* compute chromosome wide summary statistics (mean, median, variance, gini index, periphery-bias ratio...)
+* comparative plots (lorenz curve, broken stick)
+* apply some corrections to a raw Marey map (e.g. outlier removal)
+
+
+See the vignette for details.
+
 
 ## Installation
 
@@ -42,11 +59,6 @@ The input file is a tab-separated text file (.csv, .tsv) with five mandatory col
 * 'phys' physical position on a reference genome (bp)
 * 'gen' genetic position on a linkage map (cM)
 * 'vld' only markers TRUE are valid and used in analyses
-
-
-### mareyMap objects
-
-EasyMareyMap uses an S3 Object to encode all information (interpolation output...) and metadata and uses methods to apply specific methods to Marey maps and recombination maps. A `mareyMap` S3 object must contain only one genetic map (i.e. one chromosome), but the input data can contain multiple chromosome (hence chromosome name must be specified).
 
 
 

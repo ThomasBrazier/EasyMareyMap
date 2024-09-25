@@ -41,14 +41,27 @@ library(ggplot2)
 ```
 
 
+Two S3 objects are at the core of the package:
+* the `marey_map` object contains all the data and metadata associated with a single map. It contains slots with the Marey map, the recombination map (after estimating it), and additional metadata, such as model goodness of fit.
+* the `comparative_marey_map` object is a collection of `marey_map` objects over which you can apply `EasyMareyMap` functions or iterate with your custom function. Hence it is a convenient object for manipulating, computing and comparing mutliple maps (i.e. multiple chromosomes and/or datasets).
+
+
+`EasyMareyMap` functions allow you to:
+* estimate the recombination map from the Marey map, using loess or smooth spline regression
+* estimate a bootstrapped confidence interval for recombination rates
+* predict genetic positions for a new set of markers
+* plot one or many Marey maps, plot one or many recombination maps
+* compute chromosome wide summary statistics (mean, median, variance, gini index, periphery-bias ratio...)
+* comparative plots (lorenz curve, broken stick, see below for details)
+* apply some corrections to a raw Marey map (e.g. outlier removal)
+
+
+
 # Create a `marey_map` object
 
-You can import the example dataset based on linkage maps for the five chromosomes of the plant *Arabidopsis thaliana* [@serin_construction_2017].
+You can import the example dataset based on linkage maps for the five chromosomes of the plant *Arabidopsis thaliana* [@serin_construction_2017]. The datasets for the 'EasyMareyMap' package are formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set', 'map, 'mkr', 'phys', 'gen', 'vld'. Genomic coordinates are in basepairs (bp) and genetic distances in cM.
 
-
-The datasets for the 'EasyMareyMap' package are formatted according to the specifications of input files of the MareyMap package [@rezvoy_mareymap:_2007]. It is a tab-separated file with five columns named 'set', 'map, 'mkr', 'phys', 'gen', 'vld'. Genomic coordinates are in basepairs (bp) and genetic distances in cM.
-
-You can create a `MareyMap` object. It must contain a single map (i.e. one chromosome). We will see later how to treat multiple maps in a convenient way.
+You can then create a `marey_map` object. It must contain a single map (i.e. one chromosome). We will see later how to treat multiple maps in a convenient way.
 
 
 ```{r importMap}
@@ -503,7 +516,7 @@ head(comparative_recmap_to_dataframe(human))
 ```
 
 
-Let's work with only two chromosomes and the three datasets to show how to subset maps in a `comparative_marey_map` object. Each map in the `comparative_marey_map` object is a single `mareyMap` object. hence you can iterate over each element of `comparative_marey_map$data` to perform custom operations on `mareyMap` objects. There is also a function `merge_comparative_marey()` to merge `comparative_marey_map` objects.
+Let's work with only two chromosomes and the three datasets to show how to subset maps in a `comparative_marey_map` object. Each map in the `comparative_marey_map` object is a single `marey_map` object. hence you can iterate over each element of `comparative_marey_map$data` to perform custom operations on `marey_map` objects. There is also a function `merge_comparative_marey()` to merge `comparative_marey_map` objects.
 
 
 ```{r subset_comparative_object}
