@@ -7,7 +7,7 @@
 lorenz(x, return.plot = TRUE)
 }
 \arguments{
-\item{x}{a Marey map object (the Marey map is used) or a `comparative_marey_map` object}
+\item{x}{a `marey_map` object (the Marey map is used) or a `comparative_marey_map` object}
 
 \item{return.plot}{TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)}
 }

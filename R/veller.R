@@ -1,16 +1,15 @@
 #' Calculate the r-bar statistic from Veller et al. (2019)
 #' r-bar estimate the intra-chromosomal shuffling
 #'
-#' @param x a Marey map object.
-#' @param genomeSize The total genome size must be provided to estiate the intra-chromosomal genetic shuffling.
-#' @param mappingFunction The mapping function used to transform genetic distances (either "none", "haldane" or "kosambi")
+#' @param x a `marey_map` object.
+#' @param genome_size The total genome size must be provided to estiate the intra-chromosomal genetic shuffling.
+#' @param mapping_function The mapping function used to transform genetic distances (either "none", "haldane" or "kosambi")
 #'
 #' @return a numeric value of r-bar.
 #' @export
 #'
-#'
-veller = function(x, genomeSize = NA, mappingFunction = "none") {
-  d = getMareyMap(x)
+veller = function(x, genome_size = NA, mapping_function = "none") {
+  d = get_marey_map(x)
   # Chromosome length
   chrlength = x$chromosomeLength
 
@@ -25,19 +24,19 @@ veller = function(x, genomeSize = NA, mappingFunction = "none") {
   dij[which(dij == 0)] = NA
 
   # Convert distances back to recombinant fractions
-  if (mappingFunction == "none") {
+  if (mapping_function == "none") {
     # reversed Morgan, converting Morgans to recombinant fraction
     cat("Converting Morgans to recombinant fraction\n")
     rij = dij/100
     # cat(mean(rij, na.rm = TRUE))
   } else {
-    if (mappingFunction == "haldane") {
+    if (mapping_function == "haldane") {
       # Reversed Haldane, converting cM to recombinant fraction
       cat("Reversed Haldane, converting cM to recombinant fraction\n")
       rij = 0.5*(1-exp(-2*dij/100))
       # cat(mean(rij, na.rm = TRUE))
     } else {
-      if (mappingFunction == "kosambi") {
+      if (mapping_function == "kosambi") {
         # Reversed Kosambi, converting cM to recombinant fraction
         cat("Reversed Kosambi, converting cM to recombinant fraction\n")
         rij = 0.5*tanh(2*dij/100)
@@ -52,7 +51,7 @@ veller = function(x, genomeSize = NA, mappingFunction = "none") {
     # Intra-chromosomal component is the averaged rate of shuffling rij for each locus pair (i,j)
   # lambda = nrow(d)*(nrow(d)-1)/2 # loci x (loci-1)/2
   lambda = sum(!is.na(rij)) # is the total number of pairs of loci, i.e. number of values not NA
-  r_intra = (sum(rij, na.rm = TRUE)/(lambda*(lambda-1)*(1/2)))*(chrlength/genomeSize)^2
+  r_intra = (sum(rij, na.rm = TRUE)/(lambda*(lambda-1)*(1/2)))*(chrlength/genome_size)^2
   return(r_intra)
 }
 

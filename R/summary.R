@@ -1,15 +1,15 @@
-#' Summary of a Marey map object
+#' Summary of a `marey_map` object
 #'
-#' @param object a Marey map object.
+#' @param object a `marey_map` object.
 #' @param ... arguments passed to the generic summary function.
 #'
 #'
-#' @return a summary of the Marey map object.
+#' @return a summary of the `marey_map` object.
 #'
-#' @method summary mareyMap
+#' @method summary marey_map
 #' @export
 #' 
-summary.mareyMap = function(object, ...) {
+summary.marey_map = function(object, ...) {
   dataset = levels(object$mareyMap$set)
   nameChromosome = object$chromosomeName
   lengthChromosome = object$chromosomeLength/10^6

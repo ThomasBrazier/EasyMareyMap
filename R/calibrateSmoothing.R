@@ -1,12 +1,12 @@
 #' Automatic calibration of the smoothing parameter
 #'
-#' @param x a Marey map dataframe.
+#' @param x a `mareyMap` dataframe, from a slot in a  `marey_map` object
 #' @param method an interpolation method, either 'loess' or 'splines'.
-#' @param nResampling the number of iterations in the cross-validation procedure.
+#' @param n_resampling the number of iterations in the cross-validation procedure.
 #' @param K the number of clusters to subset in K-fold cross-validation.
 #' @param from the minimum of the range of smoothing values to explore.
 #' @param to the maximum of the range of smoothing values to explore.
-#' @param nCores the number of cores to parallelize.
+#' @param n_cores the number of cores to parallelize.
 #' @param degree (optional) the degree parameter of the polynomial used in the 'loess' method.
 #' @param verbose (logical) whether or not to print progress bars
 #'
@@ -14,13 +14,14 @@
 #' @export
 #'
 #' @import pbmcapply
-calibrateSmoothing = function(x,
+#' 
+calibrate_smoothing = function(x,
                               method = "loess",
-                              nResampling = 1000,
+                              n_resampling = 1000,
                               K = 5,
                               from = 0.2,
                               to = 0.5,
-                              nCores = 1,
+                              n_cores = 1,
                               degree = 2,
                               verbose = TRUE) {
 
@@ -39,16 +40,16 @@ calibrateSmoothing = function(x,
   crossvalidation = data.frame(smoothParam = smooth2test, MSE = NA)
 
   for (s in smooth2test) {
-    MSEBoot = numeric(nResampling)
+    MSEBoot = numeric(n_resampling)
     if (verbose) {
       cat("Fitting smoothing parameter", s, "...\n")
-      MSEBoot = unlist(pbmcapply::pbmclapply(X = 1:nResampling,
-                                             function(X) {cvResampling(x, K = K, smooth = s, method = method, degree = degree)},
-                                             mc.cores = nCores))
+      MSEBoot = unlist(pbmcapply::pbmclapply(X = 1:n_resampling,
+                                             function(X) {cv_resampling(x, K = K, smooth = s, method = method, degree = degree)},
+                                             mc.cores = n_cores))
     } else {
-      MSEBoot = unlist(mclapply(X = 1:nResampling,
-                                             function(X) {cvResampling(x, K = K, smooth = s, method = method, degree = degree)},
-                                             mc.cores = nCores))
+      MSEBoot = unlist(mclapply(X = 1:n_resampling,
+                                             function(X) {cv_resampling(x, K = K, smooth = s, method = method, degree = degree)},
+                                             mc.cores = n_cores))
     }
 
     crossvalidation$MSE[which(crossvalidation$smoothParam == s)] = mean(MSEBoot, na.rm = TRUE)

@@ -7,7 +7,7 @@
 #' The more the curve is close to the diagonal, the less heterogeneous is the distribution of recombination rates.
 #'
 #'
-#' @param x a Marey map object (the Marey map is used) or a `comparative_marey_map` object
+#' @param x a `marey_map` object (the Marey map is used) or a `comparative_marey_map` object
 #' @param return.plot TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)
 #'
 #' @return a data frame with relative physical and genetic position ordered.
@@ -15,7 +15,7 @@
 #' @importFrom ggplot2 .data
 #'
 lorenz = function(x, return.plot = TRUE) {
-  if (is(x, 'mareyMap')) {
+  if (is(x, 'marey_map')) {
     df = x$recMap
   } else {
     if (is(x, 'comparative_marey_map')) {

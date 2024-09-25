@@ -8,24 +8,24 @@
 #' - 'FALSE' if actual status is 'TRUE'
 #' - 'TRUE' otherwise
 #'
-#' @param x a mareyMap object.
+#' @param x a `marey_map` object.
 #'
-#' @return a mareyMap object.
+#' @return a `marey_map` object.
 #' @export
 #'
 #' @import gatepoints
 #' @import grDevices
 #'
-outlierSelection = function(x = mareyMap()) {
+outlier_selection = function(x = marey_map()) {
   tmp = x$mareyMap
-  idx = pointSelection(tmp)
+  idx = point_selection(tmp)
   status = !(x$mareyMap$vld[as.character(row.names(x$mareyMap)) %in% idx])
   x$mareyMap$vld[as.character(row.names(x$mareyMap)) %in% idx] = status
   return(x)
 }
 
 
-pointSelection = function(x) {
+point_selection = function(x) {
   df = x[,c("phys", "gen")]
   df = df[!is.na(df$phys),]
   dev.new()

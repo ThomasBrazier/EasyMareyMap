@@ -1,6 +1,6 @@
 #' Variance of recombination rates
 #'
-#' @param x a Marey map object.
+#' @param x a `marey_map` object.
 #'
 #' @return (numeric) the variance of recombination rates.
 #'

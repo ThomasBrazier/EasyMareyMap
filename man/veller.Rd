@@ -5,14 +5,14 @@
 \title{Calculate the r-bar statistic from Veller et al. (2019)
 r-bar estimate the intra-chromosomal shuffling}
 \usage{
-veller(x, genomeSize = NA, mappingFunction = "none")
+veller(x, genome_size = NA, mapping_function = "none")
 }
 \arguments{
-\item{x}{a Marey map object.}
+\item{x}{a `marey_map` object.}
 
-\item{genomeSize}{The total genome size must be provided to estiate the intra-chromosomal genetic shuffling.}
+\item{genome_size}{The total genome size must be provided to estiate the intra-chromosomal genetic shuffling.}
 
-\item{mappingFunction}{The mapping function used to transform genetic distances (either "none", "haldane" or "kosambi")}
+\item{mapping_function}{The mapping function used to transform genetic distances (either "none", "haldane" or "kosambi")}
 }
 \value{
 a numeric value of r-bar.

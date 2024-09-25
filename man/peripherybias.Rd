@@ -7,7 +7,7 @@
 peripherybias(x, proportion_periphery = 0.1, chromosome_arm = "random")
 }
 \arguments{
-\item{x}{a Marey map object, with a recombination map already estimated.}
+\item{x}{a `marey_map` object, with a recombination map already estimated.}
 
 \item{proportion_periphery}{the proportion of the periphery to keep (default = 0.1)}
 

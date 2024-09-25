@@ -21,7 +21,7 @@ Compute summary statistics on a meta `comparative_marey_map` object
 }
 \details{
 The complete list of statistics that can be computed is
-`mean`, `median`, `weighted.mean`, `variance`, `gini`, `peripherybias` and `coefficientVariation`
+`mean`, `median`, `weighted.mean`, `variance`, `gini`, `peripherybias` and `coefficient_variation`
 }
 \section{Slots}{
 

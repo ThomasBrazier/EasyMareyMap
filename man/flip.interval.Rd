@@ -7,7 +7,7 @@
 flip.interval(x, intervals)
 }
 \arguments{
-\item{x}{a 'mareyMap' object.}
+\item{x}{a `marey_map` object.}
 
 \item{intervals}{a data frame of genomic intervals to flip, with physical positions in columns 'start' and 'end'.}
 }

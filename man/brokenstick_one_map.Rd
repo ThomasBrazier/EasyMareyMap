@@ -7,7 +7,7 @@
 brokenstick_one_map(marey, k = 10, method = "strict")
 }
 \arguments{
-\item{marey}{a single `mareyMap` object}
+\item{marey}{a single `marey_map` object}
 
 \item{k}{the number of segments (default = 10)}
 

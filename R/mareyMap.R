@@ -1,13 +1,13 @@
-#' A Marey map object
+#' Instantiate a `marey_map` object
 #'
 #' @param x a data frame of a Marey map with columns "set",	"map",	"mkr",	"phys",	"gen",	"vld". If 'chromosome' names is not provided, this data.frame must contain only a single chromosome.
 #' @param chromosome the name of the chromosome/map to import from 'x'.
-#' @param chromosomeLength an optional vector of chromosome length in Mb.
+#' @param chromosome_length an optional vector of chromosome length in Mb.
 #'
-#' @return a 'mareyMap' object.
+#' @return a `marey_map` object.
 #' @export
 #'
-mareyMap = function(x = data.frame(), chromosome = NA, chromosomeLength = numeric()) {
+marey_map = function(x = data.frame(), chromosome = NA, chromosome_length = numeric()) {
   x = as.data.frame(x)
   if (is.na(chromosome)) {
     x = x
@@ -21,14 +21,14 @@ mareyMap = function(x = data.frame(), chromosome = NA, chromosomeLength = numeri
     }
   }
 
-  marey = new_marey_map(x, chromosomeLength = chromosomeLength)
+  marey = new_marey_map(x, chromosome_length = chromosome_length)
   validate_marey_map(marey)
 }
 
-new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
+new_marey_map = function(x = data.frame(), chromosome_length = numeric()) {
   stopifnot(is.data.frame(x))
   stopifnot(nrow(x) > 0)
-  stopifnot(is.numeric(chromosomeLength))
+  stopifnot(is.numeric(chromosome_length))
   if (!identical(colnames(x), c("set",	"map",	"mkr",	"phys",	"gen",	"vld"))) {
     stop("Invalid column names in 'x'.\n", paste(colnames(x), sep = ", "))
   }
@@ -43,9 +43,9 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
   x$vld = as.logical(x$vld)
   x$predict.se = NA
 
-  if (length(chromosomeLength) == 0) {
+  if (length(chromosome_length) == 0) {
     chrLength = aggregate(x$phys, by = list(x$map), function(x) {max(x, na.rm = TRUE)})
-    chromosomeLength = chrLength$x
+    chromosome_length = chrLength$x
   }
 
   linkageLength = aggregate(x$gen, by = list(x$map), function(x) {max(x, na.rm = TRUE)})
@@ -70,7 +70,7 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
             recMap = recMap,
             mareyCI = mareyCI,
             chromosomeName = unique(x$map),
-            chromosomeLength = chromosomeLength,
+            chromosomeLength = chromosome_length,
             linkageMapLength = linkageMapLength,
             interpolationMethod = character(),
             model = NULL,
@@ -84,7 +84,7 @@ new_marey_map = function(x = data.frame(), chromosomeLength = numeric()) {
             nBootstrap = integer())
 
   structure(df,
-            class = "mareyMap"
+            class = "marey_map"
   )
 }
 

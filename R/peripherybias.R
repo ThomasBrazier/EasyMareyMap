@@ -1,6 +1,6 @@
 #' Calculate the periphery-bias ratio as in Brazier and Glémin (2022)
 #'
-#' @param x a Marey map object, with a recombination map already estimated.
+#' @param x a `marey_map` object, with a recombination map already estimated.
 #' @param proportion_periphery the proportion of the periphery to keep (default = 0.1)
 #' @param chromosome_arm which chromosome arm (half of the chromosome) to keep (either 'random', 'left', 'right' or 'both')
 #'
@@ -9,6 +9,7 @@
 #'
 #' @import GenomicRanges
 #' @import IRanges
+#' 
 peripherybias = function(x, proportion_periphery = 0.1,  chromosome_arm = "random") {
   df = x$recMap
   chrlength = x$chromosomeLength
@@ -18,7 +19,7 @@ peripherybias = function(x, proportion_periphery = 0.1,  chromosome_arm = "rando
                       ranges = IRanges(start = seq(1, chrlength, round(chrlength/100, digits = 0)), width = round(chrlength/100, digits = 0)),
                       strand = "*")
 
-  hundred_windows = windowsPhysicalMap(x, windows = intervals)
+  hundred_windows = windows_physical_map(x, windows = intervals)
 
   # Keep only one side (one chromosome arm) or both
   # Mask with NAs

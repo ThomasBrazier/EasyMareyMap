@@ -1,6 +1,6 @@
 #' Plot the Marey maps
 #'
-#' @param x a Marey map object.
+#' @param x a `marey_map` object.
 #' @param return.plot TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)
 #' @param ... arguments passed to the generic summary function.
 #'
@@ -9,9 +9,10 @@
 #'
 #' @return a plot of the Marey maps, or a data frame.
 #'
-#' @method plot mareyMap
+#' @method plot marey_map
 #' @export
-plot.mareyMap = function(x, return.plot = TRUE, ...) {
+#' 
+plot.marey_map = function(x, return.plot = TRUE, ...) {
   df = x$mareyMap
   # Add the Marey interpolated function
   marey = x$mareyCI
@@ -69,7 +70,7 @@ plot.mareyMap = function(x, return.plot = TRUE, ...) {
 
 #' Plot the recombination map
 #'
-#' @param x a Marey map object.
+#' @param x a `marey_map` object.
 #' @param return.plot TRUE or FALSE, whether to return a plot or a data frame (default = TRUE returns the plot)
 #'
 #' @return a plot of the recombination map.
@@ -77,7 +78,7 @@ plot.mareyMap = function(x, return.plot = TRUE, ...) {
 #'
 #' @import ggplot2
 #'
-plot_recombinationMap = function(x, return.plot = TRUE) {
+plot_recombination_map = function(x, return.plot = TRUE) {
   x$recMap$point = (x$recMap$start + x$recMap$end)/2
 
   x$recMap$recRate = x$recMap$recRate * 10^6

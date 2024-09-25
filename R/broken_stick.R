@@ -110,7 +110,7 @@ brokenstick = function(x, k = 10, method = "strict", plot = TRUE) {
 #' Estimate the proportions of a broken stick model for a `comparative_marey_map` object
 #' i.e. proportion of relative genetic length (cM) in k segments of equal genomic size (bp) along the chromosome
 #' 
-#' @param marey a single `mareyMap` object
+#' @param marey a single `marey_map` object
 #' @param k the number of segments (default = 10)
 #' @param method the method used to infer segments breakpoints
 #' 

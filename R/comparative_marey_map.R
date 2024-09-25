@@ -31,7 +31,7 @@ comparative_marey_map = function(x = data.frame(),
   set = unlist(lapply(l, function(x) as.character(unique(x$set))))
   map = unlist(lapply(l, function(x) as.character(unique(x$map))))
   
-  l = lapply(l, function(x) mareyMap(x, chromosomeLength = chromosome_length))
+  l = lapply(l, function(x) marey_map(x, chromosome_length = chromosome_length))
   
   df = list(data = l,
             set = set,
@@ -60,7 +60,7 @@ comparative_recombination_maps = function(x,
                                           verbose = TRUE, ...) {
   l = x$data
   
-  x$data = lapply(l, function(x) recombinationMap(x, method = method, verbose = verbose))
+  x$data = lapply(l, function(x) recombination_map(x, method = method, verbose = verbose))
   
   return(x)
 }
@@ -79,7 +79,7 @@ comparative_recombination_maps = function(x,
 #' 
 #' @details
 #' The complete list of statistics that can be computed is
-#' `mean`, `median`, `weighted.mean`, `variance`, `gini`, `peripherybias` and `coefficientVariation`
+#' `mean`, `median`, `weighted.mean`, `variance`, `gini`, `peripherybias` and `coefficient_variation`
 #' 
 #' 
 #' @return a list of summary statistics
@@ -133,14 +133,14 @@ compute_stats_marey = function(x,
     }
     list_stats$peripherybias = pbr
   }
-  if ('coefficientVariation' %in% statistics) {
+  if ('coefficient_variation' %in% statistics) {
     cv = c()
     for (i in 1:length(x$data)) {
       df = x$data[i]
-      res = coefficientVariation(df[[1]])
+      res = coefficient_variation(df[[1]])
       cv = c(cv, res)
     }
-    list_stats$coefficientVariation = cv
+    list_stats$coefficient_variation = cv
   }
 
   return(list_stats)

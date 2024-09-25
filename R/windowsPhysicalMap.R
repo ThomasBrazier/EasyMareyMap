@@ -1,6 +1,6 @@
 #' Aggregate recombination rates in sliding windows along the genome
 #'
-#' @param x a Marey map object, with a recombination map already estimated.
+#' @param x a `marey_map` object, with a recombination map already estimated.
 #' @param windows a GRanges object with genomic intervals
 #' @param method the method used to aggregate (either "mean", "weightedmean" or "median")
 #'
@@ -11,7 +11,8 @@
 #' @import IRanges
 #' @import S4Vectors
 #' @importFrom methods as
-windowsPhysicalMap = function(x, windows = GRanges(), method = "mean") {
+#' 
+windows_physical_map = function(x, windows = GRanges(), method = "mean") {
   df = x$recMap
 
   recMap = makeGRangesFromDataFrame(df,

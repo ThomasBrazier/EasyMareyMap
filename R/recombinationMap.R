@@ -1,19 +1,19 @@
 #' Global function estimate the recombination map
 #'
-#' @param x a 'mareyMap' object.
+#' @param x a `marey_map` object.
 #' @param method an interpolation method, either 'loess' or 'splines' (default = 'loess').
 #' @param K number of clusters to subset in K-fold cross-validation.
 #' @param boot number of bootstraps to estimate the confidence interval.
-#' @param nCores number of cores to parallelize.
+#' @param n_cores number of cores to parallelize.
 #' @param smoothing (optional) smoothing parameter, if you do not want to calibrate it.
-#' @param nResampling number of iterations in the cross-validation procedure.
-#' @param calibrationRange range of the smoothing parameter space to explore.
+#' @param n_resampling number of iterations in the cross-validation procedure.
+#' @param calibration_range range of the smoothing parameter space to explore.
 #' @param degree (optional) the degree parameter of the polynomial used in the 'loess' method.
 #' @param windows size or coordinates of the windows along the chromosome: either integer in basepairs (default = 10^5) or a data.frame of start/end coordinates.
-#' @param setNegativeValues the value (e.g. 0 or NA) to use for negative values in recombination rates (default = 0).
+#' @param set_negative_values the value (e.g. 0 or NA) to use for negative values in recombination rates (default = 0).
 #' @param verbose Whether to print messages and progress bars at each step (default = TRUE).
 #'
-#' @return a 'mareyMap' object with the estimated recombination map.
+#' @return a `marey_map` object with the estimated recombination map.
 #' @export
 #'
 #' @import pbmcapply
@@ -21,30 +21,30 @@
 #' @import utils
 #' @import stats
 #'
-recombinationMap = function(x,
+recombination_map = function(x,
                             method = "loess",
                             K = 5,
                             boot = 1000,
-                            nCores = 1,
+                            n_cores = 1,
                             smoothing = numeric(),
-                            nResampling = 1000,
-                            calibrationRange = c(0.2, 0.5),
+                            n_resampling = 1000,
+                            calibration_range = c(0.2, 0.5),
                             degree = 2,
                             windows = 10^5,
-                            setNegativeValues = 0,
+                            set_negative_values = 0,
                             verbose = TRUE) {
   if (!(method %in% c("loess", "spline"))) {
     stop("Interpolation method must be specified: loess or spline.")
   }
 
-  calibrationFrom = calibrationRange[1]
-  calibrationTo = calibrationRange[2]
+  calibrationFrom = calibration_range[1]
+  calibrationTo = calibration_range[2]
 
-  nCores = min(nCores,
+  nCores = min(n_cores,
                (parallel::detectCores(all.tests = FALSE, logical = TRUE)-1))
 
   if(verbose) {cat("Processing...\n")}
-  df = getMareyMap(x)
+  df = get_marey_map(x)
 
   if (length(smoothing) > 0) {
     if (is.numeric(smoothing)) {
@@ -52,13 +52,13 @@ recombinationMap = function(x,
     }
   } else {
     if(verbose) {cat("Calibrate the smoothing parameter.\n")}
-    smoothingParam = calibrateSmoothing(df,
+    smoothingParam = calibrate_smoothing(df,
                                         method = method,
-                                        nResampling = nResampling,
+                                        n_resampling = n_resampling,
                                         K = K,
                                         from = calibrationFrom,
                                         to = calibrationTo,
-                                        nCores = nCores,
+                                        n_cores = nCores,
                                         degree = degree,
                                         verbose
     )
@@ -88,13 +88,13 @@ recombinationMap = function(x,
 
   # Fit the Marey function to all points
   if (x$interpolationMethod == "loess") {
-    fitMarey = fitLoess(df, span = smoothingParam, degree = degree)
+    fitMarey = fit_loess(df, span = smoothingParam, degree = degree)
     x$fitted = fitMarey$fitted
     x$residuals = fitMarey$residuals
     x$model = fitMarey
   }
   if (x$interpolationMethod == "spline") {
-    fitMarey = fitSpline(df, spar = smoothingParam)
+    fitMarey = fit_spline(df, spar = smoothingParam)
     x$fitted = fitMarey$y
     x$residuals = residuals(fitMarey)
     x$model = fitMarey
@@ -111,10 +111,10 @@ recombinationMap = function(x,
 
   if(verbose) {cat("Estimate a bootstrapped Marey map.\n")}
   # Estimate a Marey function with Confidence Intervals
-  x$mareyCI = bootstrapMareyMap(x, physWindows, nboot = boot, verbose)
+  x$mareyCI = bootstrap_marey_map(x, physWindows, nboot = boot, verbose)
 
   if(verbose) {cat("Estimate recombination rates.\n")}
-  x$recMap = bootstrapRecMap(x, physWindows, nboot = boot, setNegativeValues, verbose)
+  x$recMap = bootstrap_rec_map(x, physWindows, nboot = boot, set_negative_values, verbose)
 
 
   return(x)
@@ -134,7 +134,7 @@ lowerCI = function(x) {
 #'
 #' @description A generic function to bootstrap a C.I. for a Marey map on given intervals
 #'
-#' @param x a 'mareyMap' object.
+#' @param x a `marey_map` object.
 #' @param intervals a data.frame of genomic windows in which the recombination rate will be estimated, with columns 'start'-'end'.
 #' @param nboot number of bootstraps to estimate the confidence interval.
 #' @param verbose Whether to print messages and progress bars at each step (default = TRUE).
@@ -144,8 +144,8 @@ lowerCI = function(x) {
 #'
 #' @importFrom methods is
 #'
-bootstrapMareyMap = function(x, intervals, nboot = boot, verbose = TRUE) {
-  stopifnot(is(x, "mareyMap"))
+bootstrap_marey_map = function(x, intervals, nboot = boot, verbose = TRUE) {
+  stopifnot(is(x, "marey_map"))
 
   df = x$mareyMap
   fitMarey = x$model
@@ -159,12 +159,12 @@ bootstrapMareyMap = function(x, intervals, nboot = boot, verbose = TRUE) {
     resampled = df[sample(1:nrow(df), replace = TRUE), ]
 
     if (is(fitMarey, "loess")) {
-      fitMarey = fitLoess(resampled, span = fitMarey$pars$span, degree = fitMarey$pars$degree)
+      fitMarey = fit_loess(resampled, span = fitMarey$pars$span, degree = fitMarey$pars$degree)
       predicted.start = predict(fitMarey, newdata = intervals$start)
       predicted.end = predict(fitMarey, newdata = intervals$end)
     }
     if (is(fitMarey, "ss")) {
-      fitMarey = fitSpline(resampled, spar = fitMarey$spar)
+      fitMarey = fit_spline(resampled, spar = fitMarey$spar)
       predicted.start = predict(fitMarey, intervals$start)$y
       predicted.end = predict(fitMarey, intervals$end)$y
     }
@@ -199,14 +199,14 @@ bootstrapMareyMap = function(x, intervals, nboot = boot, verbose = TRUE) {
 #' @param x a 'mareyMap' object.
 #' @param intervals a data.frame of genomic windows in which the recombination rate will be estimated, with columns 'start'-'end'.
 #' @param nboot number of bootstraps to estimate the confidence interval.
-#' @param setNegativeValues the value (e.g. 0 or NA) to use for negative values in recombination rates (default = 0).
+#' @param set_negative_values the value (e.g. 0 or NA) to use for negative values in recombination rates (default = 0).
 #' @param verbose Whether to print messages and progress bars at each step (default = TRUE).
 #'
 #' @return a data frame of a recombination map.
 #' @export
 #'
-bootstrapRecMap = function(x, intervals, nboot = boot, setNegativeValues = 0, verbose = TRUE) {
-  stopifnot(class(x) == "mareyMap")
+bootstrap_rec_map = function(x, intervals, nboot = boot, set_negative_values = 0, verbose = TRUE) {
+  stopifnot(class(x) == "marey_map")
 
   df = x$mareyMap
   fitMarey = x$model
@@ -220,12 +220,12 @@ bootstrapRecMap = function(x, intervals, nboot = boot, setNegativeValues = 0, ve
     resampled = df[sample(1:nrow(df), replace = TRUE), ]
 
     if (is(fitMarey, "loess")) {
-      fitMarey = fitLoess(resampled, span = fitMarey$pars$span, degree = fitMarey$pars$degree)
+      fitMarey = fit_loess(resampled, span = fitMarey$pars$span, degree = fitMarey$pars$degree)
       predicted.start = predict(fitMarey, newdata = intervals$start)
       predicted.end = predict(fitMarey, newdata = intervals$end)
     }
     if (is(fitMarey, "ss")) {
-      fitMarey = fitSpline(resampled, spar = fitMarey$spar)
+      fitMarey = fit_spline(resampled, spar = fitMarey$spar)
       predicted.start = predict(fitMarey, intervals$start)$y
       predicted.end = predict(fitMarey, intervals$end)$y
     }
@@ -237,9 +237,9 @@ bootstrapRecMap = function(x, intervals, nboot = boot, setNegativeValues = 0, ve
   dY = rowMeans(bootPrediction, na.rm = TRUE)
   dYupper = apply(bootPrediction, MARGIN = 1, FUN = upperCI)
   dYlower = apply(bootPrediction, MARGIN = 1, FUN = lowerCI)
-  dY[dY < 0] = setNegativeValues
-  dYupper[dYupper < 0] = setNegativeValues
-  dYlower[dYlower < 0] = setNegativeValues
+  dY[dY < 0] = set_negative_values
+  dYupper[dYupper < 0] = set_negative_values
+  dYlower[dYlower < 0] = set_negative_values
 
   estimates = data.frame(
     set = unique(df$set),

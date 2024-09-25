@@ -6,7 +6,7 @@
 #' while a Gini coefficient of 1 reflects maximal inequality among values
 #' The Gini index is estimated on recombination rates with the `gini.wtd` function from the `dineq` package.
 #'
-#' @param x a Marey map object, with a recombination map already estimated.
+#' @param x a `marey_map` object, with a recombination map already estimated.
 #' @param bootstrap a numeric value of the number of iterations for a bootstrapped 95\% C.I. Set NULL if no bootstrap.
 #'
 #' @return The value of the Gini index

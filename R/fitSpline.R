@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @import npreg
-fitSpline = function(x, spar = numeric(), m = 2, nknots = .nknots.smspl, all.knots = FALSE, lambda = NULL) {
+fit_spline = function(x, spar = numeric(), m = 2, nknots = .nknots.smspl, all.knots = FALSE, lambda = NULL) {
   fit = ss(x = x$phys, y = x$gen, spar = spar, m = m, nknots = nknots, all.knots = all.knots, lambda = lambda)
   return(fit)
 }

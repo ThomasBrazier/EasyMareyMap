@@ -7,7 +7,7 @@
 gini(x, bootstrap = NULL)
 }
 \arguments{
-\item{x}{a Marey map object, with a recombination map already estimated.}
+\item{x}{a `marey_map` object, with a recombination map already estimated.}
 
 \item{bootstrap}{a numeric value of the number of iterations for a bootstrapped 95\% C.I. Set NULL if no bootstrap.}
 }

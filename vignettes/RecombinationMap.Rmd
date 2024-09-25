@@ -41,7 +41,7 @@ library(ggplot2)
 ```
 
 
-# Create a `MareyMap` object
+# Create a `marey_map` object
 
 You can import the example dataset based on linkage maps for the five chromosomes of the plant *Arabidopsis thaliana* [@serin_construction_2017].
 
@@ -62,23 +62,23 @@ head(m)
 
 
 ```{r mareyMapObject}
-# The marey map is imported into a 'mareyMap' object
+# The marey map is imported into a 'marey_map' object
 m = m[which(m$map == "1"),]
-marey = mareyMap(m)
-# names of slots in the 'mareyMap' object
+marey = marey_map(m)
+# names of slots in the 'marey_map' object
 names(marey)
 
-# See details in ?mareyMap
-colnames(marey$mareyMap)
+# See details in ?marey_map
+colnames(marey$marey_map)
 colnames(marey$recMap)
 colnames(marey$mareyCI)
 ```
 
 
-The `EasyMareyMap` package provides many functions to directly access data or compute summary statistics directly. Moreover, to allow further development and implementation of new features, data and metadata are stored in the `mareyMap` object and easily accessible.
+The `EasyMareyMap` package provides many functions to directly access data or compute summary statistics directly. Moreover, to allow further development and implementation of new features, data and metadata are stored in the `marey_map` object and easily accessible.
 
 
-The `mareyMap` object is a S3 class object (see [S3 class](https://adv-r.hadley.nz/s3.html)). It contains a list of slots:
+The `marey_map` object is a S3 class object (see [S3 class](https://adv-r.hadley.nz/s3.html)). It contains a list of slots:
 - `mareyMap` stores the input Marey map, in the format specified above.
 - `recMap` stores the estimated recombination map (cM/Mb), with confidence intervals estimated by bootstrap.
 - `mareyCI` stores estimated genetic positions of the same genomic windows as the recombination map, instead of recombination rates, with confidence intervals estimated by bootstrap. It can be a good practice to compare genetic positions interpolated in `mareyCI` with genetic positions observed in `mareyMap` to evaluate the quality of the interpolation method.
@@ -89,7 +89,7 @@ The `mareyMap` object is a S3 class object (see [S3 class](https://adv-r.hadley.
 
 
 
-There is a function to display a `summary` of a `mareyMap` object.
+There is a function to display a `summary` of a `marey_map` object.
 
 ```{r summary}
 summary(marey)
@@ -106,7 +106,7 @@ The `EasyMareyMap` package provides user-friendly functions to evaluate data qua
 
 
 
-Maps with a low quality often show outlying markers that will strongly negatively affect the performance of interpolation. Outlying markers are mapped outside the global trend of the Marey map. In the figure below, I add some outlier markers to the Marey map around the position 17Mb, just to learn how to remove them. There is a function to `plot` the Marey map of a `mareyMap` object. Markers kept for further interpolation are in blue. Markers discarded are in red. 
+Maps with a low quality often show outlying markers that will strongly negatively affect the performance of interpolation. Outlying markers are mapped outside the global trend of the Marey map. In the figure below, I add some outlier markers to the Marey map around the position 17Mb, just to learn how to remove them. There is a function to `plot` the Marey map of a `marey_map` object. Markers kept for further interpolation are in blue. Markers discarded are in red. 
 
 
 ```{r plotOutliers, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Add random outliers in the Marey map."}
@@ -133,8 +133,8 @@ plot(marey_outliers)
 
 It is possible to perform outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
 
-```
-marey = outlierSelection(marey, "1")
+```{r, eval=FALSE}
+marey = outlier_selection(marey)
 ```
 
 <!-- TODO Add a photo of mkr selection -->
@@ -198,11 +198,11 @@ plot(tmp)
 
 # Estimate a recombination map
 
-Once you have checked (and eventually corrected) the Marey map, you can estimate the recombination rates along the chromosome. Recombination rates are in cM/bp. It is the core feature of the `EasyMareyMap` package. The procedure to estimate the recombination map is done with the `recombinationMap()` function which returns a `mareyMap` object with an estimated recombination map (`recMap` slot). A description of the interpolation method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022]. The `recombinationMap()` is designed to be user-friendly (only requires a few arguments, functions to plot and summarize), script-friendly to batch analyses (e.g. hundreds of genetic maps), highly automated (automatic fine-tuning of the smoothing parameter) and provide high reproducibility (all parameters and settings are stored in the `mareyMap` object and easily accessible).
+Once you have checked (and eventually corrected) the Marey map, you can estimate the recombination rates along the chromosome. Recombination rates are in cM/bp. It is the core feature of the `EasyMareyMap` package. The procedure to estimate the recombination map is done with the `recombination_map()` function which returns a `marey_map` object with an estimated recombination map (`recMap` slot). A description of the interpolation method is available in Brazier and Glémin [@brazierDiversityDeterminantsRecombination2022]. The `recombination_map()` is designed to be user-friendly (only requires a few arguments, functions to plot and summarize), script-friendly to batch analyses (e.g. hundreds of genetic maps), highly automated (automatic fine-tuning of the smoothing parameter) and provide high reproducibility (all parameters and settings are stored in the `marey_map` object and easily accessible).
 
 
 ```{r estimateMap, eval=FALSE}
-res = recombinationMap(marey, method = "loess", verbose = FALSE)
+res = recombination_map(marey, method = "loess", verbose = FALSE)
 ```
 
 
@@ -228,12 +228,12 @@ head(res$recMap)
 summary(res)
 ```
 
-The recombination landscape can be plotted with the `plot_recombinationMap()` function. We implemented a bootstrapped procedure (random resampling of markers) to estimate confidence intervals along the genome. It is an important feature to evaluate the quality of the recombination map.
+The recombination landscape can be plotted with the `plot_recombination_map()` function. We implemented a bootstrapped procedure (random resampling of markers) to estimate confidence intervals along the genome. It is an important feature to evaluate the quality of the recombination map.
 
 
 
 ```{r plotMap, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate."}
-plot_recombinationMap(res)
+plot_recombination_map(res)
 ```
 
 
@@ -245,11 +245,12 @@ The validity and goodness of fit of statistical interpolation can be assessed wi
 
 
 ```{r fitLoess, echo=TRUE, eval=FALSE}
-res_loess = recombinationMap(marey, method = "loess", verbose = FALSE)
+res_loess = recombination_map(marey, method = "loess", verbose = FALSE)
 ```
 
 
 ```{r, echo=FALSE, message=FALSE}
+# saveRDS(res_loess, "../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
 res_loess = readRDS("../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
 ```
 
@@ -263,7 +264,7 @@ I can compare the performance of loess and smooth splines on the same Marey map.
 
 
 ```{r fitSpline, echo=TRUE, eval=FALSE}
-res_spline = recombinationMap(marey, method = "spline", verbose = FALSE)
+res_spline = recombination_map(marey, method = "spline", verbose = FALSE)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
@@ -279,7 +280,7 @@ summary(res_spline)
 In this case, the two interpolation methods are similarly good. It can be verified by visual comparison.
 
 
-```{r fitFigure, echo=FALSE, message=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Goodness of fit of ttwo Marey interpolated functions, either with Loess regression or Smooth Splines interpolation. *Arabidopsis thaliana* chromosome 1."}
+```{r fitFigure, echo=FALSE, message=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "Goodness of fit of two Marey interpolated functions, either with Loess regression or Smooth Splines interpolation. *Arabidopsis thaliana* chromosome 1."}
 df_loess = data.frame(method = "loess",
                      y = res_loess$mareyMap$gen,
                      fitted = res_loess$fitted,
@@ -320,7 +321,7 @@ By default, a grid of windows of constant size is mapped along the chromosome to
 ```{r customWindows}
 pos = data.frame(start = seq(20000, 40000000, by = 40000),
                  end = seq(20000, 40000000, by = 40000) + 20000)
-res = recombinationMap(res, method = "loess", windows = pos, verbose = FALSE)
+res = recombination_map(res, method = "loess", windows = pos, verbose = FALSE)
 ```
 
 This custom positions can represent any genomic feature (e.g. gene, exon) or marker (e.g. SNP) for which you want to estimate the average recombination rate. However keep in mind that interpolation is at a large scale (i.e. does not detect fine scale variations of recombination rates) and close markers can have exactly or very similar values due to the large scale smoothing.
@@ -333,7 +334,7 @@ genes = data.frame(chromosome = "4",
                    end = c(65000, 99500, 1234000, 267401, 500001))
 pos = data.frame(start = genes$start,
                  end = genes$end)
-res2 = recombinationMap(res, method = "loess", windows = pos, verbose = FALSE)
+res2 = recombination_map(res, method = "loess", windows = pos, verbose = FALSE)
 
 res2$recMap
 ```
@@ -344,7 +345,7 @@ res2$recMap
 
 
 
-You may want to interpolate the genetic distances for a new set of markers. It is possible to interpolate these new positions with the `predictGeneticMap()` function, passing to the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method).
+You may want to interpolate the genetic distances for a new set of markers. It is possible to interpolate these new positions with the `predict_genetic_map()` function, passing to the `predict` function corresponding to the interpolation method (e.g. `predict.loess` for the `fit.loess` method).
 
 It is recommended to use the same smoothing parameter previously estimated with the automatic calibration procedure.
 
@@ -352,14 +353,14 @@ It is recommended to use the same smoothing parameter previously estimated with 
 ```{r predictGeneticMap}
 # Re-map on a new set of markers
 new = seq(50000, 30450000, by = 1000000)
-newMap = predictGeneticMap(res, new)
+new_map = predict_genetic_map(res, new)
 
-summary(newMap)
+summary(new_map)
 ```
 
 
 ```{r newGeneticMap, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "New genetic positions (cM) on chromosome 1, with the confidence interval (+- 1.96*se) of the prediction."}
-ggplot2::ggplot(data = newMap$mareyMap, aes(x = phys/10^6, y = gen)) +
+ggplot2::ggplot(data = new_map$mareyMap, aes(x = phys/10^6, y = gen)) +
   geom_point(alpha = 0.4) +
   labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
   geom_errorbar(aes(ymin = gen - 1.96*predict.se, ymax = gen + 1.96*predict.se)) +
@@ -391,7 +392,7 @@ res = readRDS("../inst/extdata/Arabidopsis_thaliana_chromosome1.Rds")
 
 
 
-To  quantitatively describe and compare recombination maps, it is important to estimate summary statistics of the mean and variance of recombination rates. Many summary statistics of heterogeneity in recombination rates can be calculated directly with the `mareyMap` object.
+To  quantitatively describe and compare recombination maps, it is important to estimate summary statistics of the mean and variance of recombination rates. Many summary statistics of heterogeneity in recombination rates can be calculated directly with the `marey_map` object.
 These statistics, estimated on the whole chromosome, can be used to compare chromosomes in a single species, but also chromosomes between populations or species.
 
 The most simple statistics are the mean, weighted mean (weighted by the windows length), median and the variance.
@@ -410,9 +411,9 @@ Veller et al. (2019) proposed a rigorous measure of intra-chromosomal genetic sh
 
 ```{r veller}
 genome_size = 119050000
-veller(res, genomeSize = genome_size, mappingFunction = "none")
-veller(res, genomeSize = genome_size, mappingFunction = "haldane")
-veller(res, genomeSize = genome_size, mappingFunction = "kosambi")
+veller(res, genome_size = genome_size, mapping_function = "none")
+veller(res, genome_size = genome_size, mapping_function = "haldane")
+veller(res, genome_size = genome_size, mapping_function = "kosambi")
 ```
 
 
@@ -432,7 +433,7 @@ The coefficient of variation is a standardized measure of dispersion of a probab
 
 
 ```{r coefficient_variation}
-coefficientVariation(res)
+coefficient_variation(res)
 ```
 
 
@@ -465,31 +466,7 @@ lorenz(res)
 Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo sapiens*, a species with heterochiasmy (i.e. recombination rates are different between sexes).
 
 
-```{r dataHeterochiasmy, echo = FALSE}
-# m = read.table("../inst/extdata/Homo_sapiens_female.txt",
-#                header = T,
-#                sep = " ")
-# m = m[which(m$map == "Chromosome 01"),]
-# marey_female = mareyMap(m)
-# marey_female = recombinationMap(marey_female, method = "loess", verbose = FALSE)
-# 
-# 
-# m = read.table("../inst/extdata/Homo_sapiens_male.txt",
-#                header = T,
-#                sep = " ")
-# m = m[which(m$map == "Chromosome 01"),]
-# marey_male = mareyMap(m)
-# marey_male = recombinationMap(marey_male, method = "loess", verbose = FALSE)
-# 
-# 
-# m = read.table("../inst/extdata/Homo_sapiens_mean.txt",
-#                header = T,
-#                sep = " ")
-# m = m[which(m$map == "Chromosome 01"),]
-# marey_avg = mareyMap(m)
-# marey_avg = recombinationMap(marey_avg, method = "loess", verbose = FALSE)
-
-
+```{r dataHeterochiasmy, echo = TRUE}
 human = readRDS("../inst/extdata/Homo_sapiens_comparative.Rds")
 ```
 
@@ -545,7 +522,7 @@ It is easy to compute statistics on a large set of maps (22 chromosomes in three
 
 
 ```{r, echo = TRUE}
-st = compute_stats_marey(human, statistics = c("mean", "gini", "peripherybias"))
+st = compute_stats_marey(human, statistics = c("mean", "gini"))
 st = as.data.frame(st)
 
 ggplot(st, aes(x = set, y = mean, fill = set)) +
@@ -639,7 +616,7 @@ In order to compare maps between two species with contrasted recombination lands
 
 
 
-In order to get the data frame instead of the Lorenz plot, you can specify `return.plot = FALSE`. It works also for the `plot.mareyMap` and `plot_recombination` functions.
+In order to get the data frame instead of the Lorenz plot, you can specify `return.plot = FALSE`. It works also for the `plot.marey_map()` and `plot_recombination` functions.
 
 
 ```{r lorenzCompare, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative Lorenz curves between *Arabidopsis thaliana* and maize."}

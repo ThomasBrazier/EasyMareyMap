@@ -7,7 +7,7 @@
 variance(x)
 }
 \arguments{
-\item{x}{a Marey map object.}
+\item{x}{a `marey_map` object.}
 }
 \value{
 (numeric) the variance of recombination rates.

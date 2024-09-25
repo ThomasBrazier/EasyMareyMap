@@ -7,7 +7,7 @@
 flip.selection(x)
 }
 \arguments{
-\item{x}{a 'mareyMap' object.}
+\item{x}{a `marey_map` object.}
 }
 \value{
 the input 'mareyMap' object with flipped genetic positions.

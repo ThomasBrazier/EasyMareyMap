@@ -3,20 +3,21 @@
 #' @description
 #' Interpolate genetic positions (i.e. cumulative genetic distances)
 #' on a new set of physical positions
-#' and return a new 'mareyMap' object with the new set of markers (i.e. new genetic and physical distances)
-#' When the 'predictGeneticMap' function is used, the standard error of predictions is saved in the 'predcit.se' column of the mareyMap slot.
+#' and return a new `marey_map` object with the new set of markers (i.e. new genetic and physical distances)
+#' When the `predict_genetic_map` function is used, the standard error of predictions is saved in the 'predict.se' column of the mareyMap slot.
 #' (only for the "loess" regression)
 #'
-#' @param x a 'mareyMap' object, with a recombination map.
+#' @param x a `marey_map` object, with a recombination map.
 #' @param new a vector of new physical positions.
 #'
-#' @return a new 'mareyMap' object with the new set of markers
+#' @return a new `marey_map` object with the new set of markers
 #' @export
 #'
 #' @import utils
 #' @import stats
 #' @importFrom methods is
-predictGeneticMap = function(x, new) {
+#' 
+predict_genetic_map = function(x, new) {
   # Predict new positions fro the fitted model
   if (is(x$model, "loess")) {
     pred = predict(x$model, newdata = new, se = TRUE)
