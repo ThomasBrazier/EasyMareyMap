@@ -1,7 +1,7 @@
 # EasyMareyMap - Estimate recombination maps with Marey maps
 
 ![license](https://badgen.net/badge/license/GPL-3.0/blue)
-![release](https://badgen.net/badge/release/0.2.0/blue?icon=github)
+![release](https://badgen.net/badge/release/0.3.0/blue?icon=github)
 [![rworkflows](https://github.com/ThomasBrazier/EasyMareyMap/actions/workflows/rworkflows.yml/badge.svg)](https://github.com/ThomasBrazier/EasyMareyMap/actions/workflows/rworkflows.yml)
 
 

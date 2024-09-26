@@ -24,6 +24,7 @@ Our `EasyMareyMap` package is designed to provide easy access to the data (store
 
 
 Moreover, it offers a statistical framework to estimate recombination maps with the automatic calibration of hyperparameters and a bootstrap procedure to measure the uncertainty of our estimates, which is an advantage for robust data analyses. The method has been used and validated in [@brazierDiversityDeterminantsRecombination2022]. Our `EasyMareyMap` package adds these new features:
+
 * automatic calibration of the smoothing parameter
 * bootstraps to estimate a 95% confidence interval
 * graphical zone selection to exclude a bunch of outlier markers
@@ -648,12 +649,12 @@ brokenstick(compar)
 Moreover, to compare between species, it can be interesting to use relative genomic positions and relative recombination rates, instead of absolute ones.
 
 
-```{r relativeCompareMarey, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative marey maps between *Arabidopsis* and maize. Genomic distances are relative distances scaled by the total chromosome size. Genetic distances are scaled by the max genetic distance."}
+```{r relativeCompareMarey, message=FALSE, warning=FALSE, echo=TRUE, eval=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative marey maps between *Arabidopsis* and maize. Genomic distances are relative distances scaled by the total chromosome size. Genetic distances are scaled by the max genetic distance."}
 plot_comparative_marey(compar, group = 'set', relative_distance_x = T, relative_distance_y = T)
 ```
 
 
-```{r relativeCompareRec, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size. Recombination rates are scaled by the max recombination rate."}
+```{r relativeCompareRec, message=FALSE, warning=FALSE, echo=TRUE, eval=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size. Recombination rates are scaled by the max recombination rate."}
 plot_comparative_recmap(compar, group = 'set', relative_distance_x = T, relative_distance_y = T)
 ```
 
