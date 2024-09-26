@@ -155,6 +155,8 @@ compute_stats_marey = function(x,
 #'
 #' @param x a `comparative_marey_map` object
 #' @param group the grouping factor in `ggplot`, either `set`, `map` or `set + map`
+#' @param relative_distance_x logical, whether to plot the X axis as relative distances (0,1) to compare different genomes
+#' @param relative_distance_y logical, whether to plot the Y axis as relative distances (0,1) to compare different genetic maps
 #' @param ... arguments passed to the generic summary function.
 #'
 #' @import ggplot2
@@ -164,19 +166,54 @@ compute_stats_marey = function(x,
 #' @return a `ggplot2` object of Marey maps
 #' @export
 #'
-plot_comparative_marey = function(x, group = 'set + map', ...) {
+plot_comparative_marey = function(x,
+                                  group = 'set + map',
+                                  relative_distance_x = FALSE,
+                                  relative_distance_y = FALSE, ...) {
   
   df = comparative_marey_to_dataframe(x)
+  
+  scaling = 10^6 # Convert bp to Mb
+  
+  # Relative distances
+  if (relative_distance_x) {
+    df$max_phys = unlist(lapply(1:nrow(df), function(x) {max(df$phys[which(df$set == df$set[x] & df$map == df$map[x])], na.rm = T)}))
+    df$phys = df$phys / df$max_phys
+    scaling = 1
+    lab = labs(x = "Relative genomic position", y = "Genetic distance (cM)")
+  }
+  if (relative_distance_y) {
+    df$max_gen = unlist(lapply(1:nrow(df), function(x) {max(df$gen[which(df$set == df$set[x] & df$map == df$map[x])], na.rm = T)}))
+    df$gen = df$gen / df$max_gen
+    lab = labs(x = "Genomic position (Mb)", y = "Relative genetic distance")
+  }
+  if (relative_distance_x & relative_distance_y){
+    lab = labs(x = "Relative genomic position", y = "Relative genetic distance")
+  }
+  if (!relative_distance_x & !relative_distance_y){
+    lab = labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)")
+  }
 
   # Add the Marey interpolated function
   marey = comparative_interpolation_to_dataframe(x)
+  if (relative_distance_x) {
+    marey$max_phys = unlist(lapply(1:nrow(marey), function(x) {max(marey$physicalPosition[which(marey$set == marey$set[x] & marey$map == marey$map[x])], na.rm = T)}))
+    marey$physicalPosition = marey$physicalPosition / marey$max_phys
+  }
+  if (relative_distance_y) {
+    marey$max_gen = unlist(lapply(1:nrow(marey), function(x) {max(marey$upperGeneticPositioncM[which(marey$set == marey$set[x] & marey$map == marey$map[x])], na.rm = T)}))
+    marey$geneticPositioncM = marey$geneticPositioncM / marey$max_gen
+    marey$upperGeneticPositioncM = marey$upperGeneticPositioncM / marey$max_gen
+    marey$lowerGeneticPositioncM = marey$lowerGeneticPositioncM / marey$max_gen 
+  }
+  
   
   if (group == 'set') {
     grouping = as.formula(~as.factor(.data$set))
     facet = facet_wrap(grouping, scales = "free")
     point_rec = geom_point(aes(colour = as.factor(.data$map), fill = as.factor(.data$map)), alpha = 0.2)
-    line_rec = geom_line(data = marey, aes(x = .data$physicalPosition/10^6, y = .data$geneticPositioncM, group = as.factor(.data$map)), fill = "black")
-    ribbon_rec = geom_ribbon(data = marey, aes(x = .data$physicalPosition/10^6, y = .data$geneticPositioncM, ymin = .data$lowerGeneticPositioncM, ymax = .data$upperGeneticPositioncM, group = as.factor(.data$map)),
+    line_rec = geom_line(data = marey, aes(x = .data$physicalPosition/scaling, y = .data$geneticPositioncM, group = as.factor(.data$map)), fill = "black")
+    ribbon_rec = geom_ribbon(data = marey, aes(x = .data$physicalPosition/scaling, y = .data$geneticPositioncM, ymin = .data$lowerGeneticPositioncM, ymax = .data$upperGeneticPositioncM, group = as.factor(.data$map)),
                              alpha = 0.4)
 
   }
@@ -184,16 +221,16 @@ plot_comparative_marey = function(x, group = 'set + map', ...) {
     grouping = as.formula(~ as.factor(.data$map))
     facet = facet_wrap(grouping, scales = "free")
     point_rec = geom_point(aes(colour = as.factor(.data$set), fill = as.factor(.data$set)), alpha = 0.2)
-    line_rec = geom_line(data = marey, aes(x = .data$physicalPosition/10^6, y = .data$geneticPositioncM, group = as.factor(.data$set)), fill = "black")
-    ribbon_rec = geom_ribbon(data = marey, aes(x = .data$physicalPosition/10^6, y = .data$geneticPositioncM, ymin = .data$lowerGeneticPositioncM, ymax = .data$upperGeneticPositioncM, group = as.factor(.data$set)),
+    line_rec = geom_line(data = marey, aes(x = .data$physicalPosition/scaling, y = .data$geneticPositioncM, group = as.factor(.data$set)), fill = "black")
+    ribbon_rec = geom_ribbon(data = marey, aes(x = .data$physicalPosition/scaling, y = .data$geneticPositioncM, ymin = .data$lowerGeneticPositioncM, ymax = .data$upperGeneticPositioncM, group = as.factor(.data$set)),
                              alpha = 0.4)
   }
   if (group == 'set + map') {
     grouping = as.formula(~as.factor(.data$map) + as.factor(.data$set))
     facet = facet_grid(grouping, scales = "free")
     point_rec = geom_point(alpha = 0.2)
-    line_rec = geom_line(data = marey, aes(x = .data$physicalPosition/10^6, y = .data$geneticPositioncM), colour = "black")
-    ribbon_rec = geom_ribbon(data = marey, aes(x = .data$physicalPosition/10^6, y = .data$geneticPositioncM, ymin = .data$lowerGeneticPositioncM, ymax = .data$upperGeneticPositioncM),
+    line_rec = geom_line(data = marey, aes(x = .data$physicalPosition/scaling, y = .data$geneticPositioncM), colour = "black")
+    ribbon_rec = geom_ribbon(data = marey, aes(x = .data$physicalPosition/scaling, y = .data$geneticPositioncM, ymin = .data$lowerGeneticPositioncM, ymax = .data$upperGeneticPositioncM),
                                fill = "darkorange", colour = "darkorange", alpha = 0.3)
   }
   
@@ -201,12 +238,12 @@ plot_comparative_marey = function(x, group = 'set + map', ...) {
   if (nrow(marey) > 0) {
     marey$vld = TRUE
     
-    p = ggplot2::ggplot(data = df, aes(x = .data$phys/10^6, y = .data$gen)) +
+    p = ggplot2::ggplot(data = df, aes(x = .data$phys/scaling, y = .data$gen)) +
       point_rec +
       line_rec +
       ribbon_rec +
       facet +
-      labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)") +
+      lab +
       theme(axis.line = element_line(),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
@@ -219,7 +256,7 @@ plot_comparative_marey = function(x, group = 'set + map', ...) {
             axis.text=element_text(colour="black"),
             legend.position = "right")
   } else {
-    p = ggplot2::ggplot(data = df, aes(x = .data$phys/10^6, y = .data$gen)) +
+    p = ggplot2::ggplot(data = df, aes(x = .data$phys/scaling, y = .data$gen)) +
       point_rec +
       facet +
       labs(x = "Genomic position (Mb)", y = "Genetic distance (cM)", colour = "dataset") +
@@ -245,13 +282,18 @@ plot_comparative_marey = function(x, group = 'set + map', ...) {
 #'
 #' @param x a `comparative_marey_map` object
 #' @param group the grouping factor in `ggplot`, either `set`, `map` or `set + map`
+#' @param relative_distance_x logical, whether to plot the X axis as relative distances (0,1) to compare different genomes
+#' @param relative_distance_y logical, whether to plot the Y axis as relative distances (0,1) to compare maps with different average recombination rates
 #' 
 #' @return a `ggplot2` object of Marey maps
 #' @export
 #' 
 #' @import ggplot2
 #'
-plot_comparative_recmap = function(x, group = 'set + map') {
+plot_comparative_recmap = function(x,
+                                   group = 'set + map',
+                                   relative_distance_x = FALSE,
+                                   relative_distance_y = FALSE) {
   
   x = comparative_recmap_to_dataframe(x)
 
@@ -260,6 +302,26 @@ plot_comparative_recmap = function(x, group = 'set + map') {
   x$recRate = x$recRate * 10^6
   x$upperRecRate = x$upperRecRate * 10^6
   x$lowerRecRate = x$lowerRecRate * 10^6
+  
+  # Relative distances
+  if (relative_distance_x) {
+    x$max_phys = unlist(lapply(1:nrow(x), function(y) {max(x$end[which(x$set == x$set[y] & x$map == x$map[y])], na.rm = T)}))
+    x$point = x$point / x$max_phys
+    lab = labs(x = "Relative genomic position", y = "Recombination rate (cM/Mb)")
+  }
+  if (relative_distance_y) {
+    x$max_rec = unlist(lapply(1:nrow(x), function(y) {max(x$upperRecRate[which(x$set == x$set[y] & x$map == x$map[y])], na.rm = T)}))
+    x$recRate = x$recRate / x$max_rec
+    x$upperRecRate = x$upperRecRate / x$max_rec
+    x$lowerRecRate = x$lowerRecRate / x$max_rec
+    lab = labs(x = "Genomic position (Mb)", y = "Relative recombination rate")
+  }
+  if (relative_distance_x & relative_distance_y){
+    lab = labs(x = "Relative genomic position", y = "Recombination rate")
+  }
+  if (!relative_distance_x & !relative_distance_y){
+    lab = labs(x = "Genomic position (Mb)", y = "Recombination rate (cM/Mb)")
+  }
   
   if (group == 'set') {
     grouping = as.formula(~as.factor(.data$set))
@@ -286,7 +348,7 @@ plot_comparative_recmap = function(x, group = 'set + map') {
     # facet_grid(~as.factor(set)) +
     # facet_wrap(grouping, scales = "free") +
     facet +
-    labs(x = "Genomic position (Mb)", y = "Recombination rate (cM/Mb)") +
+    lab +
     theme(axis.line = element_line(),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),

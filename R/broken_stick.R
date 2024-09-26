@@ -57,7 +57,7 @@ brokenstick = function(x, k = 10, method = "strict", plot = TRUE) {
   # Tidy data frame
   # brokenstick = brokenstick[!(is.na(df$p1) | is.na(df$p2) | is.na(df$p3) | is.na(df$p4) | is.na(df$p5) | df(brokenstick$p6) | is.na(df$p7) | is.na(df$p8) | is.na(df$p9) | is.na(df$p10)),]
   brokenstick = melt(df)
-  brokenstick$sample = paste(brokenstick$set, brokenstick$chromosome, sep = "_")
+  brokenstick$sample = paste(brokenstick$set, brokenstick$name, sep = "_")
   colnames(brokenstick)=c("set","chromosome","segment","proportion.length","sample")
   
   # Set a vector of gradient color

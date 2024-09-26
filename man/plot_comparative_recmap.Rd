@@ -4,12 +4,21 @@
 \alias{plot_comparative_recmap}
 \title{Plot comparative recombination maps}
 \usage{
-plot_comparative_recmap(x, group = "set + map")
+plot_comparative_recmap(
+  x,
+  group = "set + map",
+  relative_distance_x = FALSE,
+  relative_distance_y = FALSE
+)
 }
 \arguments{
 \item{x}{a `comparative_marey_map` object}
 
 \item{group}{the grouping factor in `ggplot`, either `set`, `map` or `set + map`}
+
+\item{relative_distance_x}{logical, whether to plot the X axis as relative distances (0,1) to compare different genomes}
+
+\item{relative_distance_y}{logical, whether to plot the Y axis as relative distances (0,1) to compare maps with different average recombination rates}
 }
 \value{
 a `ggplot2` object of Marey maps

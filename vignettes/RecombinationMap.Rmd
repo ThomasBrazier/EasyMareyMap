@@ -640,7 +640,7 @@ lorenz(compar)
 The Broken stick model, as described in Brazier and Glémin (2022), is also an appropriate representation to compare the distribution of recombination rates along the genome across a large set of Marey maps.
 
 
-```{r brokenStick, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "The broken stick model applied to *Arabidopsis thaliana* and maize."}
+```{r brokenStick, message=FALSE, warning=FALSE, echo=TRUE, fig.height = 6, fig.width = 8, fig.align="center", fig.cap = "The broken stick model applied to *Arabidopsis thaliana* and maize."}
 brokenstick(compar)
 ```
 
@@ -648,44 +648,14 @@ brokenstick(compar)
 Moreover, to compare between species, it can be interesting to use relative genomic positions and relative recombination rates, instead of absolute ones.
 
 
-```{r relativeCompare, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size."}
-relative_arabido = res$recMap
-relative_maize = maize$recMap
-
-relative_arabido$relative_start = relative_arabido$start / res$chromosomeLength
-relative_arabido$relative_end = relative_arabido$end / res$chromosomeLength
-relative_arabido$relative_recRate = relative_arabido$recRate / max(relative_arabido$recRate, na.rm = TRUE)
-relative_arabido$relative_lowerRecRate = relative_arabido$lowerRecRate / max(relative_arabido$lowerRecRate, na.rm = TRUE)
-relative_arabido$relative_upperRecRate = relative_arabido$upperRecRate / max(relative_arabido$upperRecRate, na.rm = TRUE)
-
-
-relative_maize$relative_start = relative_maize$start / maize$chromosomeLength
-relative_maize$relative_end = relative_maize$end / maize$chromosomeLength
-relative_maize$relative_recRate = relative_maize$recRate / max(relative_maize$recRate, na.rm = TRUE)
-relative_maize$relative_lowerRecRate = relative_maize$lowerRecRate / max(relative_maize$lowerRecRate, na.rm = TRUE)
-relative_maize$relative_upperRecRate = relative_maize$upperRecRate / max(relative_maize$upperRecRate, na.rm = TRUE)
-
-
-df = rbind(relative_arabido,
-           relative_maize)
-
-df$point = (df$relative_start + df$relative_end)/2
-
-
-ggplot(data = df, aes(x = point, y = recRate)) +
-    geom_line(aes(group = set, color = set)) +
-    geom_ribbon(aes(x = point, ymin = lowerRecRate, ymax = upperRecRate, fill = set), alpha = 0.2) +
-    labs(x = "Relative genomic position", y = "Recombination rate (cM/Mb)") 
-
-
-ggplot(data = df, aes(x = point, y = relative_recRate)) +
-    geom_line(aes(group = set, color = set)) +
-    geom_ribbon(aes(x = point, ymin = relative_lowerRecRate, ymax = relative_upperRecRate, fill = set), alpha = 0.2) +
-    labs(x = "Relative genomic position", y = "Relative recombination rate") 
+```{r relativeCompareMarey, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative marey maps between *Arabidopsis* and maize. Genomic distances are relative distances scaled by the total chromosome size. Genetic distances are scaled by the max genetic distance."}
+plot_comparative_marey(compar, group = 'set', relative_distance_x = T, relative_distance_y = T)
 ```
 
 
-
+```{r relativeCompareRec, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size. Recombination rates are scaled by the max recombination rate."}
+plot_comparative_recmap(compar, group = 'set', relative_distance_x = T, relative_distance_y = T)
+```
 
 
 
