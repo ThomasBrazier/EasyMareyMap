@@ -101,12 +101,14 @@ maps with the automatic calibration of hyperparameters and a bootstrap
 procedure to measure the uncertainty of our estimates, which is an
 advantage for robust data analyses. The method has been used and
 validated in <span class="citation">(Brazier and Glémin 2022)</span>.
-Our <code>EasyMareyMap</code> package adds these new features: *
-automatic calibration of the smoothing parameter * bootstraps to
-estimate a 95% confidence interval * graphical zone selection to exclude
-a bunch of outlier markers * a graphical and statistical framework for
-comparative genomics (compare Marey maps between species, populations or
-genomes)</p>
+Our <code>EasyMareyMap</code> package adds these new features:</p>
+<ul>
+<li>automatic calibration of the smoothing parameter</li>
+<li>bootstraps to estimate a 95% confidence interval</li>
+<li>graphical zone selection to exclude a bunch of outlier markers</li>
+<li>a graphical and statistical framework for comparative genomics
+(compare Marey maps between species, populations or genomes)</li>
+</ul>
 <p>The package is loaded with the following command.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EasyMareyMap</span><span class="op">)</span></span>
@@ -963,8 +965,23 @@ relative genomic positions and relative recombination rates, instead of
 absolute ones.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">compar</span>, group <span class="op">=</span> <span class="st">'set'</span>, relative_distance_x <span class="op">=</span> <span class="cn">T</span>, relative_distance_y <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="RecombinationMap_files/figure-html/relativeCompareMarey-1.png" alt="Comparative marey maps between *Arabidopsis* and maize. Genomic distances are relative distances scaled by the total chromosome size. Genetic distances are scaled by the max genetic distance." width="768"><p class="caption">
+Comparative marey maps between <em>Arabidopsis</em> and maize. Genomic
+distances are relative distances scaled by the total chromosome size.
+Genetic distances are scaled by the max genetic distance.
+</p>
+</div>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">compar</span>, group <span class="op">=</span> <span class="st">'set'</span>, relative_distance_x <span class="op">=</span> <span class="cn">T</span>, relative_distance_y <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="RecombinationMap_files/figure-html/relativeCompareRec-1.png" alt="Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size. Recombination rates are scaled by the max recombination rate." width="768"><p class="caption">
+Comparative recombination landscapes between Arabidopsis chromosome 1
+and maize chromosome 1. Genomic distances are relative distances scaled
+by the total chromosome size. Recombination rates are scaled by the max
+recombination rate.
+</p>
+</div>
 </div>
 </div>
 <div class="section level2">
