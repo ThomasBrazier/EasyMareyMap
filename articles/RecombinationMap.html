@@ -694,11 +694,11 @@ distribution of relative recombination rates as a function of their
 relative physical size. A Lorenz curve always starts at (0,0) and ends
 at (1,1). The more the curve is close to the diagonal, the less
 heterogeneous is the distribution of recombination rates.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/lorenz.html">lorenz</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in geom_line(data = diagonal, aes(x = .data$x, y = .data$y, fill = NA,</span></span>
-<span><span class="co">#&gt; : Ignoring unknown aesthetics: <span style="color: #00BB00;">fill</span></span></span></code></pre></div>
-<p><img src="RecombinationMap_files/figure-html/lorenz-1.png" width="700"></p>
+<div class="figure" style="text-align: center">
+<img src="RecombinationMap_files/figure-html/lorenz-1.png" alt="The Lorenz curve of *Arabidopsis thaliana* chromosome 1." width="576"><p class="caption">
+The Lorenz curve of <em>Arabidopsis thaliana</em> chromosome 1.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="compare-multiple-maps-mapped-on-the-same-chromosome">Compare multiple maps mapped on the same chromosome<a class="anchor" aria-label="anchor" href="#compare-multiple-maps-mapped-on-the-same-chromosome"></a>
@@ -709,7 +709,7 @@ share the same set of markers, it is easy to plot them together. Here I
 compare male, female and sex-averaged recombination maps in <em>Homo
 sapiens</em>, a species with heterochiasmy (i.e. recombination rates are
 different between sexes).</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">human</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Homo_sapiens_comparative.Rds"</span><span class="op">)</span></span></code></pre></div>
 <p>It is the time to present the <code>comparative_marey_map</code>
 object. It is a meta-object storing multiple maps (i.e. multiple
@@ -719,7 +719,7 @@ statistics (e.g. mean, median recombination rates or the gini index) and
 plot these maps in the same figure in a comparative manner. The
 <code>EasyMareyMap</code> package has also functions to easily
 manipulate <code>comparative_marey_map</code> objects.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># A short summary of the data stored</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ============== Summary of the comparative marey map ==============</span></span>
@@ -738,14 +738,14 @@ manipulate <code>comparative_marey_map</code> objects.</p>
 <span><span class="co"># The class</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "comparative_marey_map"</span></span></code></pre></div>
-<p>The recombination maps cna be estimated in batch for the whole
+<p>The recombination maps can be estimated in batch for the whole
 comparative dataset with the function
 <code><a href="../reference/comparative_recombination_maps.html">comparative_recombination_maps()</a></code>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">human</span> <span class="op">=</span> <span class="fu"><a href="../reference/comparative_recombination_maps.html">comparative_recombination_maps</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span></span></code></pre></div>
 <p>There are functions to easily get the Marey maps or the recombination
 maps from a <code>comparative_marey_map</code> object.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/comparative_marey_to_dataframe.html">comparative_marey_to_dataframe</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     set           map       mkr    phys gen  vld predict.se</span></span>
 <span><span class="co">#&gt; 1 Homo sapiens (female) Chromosome 01   D1S2217  837022   0 TRUE         NA</span></span>
@@ -794,12 +794,12 @@ of <code>comparative_marey_map$data</code> to perform custom operations
 on <code>marey_map</code> objects. There is also a function
 <code><a href="../reference/merge_comparative_marey.html">merge_comparative_marey()</a></code> to merge
 <code>comparative_marey_map</code> objects.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make a logical vector of maps to keep</span></span>
 <span><span class="va">subs</span> <span class="op">=</span> <span class="op">(</span><span class="va">human</span><span class="op">$</span><span class="va">map</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chromosome 02"</span> ,<span class="st">"Chromosome 05"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">human_subset</span> <span class="op">=</span> <span class="fu"><a href="../reference/subset_comparative_marey.html">subset_comparative_marey</a></span><span class="op">(</span><span class="va">human</span>, subset <span class="op">=</span> <span class="va">subs</span><span class="op">)</span></span></code></pre></div>
 <p>And now compute three summary statistics on each map.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compute_stats_marey.html">compute_stats_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, statistics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"gini"</span>, <span class="st">"peripherybias"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $set</span></span>
 <span><span class="co">#&gt; [1] "Homo sapiens (female)" "Homo sapiens (male)"   "Homo sapiens (mean)"  </span></span>
@@ -820,34 +820,25 @@ on <code>marey_map</code> objects. There is also a function
 <span><span class="co">#&gt; [1] 1.531973 2.152255 1.802875 1.812777 1.985314 1.877357</span></span></code></pre></div>
 <p>It is easy to compute statistics on a large set of maps (22
 chromosomes in three datasets).</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/compute_stats_marey.html">compute_stats_marey</a></span><span class="op">(</span><span class="va">human</span>, statistics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"gini"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">st</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">st</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">set</span>, y <span class="op">=</span> <span class="va">mean</span>, fill <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Dataset"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Mean recombination rate (per chromosome)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="RecombinationMap_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">st</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">set</span>, y <span class="op">=</span> <span class="va">gini</span>, fill <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Dataset"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Gini index"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="RecombinationMap_files/figure-html/unnamed-chunk-11-2.png" width="700"></p>
+<div class="figure" style="text-align: center">
+<img src="RecombinationMap_files/figure-html/compareHeterochiasmy-1.png" alt="Mean recombinaiton rate per chromosome (cM/Mb) and Gini index for the female, male and sex-averaged genetic maps in human." width="768"><p class="caption">
+Mean recombinaiton rate per chromosome (cM/Mb) and Gini index for the
+female, male and sex-averaged genetic maps in human.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="RecombinationMap_files/figure-html/compareHeterochiasmy-2.png" alt="Mean recombinaiton rate per chromosome (cM/Mb) and Gini index for the female, male and sex-averaged genetic maps in human." width="768"><p class="caption">
+Mean recombinaiton rate per chromosome (cM/Mb) and Gini index for the
+female, male and sex-averaged genetic maps in human.
+</p>
+</div>
 <p>You can plot either the Marey maps or the recombination maps with the
 <code><a href="../reference/plot_comparative_marey.html">plot_comparative_marey()</a></code> or the
 <code><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap()</a></code> functions. They return a ggplot
 object that can be stored or customized. They allow a grouping factor
 for the plot. Maps can be grouped by <code>set</code>, <code>map</code>
 or both (i.e. <code>set + map</code>).</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMareyHeterochiasmy-1.png" alt="Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5." width="768"><p class="caption">
@@ -855,7 +846,7 @@ Female, male and sex-averaged Marey maps of <em>Homo sapiens</em>
 chromosomes 2 and 5.
 </p>
 </div>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMareyHeterochiasmy-2.png" alt="Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5." width="768"><p class="caption">
@@ -863,7 +854,7 @@ Female, male and sex-averaged Marey maps of <em>Homo sapiens</em>
 chromosomes 2 and 5.
 </p>
 </div>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set + map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMareyHeterochiasmy-3.png" alt="Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5." width="768"><p class="caption">
@@ -871,7 +862,7 @@ Female, male and sex-averaged Marey maps of <em>Homo sapiens</em>
 chromosomes 2 and 5.
 </p>
 </div>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMapHeterochiasmy-1.png" alt="Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -880,7 +871,7 @@ sapiens</em> chromosome 2 and 5. The shaded area is the 95% confidence
 interval around the mean estimate.
 </p>
 </div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMapHeterochiasmy-2.png" alt="Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -889,7 +880,7 @@ sapiens</em> chromosome 2 and 5. The shaded area is the 95% confidence
 interval around the mean estimate.
 </p>
 </div>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set + map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMapHeterochiasmy-3.png" alt="Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -902,7 +893,7 @@ interval around the mean estimate.
 <div class="section level3">
 <h3 id="compare-between-chromosomesspecies">Compare between chromosomes/species<a class="anchor" aria-label="anchor" href="#compare-between-chromosomesspecies"></a>
 </h3>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">maize</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Zea_mays_MaizeGDBConsensus_v4.Rds"</span><span class="op">)</span></span>
 <span><span class="va">arabidopsis</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Arabidopsis_thaliana.Rds"</span><span class="op">)</span></span>
 <span></span>
@@ -947,7 +938,7 @@ heterogeneity of recombination rates along the chromosome.</p>
 specify <code>return.plot = FALSE</code>. It works also for the
 <code><a href="../reference/plot.marey_map.html">plot.marey_map()</a></code> and <code>plot_recombination</code>
 functions.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lorenz.html">lorenz</a></span><span class="op">(</span><span class="va">compar</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/lorenzCompare-1.png" alt="Comparative Lorenz curves between *Arabidopsis thaliana* and maize." width="768"><p class="caption">
@@ -959,23 +950,8 @@ maize.
 also an appropriate representation to compare the distribution of
 recombination rates along the genome across a large set of Marey
 maps.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/brokenstick.html">brokenstick</a></span><span class="op">(</span><span class="va">compar</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Arabidopsis_thaliana_Serin2017 1 </span></span>
-<span><span class="co">#&gt; Arabidopsis_thaliana_Serin2017 2 </span></span>
-<span><span class="co">#&gt; Arabidopsis_thaliana_Serin2017 3 </span></span>
-<span><span class="co">#&gt; Arabidopsis_thaliana_Serin2017 4 </span></span>
-<span><span class="co">#&gt; Arabidopsis_thaliana_Serin2017 5 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 1 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 2 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 3 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 4 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 5 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 6 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 7 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 8 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 9 </span></span>
-<span><span class="co">#&gt; Zea_mays_MaizeGDBConsensus_v4 10</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/brokenstick.html">brokenstick</a></span><span class="op">(</span><span class="va">compar</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/brokenStick-1.png" alt="The broken stick model applied to *Arabidopsis thaliana* and maize." width="768"><p class="caption">
 The broken stick model applied to <em>Arabidopsis thaliana</em> and
@@ -985,7 +961,7 @@ maize.
 <p>Moreover, to compare between species, it can be interesting to use
 relative genomic positions and relative recombination rates, instead of
 absolute ones.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">relative_arabido</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">recMap</span></span>
 <span><span class="va">relative_maize</span> <span class="op">=</span> <span class="va">maize</span><span class="op">$</span><span class="va">recMap</span></span>
 <span></span>
