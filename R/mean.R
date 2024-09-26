@@ -7,6 +7,7 @@
 #'
 #' @method mean marey_map
 #' @export
+#' 
 mean.marey_map = function(x, ...) {
   rec = x$recMap$recRate
   m = mean(rec, na.rm = TRUE)

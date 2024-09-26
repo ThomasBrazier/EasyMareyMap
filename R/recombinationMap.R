@@ -18,8 +18,6 @@
 #'
 #' @import pbmcapply
 #' @import parallel
-#' @import utils
-#' @import stats
 #'
 recombination_map = function(x,
                             method = "loess",
@@ -123,9 +121,12 @@ recombination_map = function(x,
 
 
 # Generic functions for Confidence Intervals
+#' @importFrom stats quantile
 upperCI = function(x) {
   quantile(x, 0.975, na.rm = TRUE)
 }
+
+#' @importFrom stats quantile
 lowerCI = function(x) {
   quantile(x, 0.025, na.rm = TRUE)
 }
@@ -143,8 +144,13 @@ lowerCI = function(x) {
 #' @export
 #'
 #' @importFrom methods is
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
+#' @importFrom stats predict
+#' @importFrom stats residuals
+#' @importFrom stats anova
 #'
-bootstrap_marey_map = function(x, intervals, nboot = boot, verbose = TRUE) {
+bootstrap_marey_map = function(x, intervals, nboot = 1000, verbose = TRUE) {
   stopifnot(is(x, "marey_map"))
 
   df = x$mareyMap
@@ -202,10 +208,14 @@ bootstrap_marey_map = function(x, intervals, nboot = boot, verbose = TRUE) {
 #' @param set_negative_values the value (e.g. 0 or NA) to use for negative values in recombination rates (default = 0).
 #' @param verbose Whether to print messages and progress bars at each step (default = TRUE).
 #'
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
+#' @importFrom stats predict
+#' 
 #' @return a data frame of a recombination map.
 #' @export
 #'
-bootstrap_rec_map = function(x, intervals, nboot = boot, set_negative_values = 0, verbose = TRUE) {
+bootstrap_rec_map = function(x, intervals, nboot = 1000, set_negative_values = 0, verbose = TRUE) {
   stopifnot(class(x) == "marey_map")
 
   df = x$mareyMap

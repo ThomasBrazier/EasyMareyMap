@@ -13,8 +13,6 @@
 #' @return a new `marey_map` object with the new set of markers
 #' @export
 #'
-#' @import utils
-#' @import stats
 #' @importFrom methods is
 #' 
 predict_genetic_map = function(x, new) {

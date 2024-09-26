@@ -7,7 +7,7 @@
 bootstrap_rec_map(
   x,
   intervals,
-  nboot = boot,
+  nboot = 1000,
   set_negative_values = 0,
   verbose = TRUE
 )

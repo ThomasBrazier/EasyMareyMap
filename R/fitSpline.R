@@ -15,8 +15,12 @@
 #' @return a smoothing spline object.
 #' @export
 #'
-#' @import npreg
-fit_spline = function(x, spar = numeric(), m = 2, nknots = .nknots.smspl, all.knots = FALSE, lambda = NULL) {
+#' @importFrom npreg ss
+#' @importFrom stats .nknots.smspl
+#' 
+fit_spline = function(x, spar = numeric(), m = 2, nknots = ".nknots.smspl", all.knots = FALSE, lambda = NULL) {
+  if (nknots == ".nknots.smspl") {nknots = .nknots.smspl(x)} else {nknots = nknots}
+  
   fit = ss(x = x$phys, y = x$gen, spar = spar, m = m, nknots = nknots, all.knots = all.knots, lambda = lambda)
   return(fit)
 }

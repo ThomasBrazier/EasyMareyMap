@@ -8,7 +8,7 @@ fit_spline(
   x,
   spar = numeric(),
   m = 2,
-  nknots = .nknots.smspl,
+  nknots = ".nknots.smspl",
   all.knots = FALSE,
   lambda = NULL
 )

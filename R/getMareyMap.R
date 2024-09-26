@@ -6,6 +6,7 @@
 #' @param x a `marey_map` object.
 #'
 #' @return a Marey map without markers `vld` == FALSE.
+#' 
 get_marey_map = function(x) {
   df = x$mareyMap
   df = df[which(df$vld == TRUE),]

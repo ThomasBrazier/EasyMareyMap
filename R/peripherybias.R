@@ -7,9 +7,9 @@
 #' @return a numeric value of the periphery-bias ratio.
 #' @export
 #'
-#' @import GenomicRanges
-#' @import IRanges
-#' 
+#' @importFrom GenomicRanges GRanges
+#' @importFrom IRanges IRanges
+#'
 peripherybias = function(x, proportion_periphery = 0.1,  chromosome_arm = "random") {
   df = x$recMap
   chrlength = x$chromosomeLength

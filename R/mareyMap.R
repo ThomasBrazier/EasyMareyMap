@@ -25,6 +25,7 @@ marey_map = function(x = data.frame(), chromosome = NA, chromosome_length = nume
   validate_marey_map(marey)
 }
 
+#' @importFrom stats aggregate
 new_marey_map = function(x = data.frame(), chromosome_length = numeric()) {
   stopifnot(is.data.frame(x))
   stopifnot(nrow(x) > 0)

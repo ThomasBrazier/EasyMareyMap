@@ -7,7 +7,7 @@
 coefficient_variation(x)
 }
 \arguments{
-\item{x}{a `marey_map` object, with a recombination map already estimated.}
+\item{x}{a `marey_map` object, with a recombination map already estimated}
 }
 \value{
 a list of numeric values of the variance, standard deviation and coefficient of variation.

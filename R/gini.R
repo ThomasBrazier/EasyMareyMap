@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @import dineq
+#' 
 gini = function(x, bootstrap = NULL) {
   df = x$recMap
   g = gini.wtd(df$recRate, weights = NULL)

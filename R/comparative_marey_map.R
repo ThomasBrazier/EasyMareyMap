@@ -81,6 +81,8 @@ comparative_recombination_maps = function(x,
 #' The complete list of statistics that can be computed is
 #' `mean`, `median`, `weighted.mean`, `variance`, `gini`, `peripherybias` and `coefficient_variation`
 #' 
+#' @importFrom stats aggregate
+#' @importFrom stats var
 #' 
 #' @return a list of summary statistics
 #' @export
@@ -157,6 +159,7 @@ compute_stats_marey = function(x,
 #'
 #' @import ggplot2
 #' @importFrom ggplot2 .data
+#' @importFrom stats as.formula
 #' 
 #' @return a `ggplot2` object of Marey maps
 #' @export

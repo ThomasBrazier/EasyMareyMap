@@ -105,7 +105,7 @@ plot_recombination_map = function(x, return.plot = TRUE) {
   if (return.plot) {
     return(p)
   } else {
-    return(df)
+    return(x$recMap)
   }
 }
 

@@ -7,9 +7,10 @@
 #' @return a new data frame with recombination rates in sliding windows.
 #' @export
 #'
-#' @import GenomicRanges
-#' @import IRanges
-#' @import S4Vectors
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @importFrom GenomicRanges findOverlaps restrict
+#' @importFrom S4Vectors subjectHits queryHits
+#' @importFrom BiocGenerics start end width
 #' @importFrom methods as
 #' 
 windows_physical_map = function(x, windows = GRanges(), method = "mean") {

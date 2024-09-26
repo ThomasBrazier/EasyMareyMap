@@ -3,6 +3,7 @@
 #' @param object a `marey_map` object.
 #' @param ... arguments passed to the generic summary function.
 #'
+#' @importFrom utils head
 #'
 #' @return a summary of the `marey_map` object.
 #'

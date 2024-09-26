@@ -4,7 +4,7 @@
 \alias{bootstrap_marey_map}
 \title{Bootstrap the Marey map}
 \usage{
-bootstrap_marey_map(x, intervals, nboot = boot, verbose = TRUE)
+bootstrap_marey_map(x, intervals, nboot = 1000, verbose = TRUE)
 }
 \arguments{
 \item{x}{a `marey_map` object.}

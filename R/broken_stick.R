@@ -35,7 +35,7 @@ brokenstick = function(x, k = 10, method = "strict", plot = TRUE) {
   
   for (i in 1:length(s)) {
     idx = (s == s[i] & n == n[i])
-    cat(s[i], n[i], "\n")
+    # cat(s[i], n[i], "\n")
     
     subs = subset_comparative_marey(x, subset = idx)
     subs = comparative_marey_to_dataframe(subs)
@@ -81,17 +81,17 @@ brokenstick = function(x, k = 10, method = "strict", plot = TRUE) {
           panel.grid.minor = element_blank(),
           panel.border = element_blank(),
           panel.background = element_blank(),
-          plot.title = element_text(color="black", size=24, face="bold.italic",hjust = 0.5),
-          plot.subtitle = element_text(color="black",size=24,hjust = 0.5),
-          axis.title.x = element_text(color="black", size=24),
-          axis.title.y = element_text(color="black", size=24),
-          axis.text=element_text(size=24, colour="black"),
+          plot.title = element_text(color="black", face="bold.italic", hjust = 0.5),
+          plot.subtitle = element_text(color="black", hjust = 0.5),
+          axis.title.x = element_text(color="black"),
+          axis.title.y = element_text(color="black"),
+          axis.text=element_text(colour="black"),
           axis.text.x=element_blank(), # No samples names
           axis.ticks.x=element_blank(), # No x axis
-          strip.text=element_text(size=18, colour="black", angle = 90),
+          strip.text=element_text(colour="black", angle = 90),
           legend.key = element_rect(fill = "white", linewidth = 1),
-          legend.text=element_text(size=24),
-          legend.title=element_text(size=24))
+          legend.text=element_text(),
+          legend.title=element_text())
   p
   
   if (plot) {
@@ -113,6 +113,8 @@ brokenstick = function(x, k = 10, method = "strict", plot = TRUE) {
 #' @param marey a single `marey_map` object
 #' @param k the number of segments (default = 10)
 #' @param method the method used to infer segments breakpoints
+#' 
+#' @importFrom stats lm
 #' 
 #' 
 brokenstick_one_map = function(marey, k = 10, method = "strict") {

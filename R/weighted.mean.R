@@ -5,6 +5,7 @@
 #'
 #' @return numeric, the weighted mean of recombination rates (weighted by windows size).
 #'
+#' @importFrom stats weighted.mean
 #' @method weighted.mean marey_map
 #' @export
 weighted.mean.marey_map = function(x, ...) {

@@ -465,7 +465,7 @@ A Lorenz curve always starts at (0,0) and ends at (1,1).
 The more the curve is close to the diagonal, the less heterogeneous is the distribution of recombination rates.
 
 
-```{r lorenz}
+```{r lorenz, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 6, fig.align="center", fig.cap = "The Lorenz curve of *Arabidopsis thaliana* chromosome 1."}
 lorenz(res)
 ```
 
@@ -497,7 +497,7 @@ class(human)
 ```
 
 
-The recombination maps cna be estimated in batch for the whole comparative dataset with the function `comparative_recombination_maps()`.
+The recombination maps can be estimated in batch for the whole comparative dataset with the function `comparative_recombination_maps()`.
 
 
 ```{r, echo=TRUE, eval=FALSE}
@@ -534,11 +534,11 @@ compute_stats_marey(human_subset, statistics = c("mean", "gini", "peripherybias"
 It is easy to compute statistics on a large set of maps (22 chromosomes in three datasets).
 
 
-```{r, echo = TRUE}
+```{r compareHeterochiasmy, message=FALSE, warning=FALSE, echo=FALSE, fig.height = 4, fig.width = 8, fig.align="center", fig.cap = "Mean recombinaiton rate per chromosome (cM/Mb) and Gini index for the female, male and sex-averaged genetic maps in human."}
 st = compute_stats_marey(human, statistics = c("mean", "gini"))
 st = as.data.frame(st)
 
-ggplot(st, aes(x = set, y = mean, fill = set)) +
+ggplot(st, aes(x = set, y = mean*1000000, fill = set)) +
   geom_boxplot() +
   geom_point() +
   xlab("Dataset") +

@@ -23,6 +23,7 @@ Imports:
     IRanges,
     dineq,
     S4Vectors,
+    BiocGenerics,
     npreg,
     methods,
     reshape2,
