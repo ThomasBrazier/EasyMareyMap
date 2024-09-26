@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EasyMareyMap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -54,7 +54,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_comparative_recmap</span><span class="op">(</span><span class="va">x</span>, group <span class="op">=</span> <span class="st">"set + map"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_comparative_recmap</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  group <span class="op">=</span> <span class="st">"set + map"</span>,</span>
+<span>  relative_distance_x <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  relative_distance_y <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -67,6 +72,14 @@
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
 <dd><p>the grouping factor in `ggplot`, either `set`, `map` or `set + map`</p></dd>
+
+
+<dt id="arg-relative-distance-x">relative_distance_x<a class="anchor" aria-label="anchor" href="#arg-relative-distance-x"></a></dt>
+<dd><p>logical, whether to plot the X axis as relative distances (0,1) to compare different genomes</p></dd>
+
+
+<dt id="arg-relative-distance-y">relative_distance_y<a class="anchor" aria-label="anchor" href="#arg-relative-distance-y"></a></dt>
+<dd><p>logical, whether to plot the Y axis as relative distances (0,1) to compare maps with different average recombination rates</p></dd>
 
 </dl></div>
     <div id="value">
