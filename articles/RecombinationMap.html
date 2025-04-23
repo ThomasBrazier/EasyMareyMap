@@ -109,8 +109,18 @@ Our <code>EasyMareyMap</code> package adds these new features:</p>
 <li>a graphical and statistical framework for comparative genomics
 (compare Marey maps between species, populations or genomes)</li>
 </ul>
-<p>The package is loaded with the following command.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Install BioConductor dependency</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"GenomicRanges"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/ThomasBrazier/EasyMareyMap"</span><span class="op">)</span></span>
+<span><span class="co"># or alternatively</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"EasyMareyMap"</span>, repos<span class="op">=</span><span class="st">"https://github.com/ThomasBrazier/EasyMareyMap"</span><span class="op">)</span></span></code></pre></div>
+<p>Now load the package and <code>ggplot2</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EasyMareyMap</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>Two S3 objects are at the core of the package: * the
@@ -132,6 +142,7 @@ compute chromosome wide summary statistics (mean, median, variance, gini
 index, periphery-bias ratio…) * comparative plots (lorenz curve, broken
 stick, see below for details) * apply some corrections to a raw Marey
 map (e.g. outlier removal)</p>
+</div>
 <div class="section level2">
 <h2 id="create-a-marey_map-object">Create a <code>marey_map</code> object<a class="anchor" aria-label="anchor" href="#create-a-marey_map-object"></a>
 </h2>
@@ -145,7 +156,7 @@ basepairs (bp) and genetic distances in cM.</p>
 <p>You can then create a <code>marey_map</code> object. It must contain
 a single map (i.e. one chromosome). We will see later how to treat
 multiple maps in a convenient way.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"../inst/extdata/Arabidopsis_thaliana.txt"</span>,</span>
 <span>               header <span class="op">=</span> <span class="cn">T</span>,</span>
 <span>               sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></span>
@@ -160,7 +171,7 @@ multiple maps in a convenient way.</p>
 <span><span class="co">#&gt; 4 Arabidopsis_thaliana_Serin2017   1 RSM_1_0.35 350000 1.28 TRUE</span></span>
 <span><span class="co">#&gt; 5 Arabidopsis_thaliana_Serin2017   1 RSM_1_0.45 450000 1.92 TRUE</span></span>
 <span><span class="co">#&gt; 6 Arabidopsis_thaliana_Serin2017   1 RSM_1_0.55 550000 2.24 TRUE</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The marey map is imported into a 'marey_map' object</span></span>
 <span><span class="va">m</span> <span class="op">=</span> <span class="va">m</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">map</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>,<span class="op">]</span></span>
 <span><span class="va">marey</span> <span class="op">=</span> <span class="fu"><a href="../reference/marey_map.html">marey_map</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
@@ -203,7 +214,7 @@ important to note that the interpolation model is stored in the
 <code>model</code> slot and all its attributes can be accessed.</p>
 <p>There is a function to display a <code>summary</code> of a
 <code>marey_map</code> object.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">marey</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ===================== Summary of the Marey map ==================</span></span>
 <span><span class="co">#&gt;  Dataset:  Arabidopsis_thaliana_Serin2017 </span></span>
@@ -245,7 +256,7 @@ position 17Mb, just to learn how to remove them. There is a function to
 <code>plot</code> the Marey map of a <code>marey_map</code> object.
 Markers kept for further interpolation are in blue. Markers discarded
 are in red.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">marey_outliers</span> <span class="op">=</span> <span class="va">marey</span></span>
 <span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="va">marey_outliers</span><span class="op">$</span><span class="va">mareyMap</span></span>
@@ -275,7 +286,7 @@ just need to draw a region around markers to remove. Left-click to place
 points of the polygon, then right-click to close the region and return
 to the script. All markers selected are automatically marked as removed
 (<code>vld =  FALSE</code>).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">marey</span> <span class="op">=</span> <span class="fu"><a href="../reference/outlier_selection.html">outlier_selection</a></span><span class="op">(</span><span class="va">marey</span><span class="op">)</span></span></code></pre></div>
 <!-- TODO Add a photo of mkr selection -->
 </div>
@@ -286,7 +297,7 @@ to the script. All markers selected are automatically marked as removed
 <code>mask.interval</code> function (<code>unmask.interval</code>
 respectively). Fo example, you might want to mask regions where markers
 are difficult to map or have higher sequencing/calling error.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">phys</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">17855000</span>, <span class="fl">17853000</span>, <span class="fl">17858000</span>, <span class="fl">17840000</span>, <span class="fl">17890000</span><span class="op">)</span></span>
 <span><span class="va">gen</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">34</span>, <span class="fl">32</span>, <span class="fl">36</span>, <span class="fl">33</span>, <span class="fl">27</span><span class="op">)</span></span>
 <span><span class="va">pos</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>phys <span class="op">=</span> <span class="va">phys</span>, gen <span class="op">=</span> <span class="va">gen</span><span class="op">)</span></span>
@@ -299,7 +310,7 @@ Marey maps of chromosome 1 in <em>Arabidopsis thaliana</em>. Invalid
 markers are shown in red.
 </p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">marey_outliers</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -324,7 +335,7 @@ genome annotation.</p>
 scaffolds of the reference genome and the linkage map are not in the
 same order. Then I use the same <code><a href="../reference/flip.interval.html">flip.interval()</a></code> function to
 put them back in the right order.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">interv</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">25000000</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10000000</span>, <span class="fl">50000000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="fu"><a href="../reference/flip.interval.html">flip.interval</a></span><span class="op">(</span><span class="va">marey</span>, intervals <span class="op">=</span> <span class="va">interv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></code></pre></div>
@@ -333,7 +344,7 @@ put them back in the right order.</p>
 Flipping a genomic interval.
 </p>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="fu"><a href="../reference/flip.interval.html">flip.interval</a></span><span class="op">(</span><span class="va">tmp</span>, intervals <span class="op">=</span> <span class="va">interv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></code></pre></div>
@@ -344,7 +355,7 @@ Flipping a genomic interval.
 </div>
 <p>You can flip the whole chromosome by specifying a single interval
 from one to the chromosome length.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wholechromosome</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">marey</span><span class="op">$</span><span class="va">chromosomeLength</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="fu"><a href="../reference/flip.interval.html">flip.interval</a></span><span class="op">(</span><span class="va">marey</span>, intervals <span class="op">=</span> <span class="va">wholechromosome</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></code></pre></div>
@@ -353,7 +364,7 @@ from one to the chromosome length.</p>
 Flipping the entire chromosome
 </p>
 </div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="fu"><a href="../reference/flip.interval.html">flip.interval</a></span><span class="op">(</span><span class="va">tmp</span>, intervals <span class="op">=</span> <span class="va">wholechromosome</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></code></pre></div>
@@ -381,9 +392,9 @@ script-friendly to batch analyses (e.g. hundreds of genetic maps),
 highly automated (automatic fine-tuning of the smoothing parameter) and
 provide high reproducibility (all parameters and settings are stored in
 the <code>marey_map</code> object and easily accessible).</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">marey</span>, method <span class="op">=</span> <span class="st">"loess"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">marey</span>, method <span class="op">=</span> <span class="st">"loess"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotInterpolation-1.png" alt="Marey maps of five chromosomes in *Arabidopsis thaliana* with the Marey interpolation line and a 95% C.I. (invalid markers are shown in red)." width="576"><p class="caption">
@@ -392,7 +403,7 @@ Marey interpolation line and a 95% C.I. (invalid markers are shown in
 red).
 </p>
 </div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">recMap</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                              set map start    end      recRate upperRecRate</span></span>
 <span><span class="co">#&gt; 1 Arabidopsis_thaliana_Serin2017   1 0e+00  99999          NaN           NA</span></span>
@@ -408,7 +419,7 @@ red).
 <span><span class="co">#&gt; 4 3.824480e-06</span></span>
 <span><span class="co">#&gt; 5 3.891871e-06</span></span>
 <span><span class="co">#&gt; 6 3.960459e-06</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ===================== Summary of the Marey map ==================</span></span>
 <span><span class="co">#&gt;  Dataset:  Arabidopsis_thaliana_Serin2017 </span></span>
@@ -436,7 +447,7 @@ red).
 bootstrapped procedure (random resampling of markers) to estimate
 confidence intervals along the genome. It is an important feature to
 evaluate the quality of the recombination map.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_recombination_map.html">plot_recombination_map</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMap-1.png" alt="Recombination landscape of *Arabidopsis thaliana*. The gray area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -452,9 +463,9 @@ is the 95% confidence interval around the mean estimate.
 assessed with the linear regression of fitted values as a function of
 observed genetic distances. Once I fitted a loess function, I print the
 goodness of fit with <code>summary</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res_loess</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">marey</span>, method <span class="op">=</span> <span class="st">"loess"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_loess</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">marey</span>, method <span class="op">=</span> <span class="st">"loess"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res_loess</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ===================== Summary of the Marey map ==================</span></span>
 <span><span class="co">#&gt;  Dataset:  Arabidopsis_thaliana_Serin2017 </span></span>
@@ -481,9 +492,9 @@ goodness of fit with <code>summary</code>.</p>
 interpolation methods and hyperparameters (i.e. smoothing parameter) I
 can compare the performance of loess and smooth splines on the same
 Marey map.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res_spline</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">marey</span>, method <span class="op">=</span> <span class="st">"spline"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_spline</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">marey</span>, method <span class="op">=</span> <span class="st">"spline"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res_spline</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ===================== Summary of the Marey map ==================</span></span>
 <span><span class="co">#&gt;  Dataset:  Arabidopsis_thaliana_Serin2017 </span></span>
@@ -540,7 +551,7 @@ chromosome to produce the recombination map. But you can also provide a
 data frame of custom start/end positions to estimate the recombination
 rate within specific genomic intervals or in a custom set of genomic
 windows along the genome.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pos</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">40000000</span>, by <span class="op">=</span> <span class="fl">40000</span><span class="op">)</span>,</span>
 <span>                 end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">40000000</span>, by <span class="op">=</span> <span class="fl">40000</span><span class="op">)</span> <span class="op">+</span> <span class="fl">20000</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/recombination_map.html">recombination_map</a></span><span class="op">(</span><span class="va">res</span>, method <span class="op">=</span> <span class="st">"loess"</span>, windows <span class="op">=</span> <span class="va">pos</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
@@ -550,7 +561,7 @@ recombination rate. However keep in mind that interpolation is at a
 large scale (i.e. does not detect fine scale variations of recombination
 rates) and close markers can have exactly or very similar values due to
 the large scale smoothing.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">genes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>chromosome <span class="op">=</span> <span class="st">"4"</span>,</span>
 <span>                   start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60000</span>, <span class="fl">99000</span>, <span class="fl">123000</span>, <span class="fl">267400</span>, <span class="fl">500000</span><span class="op">)</span>,</span>
 <span>                   end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">65000</span>, <span class="fl">99500</span>, <span class="fl">1234000</span>, <span class="fl">267401</span>, <span class="fl">500001</span><span class="op">)</span><span class="op">)</span></span>
@@ -583,7 +594,7 @@ markers. It is possible to interpolate these new positions with the
 method).</p>
 <p>It is recommended to use the same smoothing parameter previously
 estimated with the automatic calibration procedure.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Re-map on a new set of markers</span></span>
 <span><span class="va">new</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">50000</span>, <span class="fl">30450000</span>, by <span class="op">=</span> <span class="fl">1000000</span><span class="op">)</span></span>
 <span><span class="va">new_map</span> <span class="op">=</span> <span class="fu"><a href="../reference/predict_genetic_map.html">predict_genetic_map</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">new</span><span class="op">)</span></span>
@@ -633,7 +644,7 @@ chromosome, can be used to compare chromosomes in a single species, but
 also chromosomes between populations or species.</p>
 <p>The most simple statistics are the mean, weighted mean (weighted by
 the windows length), median and the variance.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 3.912888e-06</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
@@ -648,7 +659,7 @@ genetic shuffling <span class="citation">(Veller, Kleckner, and Nowak
 along the chromosome and total genome size. The genetic distances must
 be transformed back to recombinant fractions. The inverse of the mapping
 function used to calculate genetic distances must be applied.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">genome_size</span> <span class="op">=</span> <span class="fl">119050000</span></span>
 <span><span class="fu"><a href="../reference/veller.html">veller</a></span><span class="op">(</span><span class="va">res</span>, genome_size <span class="op">=</span> <span class="va">genome_size</span>, mapping_function <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Converting Morgans to recombinant fraction</span></span>
@@ -668,7 +679,7 @@ ratio higher than one indicates less recombination at the periphery.
 Because chromosomes can be asymmetric, the measure can be calculated
 either on the left or right half of the chromosome, both sides or one
 side at random.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/peripherybias.html">peripherybias</a></span><span class="op">(</span><span class="va">res</span>, proportion_periphery <span class="op">=</span> <span class="fl">0.1</span>,  chromosome_arm <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.049341</span></span>
 <span><span class="fu"><a href="../reference/peripherybias.html">peripherybias</a></span><span class="op">(</span><span class="va">res</span>, proportion_periphery <span class="op">=</span> <span class="fl">0.1</span>,  chromosome_arm <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
@@ -680,14 +691,14 @@ side at random.</p>
 <p>The coefficient of variation is a standardized measure of dispersion
 of a probability distribution or frequency distribution. It is defined
 as the ratio of the standard deviation divided by the mean.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/coefficient_variation.html">coefficient_variation</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.3358516</span></span></code></pre></div>
 <p>The Gini index is a measure of statistical dispersion intended to
 represent inequality between measures, here recombination rates. A Gini
 coefficient of 0 reflects perfect equality, while a Gini coefficient of
 1 reflects maximal inequality among values</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/gini.html">gini</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.1852593</span></span></code></pre></div>
 <p>The Lorenz curve is a graphical representation of the heterogeneity
@@ -702,26 +713,24 @@ The Lorenz curve of <em>Arabidopsis thaliana</em> chromosome 1.
 </p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="compare-multiple-maps-mapped-on-the-same-chromosome">Compare multiple maps mapped on the same chromosome<a class="anchor" aria-label="anchor" href="#compare-multiple-maps-mapped-on-the-same-chromosome"></a>
-</h3>
-<p>Different genetic map can be generated in different populations, or
-between sexes, and mapped on the same reference genome. If the maps
-share the same set of markers, it is easy to plot them together. Here I
-compare male, female and sex-averaged recombination maps in <em>Homo
-sapiens</em>, a species with heterochiasmy (i.e. recombination rates are
-different between sexes).</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">human</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Homo_sapiens_comparative.Rds"</span><span class="op">)</span></span></code></pre></div>
-<p>It is the time to present the <code>comparative_marey_map</code>
+</div>
+<div class="section level2">
+<h2 id="comparative-analysis-of-recombination-maps">Comparative analysis of recombination maps<a class="anchor" aria-label="anchor" href="#comparative-analysis-of-recombination-maps"></a>
+</h2>
+<p>Now it is the time to present the <code>comparative_marey_map</code>
 object. It is a meta-object storing multiple maps (i.e. multiple
-chromosomes and multiple datasets). It allows to perform operations on a
-list of maps (e.g. estimating recombination rates), compute summary
-statistics (e.g. mean, median recombination rates or the gini index) and
-plot these maps in the same figure in a comparative manner. The
-<code>EasyMareyMap</code> package has also functions to easily
-manipulate <code>comparative_marey_map</code> objects.</p>
+chromosomes and/or multiple datasets). It allows to perform operations
+on a list of <code>mareyMap</code> maps (e.g. estimating recombination
+rates), compute summary statistics (e.g. mean, median recombination
+rates or the gini index) and plot these maps in the same figure in a
+comparative manner. The <code>EasyMareyMap</code> package has also
+functions to easily manipulate <code>comparative_marey_map</code>
+objects.</p>
+<p>As an example I will present recombination maps for female, male and
+sex-average genetic maps in human.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">human</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Homo_sapiens_comparative.Rds"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># A short summary of the data stored</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ============== Summary of the comparative marey map ==============</span></span>
@@ -743,11 +752,11 @@ manipulate <code>comparative_marey_map</code> objects.</p>
 <p>The recombination maps can be estimated in batch for the whole
 comparative dataset with the function
 <code><a href="../reference/comparative_recombination_maps.html">comparative_recombination_maps()</a></code>.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">human</span> <span class="op">=</span> <span class="fu"><a href="../reference/comparative_recombination_maps.html">comparative_recombination_maps</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span></span></code></pre></div>
 <p>There are functions to easily get the Marey maps or the recombination
 maps from a <code>comparative_marey_map</code> object.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/comparative_marey_to_dataframe.html">comparative_marey_to_dataframe</a></span><span class="op">(</span><span class="va">human</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     set           map       mkr    phys gen  vld predict.se</span></span>
 <span><span class="co">#&gt; 1 Homo sapiens (female) Chromosome 01   D1S2217  837022   0 TRUE         NA</span></span>
@@ -788,6 +797,15 @@ maps from a <code>comparative_marey_map</code> object.</p>
 <span><span class="co">#&gt; 4           NA</span></span>
 <span><span class="co">#&gt; 5           NA</span></span>
 <span><span class="co">#&gt; 6           NA</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="compare-multiple-maps-mapped-on-the-same-chromosome">Compare multiple maps mapped on the same chromosome<a class="anchor" aria-label="anchor" href="#compare-multiple-maps-mapped-on-the-same-chromosome"></a>
+</h3>
+<p>Different genetic map can be generated in different populations, or
+between sexes, and mapped on the same reference genome. If the maps
+share the same set of markers, it is easy to plot them together. Here I
+compare male, female and sex-averaged recombination maps in <em>Homo
+sapiens</em>, a species with heterochiasmy (i.e. recombination rates are
+different between sexes).</p>
 <p>Let’s work with only two chromosomes and the three datasets to show
 how to subset maps in a <code>comparative_marey_map</code> object. Each
 map in the <code>comparative_marey_map</code> object is a single
@@ -796,12 +814,12 @@ of <code>comparative_marey_map$data</code> to perform custom operations
 on <code>marey_map</code> objects. There is also a function
 <code><a href="../reference/merge_comparative_marey.html">merge_comparative_marey()</a></code> to merge
 <code>comparative_marey_map</code> objects.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make a logical vector of maps to keep</span></span>
 <span><span class="va">subs</span> <span class="op">=</span> <span class="op">(</span><span class="va">human</span><span class="op">$</span><span class="va">map</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chromosome 02"</span> ,<span class="st">"Chromosome 05"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">human_subset</span> <span class="op">=</span> <span class="fu"><a href="../reference/subset_comparative_marey.html">subset_comparative_marey</a></span><span class="op">(</span><span class="va">human</span>, subset <span class="op">=</span> <span class="va">subs</span><span class="op">)</span></span></code></pre></div>
 <p>And now compute three summary statistics on each map.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compute_stats_marey.html">compute_stats_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, statistics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"gini"</span>, <span class="st">"peripherybias"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $set</span></span>
 <span><span class="co">#&gt; [1] "Homo sapiens (female)" "Homo sapiens (male)"   "Homo sapiens (mean)"  </span></span>
@@ -840,7 +858,7 @@ female, male and sex-averaged genetic maps in human.
 object that can be stored or customized. They allow a grouping factor
 for the plot. Maps can be grouped by <code>set</code>, <code>map</code>
 or both (i.e. <code>set + map</code>).</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMareyHeterochiasmy-1.png" alt="Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5." width="768"><p class="caption">
@@ -848,7 +866,7 @@ Female, male and sex-averaged Marey maps of <em>Homo sapiens</em>
 chromosomes 2 and 5.
 </p>
 </div>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMareyHeterochiasmy-2.png" alt="Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5." width="768"><p class="caption">
@@ -856,7 +874,7 @@ Female, male and sex-averaged Marey maps of <em>Homo sapiens</em>
 chromosomes 2 and 5.
 </p>
 </div>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set + map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMareyHeterochiasmy-3.png" alt="Female, male and sex-averaged Marey maps of *Homo sapiens* chromosomes 2 and 5." width="768"><p class="caption">
@@ -864,7 +882,7 @@ Female, male and sex-averaged Marey maps of <em>Homo sapiens</em>
 chromosomes 2 and 5.
 </p>
 </div>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMapHeterochiasmy-1.png" alt="Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -873,7 +891,7 @@ sapiens</em> chromosome 2 and 5. The shaded area is the 95% confidence
 interval around the mean estimate.
 </p>
 </div>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMapHeterochiasmy-2.png" alt="Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -882,7 +900,7 @@ sapiens</em> chromosome 2 and 5. The shaded area is the 95% confidence
 interval around the mean estimate.
 </p>
 </div>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">human_subset</span>, group <span class="op">=</span> <span class="st">"set + map"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/plotMapHeterochiasmy-3.png" alt="Female, male and sex-averaged recombination landscape of *Homo sapiens* chromosome 2 and 5. The shaded area is the 95% confidence interval around the mean estimate." width="768"><p class="caption">
@@ -895,7 +913,7 @@ interval around the mean estimate.
 <div class="section level3">
 <h3 id="compare-between-chromosomesspecies">Compare between chromosomes/species<a class="anchor" aria-label="anchor" href="#compare-between-chromosomesspecies"></a>
 </h3>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">maize</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Zea_mays_MaizeGDBConsensus_v4.Rds"</span><span class="op">)</span></span>
 <span><span class="va">arabidopsis</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"../inst/extdata/Arabidopsis_thaliana.Rds"</span><span class="op">)</span></span>
 <span></span>
@@ -940,7 +958,7 @@ heterogeneity of recombination rates along the chromosome.</p>
 specify <code>return.plot = FALSE</code>. It works also for the
 <code><a href="../reference/plot.marey_map.html">plot.marey_map()</a></code> and <code>plot_recombination</code>
 functions.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lorenz.html">lorenz</a></span><span class="op">(</span><span class="va">compar</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/lorenzCompare-1.png" alt="Comparative Lorenz curves between *Arabidopsis thaliana* and maize." width="768"><p class="caption">
@@ -952,7 +970,7 @@ maize.
 also an appropriate representation to compare the distribution of
 recombination rates along the genome across a large set of Marey
 maps.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brokenstick.html">brokenstick</a></span><span class="op">(</span><span class="va">compar</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/brokenStick-1.png" alt="The broken stick model applied to *Arabidopsis thaliana* and maize." width="768"><p class="caption">
@@ -963,7 +981,7 @@ maize.
 <p>Moreover, to compare between species, it can be interesting to use
 relative genomic positions and relative recombination rates, instead of
 absolute ones.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_marey.html">plot_comparative_marey</a></span><span class="op">(</span><span class="va">compar</span>, group <span class="op">=</span> <span class="st">'set'</span>, relative_distance_x <span class="op">=</span> <span class="cn">T</span>, relative_distance_y <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/relativeCompareMarey-1.png" alt="Comparative marey maps between *Arabidopsis* and maize. Genomic distances are relative distances scaled by the total chromosome size. Genetic distances are scaled by the max genetic distance." width="768"><p class="caption">
@@ -972,7 +990,7 @@ distances are relative distances scaled by the total chromosome size.
 Genetic distances are scaled by the max genetic distance.
 </p>
 </div>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_comparative_recmap.html">plot_comparative_recmap</a></span><span class="op">(</span><span class="va">compar</span>, group <span class="op">=</span> <span class="st">'set'</span>, relative_distance_x <span class="op">=</span> <span class="cn">T</span>, relative_distance_y <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="RecombinationMap_files/figure-html/relativeCompareRec-1.png" alt="Comparative recombination landscapes between Arabidopsis chromosome 1 and maize chromosome 1. Genomic distances are relative distances scaled by the total chromosome size. Recombination rates are scaled by the max recombination rate." width="768"><p class="caption">
