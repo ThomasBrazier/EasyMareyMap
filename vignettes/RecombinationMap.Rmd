@@ -31,10 +31,20 @@ Moreover, it offers a statistical framework to estimate recombination maps with 
 * a graphical and statistical framework for comparative genomics (compare Marey maps between species, populations or genomes)
 
 
+# Installation
 
 
+```{r install, eval=FALSE}
+# Install BioConductor dependency
+BiocManager::install("GenomicRanges")
 
-The package is loaded with the following command.
+devtools::install_github("https://github.com/ThomasBrazier/EasyMareyMap")
+# or alternatively
+install.packages("EasyMareyMap", repos="https://github.com/ThomasBrazier/EasyMareyMap")
+```
+
+
+Now load the package and `ggplot2`.
 
 ```{r setup, message=FALSE, warning=FALSE}
 library(EasyMareyMap)
@@ -474,17 +484,19 @@ lorenz(res)
 
 
 
-## Compare multiple maps mapped on the same chromosome
+# Comparative analysis of recombination maps
+
+Now it is the time to present the `comparative_marey_map` object. It is a meta-object storing multiple maps (i.e. multiple chromosomes and/or multiple datasets). It allows to perform operations on a list of `mareyMap` maps (e.g. estimating recombination rates), compute summary statistics (e.g. mean, median recombination rates or the gini index) and plot these maps in the same figure in a comparative manner. The `EasyMareyMap` package has also functions to easily manipulate `comparative_marey_map` objects.
 
 
-Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo sapiens*, a species with heterochiasmy (i.e. recombination rates are different between sexes).
+As an example I will present recombination maps for female, male and sex-average genetic maps in human.
 
 
 ```{r dataHeterochiasmy, echo = TRUE}
 human = readRDS("../inst/extdata/Homo_sapiens_comparative.Rds")
 ```
 
-It is the time to present the `comparative_marey_map` object. It is a meta-object storing multiple maps (i.e. multiple chromosomes and multiple datasets). It allows to perform operations on a list of maps (e.g. estimating recombination rates), compute summary statistics (e.g. mean, median recombination rates or the gini index) and plot these maps in the same figure in a comparative manner. The `EasyMareyMap` package has also functions to easily manipulate `comparative_marey_map` objects.
+
 
 ```{r comparative_object}
 # A short summary of the data stored
@@ -515,6 +527,11 @@ head(comparative_interpolation_to_dataframe(human))
 
 head(comparative_recmap_to_dataframe(human))
 ```
+
+## Compare multiple maps mapped on the same chromosome
+
+
+Different genetic map can be generated in different populations, or between sexes, and mapped on the same reference genome. If the maps share the same set of markers, it is easy to plot them together. Here I compare male, female and sex-averaged recombination maps in *Homo sapiens*, a species with heterochiasmy (i.e. recombination rates are different between sexes).
 
 
 Let's work with only two chromosomes and the three datasets to show how to subset maps in a `comparative_marey_map` object. Each map in the `comparative_marey_map` object is a single `marey_map` object. hence you can iterate over each element of `comparative_marey_map$data` to perform custom operations on `marey_map` objects. There is also a function `merge_comparative_marey()` to merge `comparative_marey_map` objects.
