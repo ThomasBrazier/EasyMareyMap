@@ -39,8 +39,8 @@ new_marey_map = function(x = data.frame(), chromosome_length = numeric()) {
   x$set = as.factor(x$set)
   x$map = as.factor(x$map)
   x$mkr = as.character(x$mkr)
-  x$phys = as.integer(x$phys)
-  x$gen = as.integer(x$gen)
+  x$phys = as.numeric(x$phys)
+  x$gen = as.numeric(x$gen)
   x$vld = as.logical(x$vld)
   x$predict.se = NA
 

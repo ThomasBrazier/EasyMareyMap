@@ -155,7 +155,8 @@ plot(marey_outliers)
 
 ## Visual outlier selection
 
-It is possible to perform outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
+It is possible to perform outlier selection in a visual mode. You just need to draw a region around markers to remove. Left-click to place points of the polygon, then press the `ESC` key or right-click to close the region and return to the script. All markers selected are automatically marked as removed (`vld =  FALSE`).
+
 
 ```{r, eval=FALSE}
 marey = outlier_selection(marey)
@@ -226,7 +227,7 @@ Once you have checked (and eventually corrected) the Marey map, you can estimate
 
 
 ```{r estimateMap, eval=FALSE}
-res = recombination_map(marey, method = "loess", verbose = FALSE)
+res = recombination_map(marey, method = "loess")
 ```
 
 

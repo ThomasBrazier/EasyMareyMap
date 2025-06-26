@@ -28,10 +28,13 @@ outlier_selection = function(x = marey_map()) {
 point_selection = function(x) {
   df = x[,c("phys", "gen")]
   df = df[!is.na(df$phys),]
-  dev.new()
+  
+  X11()
+  # dev.new()
   plot(df, col = "black")
   selectedPoints = gatepoints::fhs(df, mark = TRUE)
   dev.off()
+  
   pointNames = as.character(selectedPoints)
   return(pointNames)
 }

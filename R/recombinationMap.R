@@ -43,6 +43,10 @@ recombination_map = function(x,
 
   if(verbose) {cat("Processing...\n")}
   df = get_marey_map(x)
+  
+  # Remove markers not valid (VLD == FALSE)
+  df$phys[which(df$vld == FALSE)] = NA
+  df$gen[which(df$vld == FALSE)] = NA
 
   if (length(smoothing) > 0) {
     if (is.numeric(smoothing)) {
@@ -99,7 +103,7 @@ recombination_map = function(x,
   }
   # Goodness of fit criterion
   # OLS regression fitted genetic positions ~ true genetic positions
-  goodnessFit = lm(x$fitted ~ x$mareyMap$phys)
+  goodnessFit = lm(x$fitted ~ df$phys)
   summary(goodnessFit)
 
   x$goodness.r.squared = as.numeric(summary(goodnessFit)["r.squared"])
@@ -154,6 +158,10 @@ bootstrap_marey_map = function(x, intervals, nboot = 1000, verbose = TRUE) {
   stopifnot(is(x, "marey_map"))
 
   df = x$mareyMap
+  # Remove markers not valid (VLD == FALSE)
+  df$phys[which(df$vld == FALSE)] = NA
+  df$gen[which(df$vld == FALSE)] = NA
+  
   fitMarey = x$model
 
   mareyPredictions = matrix(NA, nrow = nrow(intervals), ncol = nboot)
@@ -185,6 +193,10 @@ bootstrap_marey_map = function(x, intervals, nboot = 1000, verbose = TRUE) {
   Y[is.na(Y)] = 0
   Yupper[is.na(Yupper)] = 0
   Ylower[is.na(Ylower)] = 0
+  
+  Y[Y < 0] = 0
+  Yupper[Yupper < 0] = 0
+  Ylower[Ylower < 0] = 0
 
   mareyCI = data.frame(
     set = unique(df$set),
@@ -219,6 +231,10 @@ bootstrap_rec_map = function(x, intervals, nboot = 1000, set_negative_values = 0
   stopifnot(class(x) == "marey_map")
 
   df = x$mareyMap
+  # Remove markers not valid (VLD == FALSE)
+  df$phys[which(df$vld == FALSE)] = NA
+  df$gen[which(df$vld == FALSE)] = NA
+  
   fitMarey = x$model
 
   bootPrediction = matrix(NA, nrow = nrow(intervals), ncol = nboot)
