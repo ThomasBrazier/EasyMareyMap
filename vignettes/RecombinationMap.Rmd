@@ -677,6 +677,9 @@ plot_comparative_recmap(compar, group = 'set', relative_distance_x = T, relative
 ```
 
 
+# Acknowledgements
+
+I wish to thank my early beta-testers, Anastasia Paupe and Maxence Brault, who identified bugs and helped me to make a better version.
 
 
 # References
